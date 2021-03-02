@@ -15,7 +15,7 @@ const Layout: React.FC<Props> = ({ children }) => {
       <Header />
       <div className="flex flex-row overflow-hidden max-h-full">
         {layoutContext.sidebarOpen && <Sidebar />}
-        <div className="flex flex-row flex-wrap overflow-y-scroll mb-14">
+        <div className="border flex-grow overflow-y-scroll mb-14">
           {children}
         </div>
         {layoutContext.createPanelOpen && <CreatePanel />}

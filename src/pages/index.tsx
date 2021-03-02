@@ -2,21 +2,25 @@ import React from "react"
 import Bookmark from "~/components/Bookmark"
 import Layout from "~/components/Layout"
 
-const BookmarkTestStub = () => {
-  const arr = new Array(100).fill(1)
-  console.log(arr)
+type BookmarkListProps = {
+  // TODO: Fix type
+  data: any[]
+}
+
+const BookmarkList: React.FC<BookmarkListProps> = ({ data }) => {
   return (
-    <>
-      {arr.map((_item: any, index: number) => {
-        return <Bookmark key={index} />
+    <div className="max-w-3xl mx-auto">
+      {data.map((item, index) => {
+        return <Bookmark />
       })}
-    </>
+    </div>
   )
 }
 const Index = () => {
+  const arr = new Array(100).fill(1)
   return (
     <Layout>
-      <BookmarkTestStub />
+      <BookmarkList data={arr} />
     </Layout>
   )
 }
