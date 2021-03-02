@@ -11,7 +11,10 @@ module.exports = {
       "create-panel": "32rem",
       sidebar: "24rem",
     },
-    extend: {},
+    extend: {
+      boxShadow: ["active"],
+      backgroundColor: ["active"],
+    },
   },
   variants: {
     extend: {},

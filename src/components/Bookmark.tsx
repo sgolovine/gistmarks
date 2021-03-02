@@ -1,12 +1,18 @@
-import React from "react"
+import React, { useState } from "react"
 import IconButton from "./common/IconButton"
 import EditIcon from "./icons/EditIcon"
 import ExternalLinkIcon from "./icons/ExternalLinkIcon"
 import TrashIcon from "./icons/TrashIcon"
 
 const Bookmark: React.FC = () => {
+  const [isHovering, setIsHovering] = useState<boolean>(false)
+
   return (
-    <div className="h-64 w-64 border m-2 p-2 rounded shadow flex flex-col justify-between">
+    <div
+      className="h-64 w-64 border m-2 p-2 rounded shadow flex flex-col justify-between"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
       <div>
         <div>
           <div className="flex flex-row items-center">
@@ -26,14 +32,16 @@ const Bookmark: React.FC = () => {
           does
         </p>
       </div>
-      <div className="flex flex-row">
-        <IconButton bgClassName="bg-red-600">
-          <TrashIcon fill="white" />
-        </IconButton>
-        <IconButton bgClassName="bg-blue-600">
-          <EditIcon fill="white" />
-        </IconButton>
-      </div>
+      {isHovering && (
+        <div className="flex flex-row">
+          <IconButton>
+            <TrashIcon fill="#666" />
+          </IconButton>
+          <IconButton>
+            <EditIcon fill="#666" />
+          </IconButton>
+        </div>
+      )}
     </div>
   )
 }

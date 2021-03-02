@@ -30,7 +30,7 @@ const Sidebar: React.FC = () => {
             className="flex-grow border mr-2 px-2 rounded"
             placeholder="Add new Collection"
           />
-          <Button label="Add Collection" onClick={() => null} />
+          <Button label="Add" onClick={() => null} />
         </div>
       </div>
       <div className="pt-2">

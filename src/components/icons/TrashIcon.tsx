@@ -4,7 +4,7 @@ type Props = {
   fill?: string
 }
 
-export default ({ fill = "currentColor" }: Props) => (
+const TrashIcon = ({ fill = "currentColor" }: Props) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill={fill}>
     <path
       fillRule="evenodd"
@@ -13,3 +13,5 @@ export default ({ fill = "currentColor" }: Props) => (
     />
   </svg>
 )
+
+export default TrashIcon
