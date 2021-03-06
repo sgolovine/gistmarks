@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createContext, ReactNode } from "react"
 import { ContextProviderProps } from "~/model/Context"
+import axios from "axios"
 
 interface AuthContext {
   authCode: string
@@ -29,6 +30,12 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
       }
     }
   }, [])
+
+  useEffect(() => {
+    axios.post("/api/authWithGithub").then((resp) => {
+      console.log("resp from github api", resp)
+    })
+  }, [authCode])
 
   return (
     <authContext.Provider value={providerValue}>
