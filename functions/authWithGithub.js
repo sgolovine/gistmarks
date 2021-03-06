@@ -29,7 +29,16 @@ exports.handler = async function (event, _context, callback) {
       method: "POST",
       url: `https://github.com/login/oauth/access_token?${query}`,
     })
-    console.log("resp from API", resp)
+    const parsedResp = qs.parse(resp.data)
+
+    callback(null, {
+      statusCode: 200,
+      body: JSON.stringify({
+        accessToken: parsedResp.access_token,
+        scope: parsedResp.scope,
+        tokenType: parsedResp.token_type,
+      }),
+    })
   } catch {
     callback(null, {
       statusCode: 400,
