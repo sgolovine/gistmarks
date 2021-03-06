@@ -8,6 +8,8 @@ interface AuthContext {
   accessToken: string | null
   scope: string | null
   tokenType: string | null
+  isLoggedIn: boolean
+  logout: () => void
 }
 
 type AuthState = Pick<
@@ -20,6 +22,8 @@ export const authContext = createContext<AuthContext>({
   accessToken: null,
   scope: null,
   tokenType: null,
+  isLoggedIn: false,
+  logout: () => null,
 })
 
 export const AuthContextProvider: React.FC<ContextProviderProps> = ({
@@ -32,16 +36,17 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
     tokenType: null,
   })
 
+  // Helper function - set state
   const setState = (key: keyof AuthState, value: string) =>
     setAuthState({ ...authState, [key]: value })
 
+  // Helper function - persist state
   const persistState = ({
     authCode,
     accessToken,
     scope,
     tokenType,
   }: AuthState) => {
-    console.log("[DEV] [AUTH] Persisting State")
     const value = JSON.stringify({
       authCode,
       accessToken,
@@ -51,13 +56,28 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
     localStorage.setItem(AUTH_STORAGE_KEY, value)
   }
 
+  const logout = () => {
+    setAuthState({
+      authCode: null,
+      accessToken: null,
+      scope: null,
+      tokenType: null,
+    })
+    localStorage.removeItem(AUTH_STORAGE_KEY)
+  }
+
   const providerValue: AuthContext = {
     authCode: authState.authCode,
     accessToken: authState.accessToken,
     scope: authState.scope,
     tokenType: authState.tokenType,
+    isLoggedIn:
+      !!authState.accessToken && !!authState.scope && !!authState.tokenType,
+    logout,
   }
 
+  // Once we are redirected back from github, look at the URL
+  // and grab the code
   useEffect(() => {
     if (typeof window !== undefined) {
       if (window.location.search.includes("?code=")) {
@@ -67,14 +87,16 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
     }
   }, [])
 
+  // Rehydrate context from local storage
   useEffect(() => {
     const authState = localStorage.getItem(AUTH_STORAGE_KEY)
     if (authState) {
       const value = JSON.parse(authState)
-      console.log("[DEV] [AUTH] STATE RETURNED", value)
     }
   }, [])
 
+  // After we get an authcode, call out to our API to get
+  // the access token
   useEffect(() => {
     if (authState.authCode) {
       axios
