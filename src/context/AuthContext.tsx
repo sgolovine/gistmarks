@@ -17,7 +17,7 @@ type AuthState = Pick<
   "authCode" | "accessToken" | "scope" | "tokenType"
 >
 
-export const authContext = createContext<AuthContext>({
+export const AuthContext = createContext<AuthContext>({
   authCode: null,
   accessToken: null,
   scope: null,
@@ -122,8 +122,8 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   }, [authState.authCode])
 
   return (
-    <authContext.Provider value={providerValue}>
+    <AuthContext.Provider value={providerValue}>
       {children}
-    </authContext.Provider>
+    </AuthContext.Provider>
   )
 }
