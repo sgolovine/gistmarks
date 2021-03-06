@@ -1,13 +1,17 @@
 import React from "react"
 import { AppProps } from "next/app"
+import { LayoutContextProvider, AuthContextProvider } from "~/context"
+
 import "~/styles/tailwind.css"
-import LayoutContextProvider from "~/components/context/layoutContext"
+import "~/styles/button.css"
 
 const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
-    <LayoutContextProvider>
-      <Component {...pageProps} />
-    </LayoutContextProvider>
+    <AuthContextProvider>
+      <LayoutContextProvider>
+        <Component {...pageProps} />
+      </LayoutContextProvider>
+    </AuthContextProvider>
   )
 }
 

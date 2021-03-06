@@ -1,5 +1,5 @@
 import React, { ReactNode, useContext } from "react"
-import { LayoutContext } from "./context/layoutContext"
+import { LayoutContext } from "../context/LayoutContext"
 import CreatePanel from "./CreatePanel"
 import Header from "./Header"
 import Sidebar from "./Sidebar"

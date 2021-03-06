@@ -1,4 +1,10 @@
 [build]
   base = "/"
   publish = "/out"
+  functions = "/functions"
   command = "yarn build"
+
+[[ redirects ]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200

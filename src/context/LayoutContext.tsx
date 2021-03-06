@@ -1,14 +1,11 @@
 import React, { useState, createContext, ReactNode } from "react"
+import { ContextProviderProps } from "~/model/Context"
 
 interface LayoutContext {
   toggleCreatePanel: () => void
   toggleSidebar: () => void
   createPanelOpen: boolean
   sidebarOpen: boolean
-}
-
-interface LayoutContextProvider {
-  children: ReactNode
 }
 
 export const LayoutContext = createContext<LayoutContext>({
@@ -18,7 +15,7 @@ export const LayoutContext = createContext<LayoutContext>({
   sidebarOpen: true,
 })
 
-const LayoutContextProvider: React.FC<LayoutContextProvider> = ({
+export const LayoutContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
   const [createPanelOpen, setCreatePanelOpen] = useState<boolean>(false)
@@ -38,5 +35,3 @@ const LayoutContextProvider: React.FC<LayoutContextProvider> = ({
     <LayoutContext.Provider value={value}>{children}</LayoutContext.Provider>
   )
 }
-
-export default LayoutContextProvider
