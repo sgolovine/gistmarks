@@ -1,4 +1,5 @@
 import React from "react"
+import { Bookmark, BookmarkList } from "~/components/bookmark"
 // import Bookmark from "~/components/Bookmark"
 import Layout from "~/components/Layout"
 
@@ -19,7 +20,12 @@ type BookmarkListProps = {
 
 const Index = () => {
   const arr = new Array(100).fill(1)
-  return <Layout>{/* <BookmarkList data={arr} /> */}</Layout>
+  return (
+    <Layout>
+      {/* <BookmarkList data={arr} /> */}
+      <Bookmark />
+    </Layout>
+  )
 }
 
 export default Index
