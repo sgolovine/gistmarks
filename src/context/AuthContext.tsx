@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext, ReactNode } from "react"
 import { ContextProviderProps } from "~/model/Context"
 import axios from "axios"
 import { AUTH_STORAGE_KEY } from "~/defines/localStorage"
+import { makePublicRouterInstance, useRouter } from "next/router"
 
 interface AuthContext {
   authCode: string | null
@@ -29,6 +30,8 @@ export const AuthContext = createContext<AuthContext>({
 export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
+  const router = useRouter()
+
   const [authState, setAuthState] = useState<AuthState>({
     authCode: null,
     accessToken: null,
@@ -41,14 +44,8 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
     setAuthState({ ...authState, [key]: value })
 
   // Helper function - persist state
-  const persistState = ({
-    authCode,
-    accessToken,
-    scope,
-    tokenType,
-  }: AuthState) => {
+  const persistState = ({ accessToken, scope, tokenType }: AuthState) => {
     const value = JSON.stringify({
-      authCode,
       accessToken,
       scope,
       tokenType,
@@ -76,6 +73,31 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
     logout,
   }
 
+  // Rehydrate context from local storage
+  useEffect(() => {
+    // If the URL bar contains a ?code=, then we know that
+    // We are currently in the auth flow and we should
+    // ignore rehydration
+    if (
+      typeof window !== undefined &&
+      window.location.search.includes("?code=")
+    ) {
+      return
+    } else {
+      const persistedAuthState = localStorage.getItem(AUTH_STORAGE_KEY)
+      if (persistedAuthState) {
+        const value = JSON.parse(persistedAuthState)
+        const { accessToken, tokenType, scope } = value
+        setAuthState({
+          ...authState,
+          accessToken,
+          tokenType,
+          scope,
+        })
+      }
+    }
+  }, [])
+
   // Once we are redirected back from github, look at the URL
   // and grab the code
   useEffect(() => {
@@ -83,15 +105,9 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
       if (window.location.search.includes("?code=")) {
         const code = window.location.search.replace("?code=", "")
         setState("authCode", code)
+        // Now remove the code from the URL bar
+        router.replace("/", undefined, { shallow: true })
       }
-    }
-  }, [])
-
-  // Rehydrate context from local storage
-  useEffect(() => {
-    const authState = localStorage.getItem(AUTH_STORAGE_KEY)
-    if (authState) {
-      const value = JSON.parse(authState)
     }
   }, [])
 
