@@ -13,7 +13,7 @@ export const omitKey = (key: string, data: { [key: string]: unknown }) => {
   }, {})
 }
 
-export function generateUUID() {
+export const generateUUID = () => {
   const guid = uuidv4()
   return guid
 }
