@@ -1,5 +1,6 @@
 import React, { useState, createContext, ReactNode } from "react"
 import { ContextProviderProps } from "~/model/Context"
+import { ContextDevTool } from "react-context-devtool"
 
 interface LayoutContext {
   toggleCreatePanel: () => void
@@ -32,6 +33,15 @@ export const LayoutContextProvider: React.FC<ContextProviderProps> = ({
   }
 
   return (
-    <LayoutContext.Provider value={value}>{children}</LayoutContext.Provider>
+    <LayoutContext.Provider value={value}>
+      {children}
+      {process.env.NODE_ENV === "development" && (
+        <ContextDevTool
+          context={LayoutContext}
+          id="layoutContext"
+          displayName="Layout Context"
+        />
+      )}
+    </LayoutContext.Provider>
   )
 }

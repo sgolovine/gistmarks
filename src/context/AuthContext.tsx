@@ -3,6 +3,7 @@ import { ContextProviderProps } from "~/model/Context"
 import axios from "axios"
 import { AUTH_STORAGE_KEY } from "~/defines/localStorage"
 import { makePublicRouterInstance, useRouter } from "next/router"
+import { ContextDevTool } from "react-context-devtool"
 
 interface AuthContext {
   authCode: string | null
@@ -140,6 +141,13 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   return (
     <AuthContext.Provider value={providerValue}>
       {children}
+      {process.env.NODE_ENV === "development" && (
+        <ContextDevTool
+          context={AuthContext}
+          id="authContext"
+          displayName="Auth Context"
+        />
+      )}
     </AuthContext.Provider>
   )
 }
