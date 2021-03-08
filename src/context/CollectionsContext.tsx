@@ -32,6 +32,7 @@ export const CollectionsContextProvider: React.FC<ContextProviderProps> = ({
     if (data) {
       const parsedData = JSON.parse(data)
       setCollections(parsedData.collections)
+      setActiveCollection(parsedData.activeCollection)
     }
   }, [])
 
@@ -39,9 +40,9 @@ export const CollectionsContextProvider: React.FC<ContextProviderProps> = ({
   useEffect(() => {
     localStorage.setItem(
       COLLECTIONS_STORAGE_KEY,
-      JSON.stringify({ collections })
+      JSON.stringify({ collections, activeCollection })
     )
-  }, [collections])
+  }, [collections, activeCollection])
 
   const add = (collection: string) => {
     setCollections(uniq([...collections, collection]))
