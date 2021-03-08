@@ -1,8 +1,10 @@
-import React from "react"
+import React, { useContext } from "react"
+import { BookmarkContext, EditorStateContext, LayoutContext } from "~/context"
 import EditIcon from "../icons/EditIcon"
 import TrashIcon from "../icons/TrashIcon"
 
 interface Props {
+  guid: string
   title?: string
   href?: string
   description?: string
@@ -10,7 +12,34 @@ interface Props {
 
 const CARD_SIZE = "72"
 
-export const Bookmark: React.FC<Props> = ({ title, href, description }) => {
+export const Bookmark: React.FC<Props> = ({
+  guid,
+  title,
+  href,
+  description,
+}) => {
+  const editorStateContext = useContext(EditorStateContext)
+  const bookmarkContext = useContext(BookmarkContext)
+  const layoutContext = useContext(LayoutContext)
+
+  const handleEdit = () => {
+    const bookmark = bookmarkContext.data.bookmarks[guid]
+    if (bookmark) {
+      editorStateContext.setFields({
+        guid,
+        name: bookmark.name,
+        href: bookmark.href,
+        description: bookmark.description,
+        category: bookmark.category,
+      })
+      layoutContext.toggleEditPanel()
+    }
+  }
+
+  const handleDelete = () => {
+    bookmarkContext.actions.removeBookmark(guid)
+  }
+
   return (
     <div
       className={`border h-${CARD_SIZE} w-${CARD_SIZE} m-2 p-2 rounded hover:shadow`}
@@ -34,12 +63,18 @@ export const Bookmark: React.FC<Props> = ({ title, href, description }) => {
           </div>
         </div>
         <div className="flex flex-row items-center">
-          <button className="border shadow rounded p-1 mr-2">
+          <button
+            className="border shadow rounded p-1 mr-2"
+            onClick={handleEdit}
+          >
             <div className="h-6 w-6">
               <EditIcon />
             </div>
           </button>
-          <button className="border shadow rounded p-1 ml-2">
+          <button
+            className="border shadow rounded p-1 ml-2"
+            onClick={handleDelete}
+          >
             <div className="h-6 w-6">
               <TrashIcon />
             </div>

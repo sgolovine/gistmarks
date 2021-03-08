@@ -4,27 +4,25 @@ import IconButton from "./common/IconButton"
 import MenuIcon from "./icons/MenuIcon"
 import { buildAuthUrl } from "~/helpers"
 import { AuthContext, LayoutContext } from "~/context"
+import { useRouter } from "next/router"
 
 const authUrl = buildAuthUrl()
 
 const Header: React.FC = () => {
+  const router = useRouter()
   const layoutContext = useContext(LayoutContext)
   const authContext = useContext(AuthContext)
   const buttonText = layoutContext.createPanelOpen
     ? "Close Window"
     : "Create Bookmark"
 
-  const renderLoginButton = () => (
-    <LinkButton href={authUrl} label="Login" additionalClassnames="w-36 mx-2" />
-  )
-
-  const renderLogoutButton = () => (
-    <Button
-      onClick={authContext.logout}
-      label="Logout"
-      additionalClassnames="w-36 mx-2"
-    />
-  )
+  const handleAuth = () => {
+    if (authContext.isLoggedIn) {
+      authContext.logout()
+    } else {
+      router.push(authUrl)
+    }
+  }
 
   return (
     <div className="border h-12 flex flex-row justify-between items-center px-4">
@@ -35,7 +33,11 @@ const Header: React.FC = () => {
         <p className="text-lg font-bold">GistMarks</p>
       </div>
       <div>
-        {authContext.isLoggedIn ? renderLogoutButton() : renderLoginButton()}
+        <Button
+          onClick={handleAuth}
+          label={authContext.isLoggedIn ? "Log Out" : "Log In"}
+          additionalClassnames="w-36 mx-2"
+        />
         <Button
           onClick={layoutContext.toggleCreatePanel}
           label={buttonText}

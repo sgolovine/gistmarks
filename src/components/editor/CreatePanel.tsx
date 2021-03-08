@@ -3,7 +3,7 @@ import { BookmarkContext, LayoutContext } from "~/context"
 import { Bookmark } from "~/model/Bookmark"
 import Editor from "./Editor"
 
-const CreatePanel = () => {
+export const CreatePanel = () => {
   const bookmarkContext = useContext(BookmarkContext)
   const layoutContext = useContext(LayoutContext)
 
@@ -53,5 +53,3 @@ const CreatePanel = () => {
     />
   )
 }
-
-export default CreatePanel

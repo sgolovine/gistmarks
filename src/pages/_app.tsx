@@ -5,6 +5,7 @@ import {
   AuthContextProvider,
   CollectionsContextProvider,
   BookmarkContextProvider,
+  EditorStateContextProvider,
 } from "~/context"
 
 import "~/styles/tailwind.css"
@@ -16,7 +17,9 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
       <LayoutContextProvider>
         <CollectionsContextProvider>
           <BookmarkContextProvider>
-            <Component {...pageProps} />
+            <EditorStateContextProvider>
+              <Component {...pageProps} />
+            </EditorStateContextProvider>
           </BookmarkContextProvider>
         </CollectionsContextProvider>
       </LayoutContextProvider>

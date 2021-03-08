@@ -16,6 +16,8 @@ export const BookmarkList: React.FC = () => {
         const bookmarkData = bookmarkContext.data.bookmarks[key]
         return (
           <Bookmark
+            key={key}
+            guid={key}
             title={bookmarkData.name}
             href={bookmarkData.href}
             description={bookmarkData.description}
