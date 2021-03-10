@@ -1,4 +1,3 @@
-import { sendStatusCode } from "next/dist/next-server/server/api-utils"
 import React, { useContext, useState } from "react"
 import { BookmarkContext, LayoutContext } from "~/context"
 import { generateUUID } from "~/helpers"

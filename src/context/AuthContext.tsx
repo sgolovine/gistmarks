@@ -2,7 +2,6 @@ import React, { useState, useEffect, createContext, ReactNode } from "react"
 import { ContextProviderProps } from "~/model/Context"
 import axios from "axios"
 import { AUTH_STORAGE_KEY } from "~/defines/localStorage"
-import { makePublicRouterInstance, useRouter } from "next/router"
 import { ContextDevTool } from "react-context-devtool"
 
 interface AuthContext {
@@ -31,8 +30,6 @@ export const AuthContext = createContext<AuthContext>({
 export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  const router = useRouter()
-
   const [authState, setAuthState] = useState<AuthState>({
     authCode: null,
     accessToken: null,
@@ -107,7 +104,9 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
         const code = window.location.search.replace("?code=", "")
         setState("authCode", code)
         // Now remove the code from the URL bar
-        router.replace("/", undefined, { shallow: true })
+        // router.replace("/", undefined, { shallow: true })
+        alert("Router stub")
+        console.log("Fix this @: AuthContext.tsx")
       }
     }
   }, [])

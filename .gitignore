@@ -4,6 +4,7 @@ out
 # dotenv environment variables file (build for Zeit Now)
 .env.development
 .env.production
+.env
 # Dependency directories
 node_modules/
 # Logs
