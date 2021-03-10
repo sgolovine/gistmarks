@@ -8,11 +8,11 @@ import {
   EditorStateContextProvider,
   LayoutContextProvider,
 } from "~/context"
-import { store } from "~/redux"
+import DebugWindow from "~/components/DebugWindow"
 
 import "~/styles/tailwind.css"
 import "~/styles/button.css"
-import DebugWindow from "~/components/DebugWindow"
+import "~/styles/form.css"
 
 interface ContextWrapperProps {
   children: ReactNode
@@ -43,12 +43,10 @@ const AppModals = () => {
 const App = () => {
   return (
     <ContextWrapper>
-      <Provider store={store}>
-        <Layout>
-          <BookmarkList />
-        </Layout>
-        <AppModals />
-      </Provider>
+      <Layout>
+        <BookmarkList />
+      </Layout>
+      <AppModals />
     </ContextWrapper>
   )
 }
