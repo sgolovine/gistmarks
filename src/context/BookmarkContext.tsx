@@ -4,6 +4,7 @@ import { ContextProviderProps } from "~/model/Context"
 import { ContextDevTool } from "react-context-devtool"
 import { BOOKMARK_STORAGE_KEY } from "~/defines/localStorage"
 import { generateUUID, omitKey } from "~/helpers"
+import { dev } from "~/helpers/isDev"
 
 type BookmarkMeta = {
   name: string | null
@@ -141,7 +142,7 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
   return (
     <BookmarkContext.Provider value={providerValue}>
       {children}
-      {process.env.NODE_ENV === "development" && (
+      {dev && (
         <ContextDevTool
           context={BookmarkContext}
           id="authContext"

@@ -4,6 +4,7 @@ import IconButton from "./common/IconButton"
 import MenuIcon from "./icons/MenuIcon"
 import { buildAuthUrl } from "~/helpers"
 import { AuthContext, LayoutContext } from "~/context"
+import { dev } from "~/helpers/isDev"
 
 const authUrl = buildAuthUrl()
 
@@ -32,6 +33,13 @@ const Header: React.FC = () => {
         <p className="text-lg font-bold">GistMarks</p>
       </div>
       <div>
+        {dev && (
+          <Button
+            onClick={layoutContext.toggleDevModal}
+            label={"Debug"}
+            additionalClassnames="w-36 mx-2"
+          />
+        )}
         <Button
           onClick={handleAuth}
           label={authContext.isLoggedIn ? "Log Out" : "Log In"}

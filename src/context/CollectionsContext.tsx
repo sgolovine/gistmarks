@@ -3,6 +3,7 @@ import { COLLECTIONS_STORAGE_KEY } from "~/defines/localStorage"
 import { removeItem, uniq } from "~/helpers"
 import { ContextProviderProps } from "~/model/Context"
 import { ContextDevTool } from "react-context-devtool"
+import { dev } from "~/helpers/isDev"
 
 interface CollectionsContext {
   collections: string[]
@@ -67,7 +68,7 @@ export const CollectionsContextProvider: React.FC<ContextProviderProps> = ({
   return (
     <CollectionsContext.Provider value={contextValue}>
       {children}
-      {process.env.NODE_ENV === "development" && (
+      {dev && (
         <ContextDevTool
           context={CollectionsContext}
           id="collectionsContext"

@@ -10,11 +10,13 @@ import {
 
 import "~/styles/tailwind.css"
 import "~/styles/button.css"
+import DebugWindow from "~/components/DebugWindow"
 
 interface ContextWrapperProps {
   children: ReactNode
 }
 
+// Contexts used by the app
 const ContextWrapper: React.FC<ContextWrapperProps> = ({ children }) => {
   return (
     <AuthContextProvider>
@@ -27,13 +29,22 @@ const ContextWrapper: React.FC<ContextWrapperProps> = ({ children }) => {
   )
 }
 
+// Modals used by the app
+const AppModals = () => {
+  return (
+    <>
+      <DebugWindow />
+    </>
+  )
+}
+
 const App = () => {
-  // return <h1>App.js</h1>
   return (
     <ContextWrapper>
       <Layout>
         <BookmarkList />
       </Layout>
+      <AppModals />
     </ContextWrapper>
   )
 }

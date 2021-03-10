@@ -4,26 +4,56 @@ const HtmlWebpackPlugin = require("html-webpack-plugin")
 const webpack = require("webpack")
 const Dotenv = require("dotenv-webpack")
 const WebpackBar = require("webpackbar")
+const TerserPlugin = require("terser-webpack-plugin")
+
+// Helpers
+const dev = process.env.NODE_ENV === "development"
 
 // Variables
-const devFolder = "__dev__"
-const devFolderPath = path.resolve(__dirname, devFolder)
+const devFolderPath = path.resolve(__dirname, "__dev__")
+const prodFolderPath = path.resolve(__dirname, "dist")
 
 module.exports = {
-  mode: "development",
-  devtool: "cheap-module-source-map",
+  mode: dev ? "development" : "production",
+  devtool: dev ? "cheap-module-source-map" : false,
   entry: path.resolve(__dirname, "src", "entry", "index.tsx"),
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx", ".html", ".css"],
   },
   output: {
-    path: devFolderPath,
+    path: dev ? devFolderPath : prodFolderPath,
     filename: "[name].[contenthash].bundle.js",
   },
   devServer: {
     contentBase: devFolderPath,
     hot: true,
     port: 3000,
+  },
+  optimization: {
+    minimize: true,
+    nodeEnv: "production",
+    concatenateModules: true,
+    runtimeChunk: "single",
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        extractComments: "all",
+        terserOptions: {
+          warnings: true,
+          compress: {
+            drop_console: true,
+            drop_debugger: true,
+          },
+          parse: {},
+          mangle: true,
+        },
+      }),
+    ],
+    splitChunks: {
+      chunks: "all",
+      maxInitialRequests: 10,
+      minSize: 0,
+    },
   },
   module: {
     rules: [
