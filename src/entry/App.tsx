@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react"
 import { BookmarkList } from "~/components/bookmark"
 import Layout from "~/components/Layout"
-import { Provider } from "react-redux"
 import {
   AuthContextProvider,
   CollectionsContextProvider,
