@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin")
 const webpack = require("webpack")
 const Dotenv = require("dotenv-webpack")
 const WebpackBar = require("webpackbar")
+const TerserPlugin = require("terser-webpack-plugin")
 
 // Helpers
 const dev = process.env.NODE_ENV === "development"
@@ -27,6 +28,33 @@ module.exports = {
     contentBase: devFolderPath,
     hot: true,
     port: 3000,
+  },
+  optimization: {
+    minimize: true,
+    nodeEnv: "production",
+    concatenateModules: true,
+    runtimeChunk: "single",
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        cache: true,
+        extractComments: "all",
+        terserOptions: {
+          warnings: true,
+          compress: {
+            drop_console: true,
+            drop_debugger: true,
+          },
+          parse: {},
+          mangle: true,
+        },
+      }),
+    ],
+    splitChunks: {
+      chunks: "all",
+      maxInitialRequests: 10,
+      minSize: 0,
+    },
   },
   module: {
     rules: [
