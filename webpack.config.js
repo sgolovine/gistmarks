@@ -5,19 +5,22 @@ const webpack = require("webpack")
 const Dotenv = require("dotenv-webpack")
 const WebpackBar = require("webpackbar")
 
+// Helpers
+const dev = process.env.NODE_ENV === "development"
+
 // Variables
-const devFolder = "__dev__"
-const devFolderPath = path.resolve(__dirname, devFolder)
+const devFolderPath = path.resolve(__dirname, "__dev__")
+const prodFolderPath = path.resolve(__dirname, "dist")
 
 module.exports = {
-  mode: "development",
-  devtool: "cheap-module-source-map",
+  mode: dev ? "development" : "production",
+  devtool: dev ? "cheap-module-source-map" : false,
   entry: path.resolve(__dirname, "src", "entry", "index.tsx"),
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx", ".html", ".css"],
   },
   output: {
-    path: devFolderPath,
+    path: dev ? devFolderPath : prodFolderPath,
     filename: "[name].[contenthash].bundle.js",
   },
   devServer: {
