@@ -1,19 +1,23 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const webpack = require("webpack")
+
+const devFolder = "__dev__"
+const devFolderPath = path.resolve(__dirname, devFolder)
 
 module.exports = {
   mode: "development",
   devtool: "cheap-module-source-map",
-  entry: "./src/index.tsx",
+  entry: "./src/entry/index.tsx",
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx", ".html", ".css"],
   },
   output: {
-    path: path.resolve(__dirname, "__dev__"),
+    path: devFolderPath,
     filename: "[name].[contenthash].bundle.js",
   },
   devServer: {
-    contentBase: path.resolve(__dirname, "__dev__"),
+    contentBase: devFolderPath,
     hot: true,
     port: 3000,
   },
@@ -31,5 +35,12 @@ module.exports = {
       },
     ],
   },
-  plugins: [new HtmlWebpackPlugin({ template: "./src/index.html" })],
-};
+  plugins: [
+    new HtmlWebpackPlugin({ template: "./src/entry/index.html" }),
+    new webpack.DefinePlugin({
+      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+      GITHUB_CLIENT_ID: JSON.stringify(process.env.GITHUB_CLIENT_ID),
+      REDIRECT_URI: JSON.stringify(process.env.REDIRECT_URI),
+    }),
+  ],
+}

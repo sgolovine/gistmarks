@@ -4,12 +4,10 @@ import IconButton from "./common/IconButton"
 import MenuIcon from "./icons/MenuIcon"
 import { buildAuthUrl } from "~/helpers"
 import { AuthContext, LayoutContext } from "~/context"
-import { useRouter } from "next/router"
 
 const authUrl = buildAuthUrl()
 
 const Header: React.FC = () => {
-  const router = useRouter()
   const layoutContext = useContext(LayoutContext)
   const authContext = useContext(AuthContext)
   const buttonText = layoutContext.createPanelOpen
@@ -20,7 +18,8 @@ const Header: React.FC = () => {
     if (authContext.isLoggedIn) {
       authContext.logout()
     } else {
-      router.push(authUrl)
+      alert("Stub for navigation")
+      console.log("Fix this @: Header.tsx")
     }
   }
 
