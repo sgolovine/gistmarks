@@ -1,9 +1,9 @@
-import { sendStatusCode } from "next/dist/next-server/server/api-utils"
 import React, { useContext, useState } from "react"
 import { BookmarkContext, LayoutContext } from "~/context"
 import { generateUUID } from "~/helpers"
 import { Bookmark } from "~/model/Bookmark"
 import Button from "~/components/common/Button"
+import { dev } from "~/helpers/isDev"
 
 export interface EditorProps {
   name: string
@@ -30,7 +30,7 @@ const Editor: React.FC<EditorProps> = ({
     <div className="min-w-create-panel border">
       <div>
         <p className="font-bold text-2xl p-1">Create Bookmark</p>
-        {process.env.NODE_ENV === "development" && (
+        {dev && (
           <div className="flex flex-col py-2 px-1">
             <label className="text-sm font-bold">Dev Options</label>
             <div>

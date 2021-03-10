@@ -1,67 +1,80 @@
 import React, { useState, createContext, ReactNode, useEffect } from "react"
 import { ContextProviderProps } from "~/model/Context"
 import { ContextDevTool } from "react-context-devtool"
+import { dev } from "~/helpers/isDev"
 
-interface LayoutContext {
-  toggleCreatePanel: () => void
-  toggleEditPanel: () => void
-  toggleSidebar: () => void
-  toggleCollectionModal: () => void
+interface LayoutContextState {
   createPanelOpen: boolean
   editPanelOpen: boolean
   sidebarOpen: boolean
+  devModalOpen: boolean
   collectionModalOpen: boolean
 }
 
-export const LayoutContext = createContext<LayoutContext>({
-  toggleCreatePanel: () => null,
-  toggleEditPanel: () => null,
-  toggleSidebar: () => null,
-  toggleCollectionModal: () => null,
-  createPanelOpen: false,
-  editPanelOpen: false,
-  sidebarOpen: true,
-  collectionModalOpen: false,
-})
+interface LayoutContextActions {
+  toggleCreatePanel: () => void
+  toggleEditPanel: () => void
+  toggleSidebar: () => void
+  toggleDevModal: () => void
+  toggleCollectionModal: () => void
+}
+
+type LayoutContext = LayoutContextState & LayoutContextActions
+
+export const LayoutContext = createContext<LayoutContext>({} as LayoutContext)
 
 export const LayoutContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  const [createPanelOpen, setCreatePanelOpen] = useState<boolean>(false)
-  const [editPanelOpen, setEditPanelOpen] = useState<boolean>(false)
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(true)
-  const [collectionModalOpen, setCollectionModalOpen] = useState<boolean>(false)
+  const [layoutState, setLayoutState] = useState<LayoutContextState>({
+    createPanelOpen: false,
+    editPanelOpen: false,
+    sidebarOpen: true,
+    devModalOpen: false,
+    collectionModalOpen: false,
+  })
 
-  const toggleCreatePanel = () => setCreatePanelOpen(!createPanelOpen)
-  const toggleEditPanel = () => setEditPanelOpen(!editPanelOpen)
-  const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
-  const toggleCollectionModal = () =>
-    setCollectionModalOpen(!collectionModalOpen)
+  const toggle = (field: keyof LayoutContextState, newValue: boolean) => {
+    setLayoutState({
+      ...layoutState,
+      [field]: newValue,
+    })
+  }
 
+  // If we open the edit window, close the create window
   useEffect(() => {
-    if (createPanelOpen) {
-      setEditPanelOpen(false)
+    if (layoutState.createPanelOpen) {
+      toggle("editPanelOpen", false)
+      return
     }
-    if (editPanelOpen) {
-      setCreatePanelOpen(false)
+    if (layoutState.editPanelOpen) {
+      toggle("createPanelOpen", false)
+      return
     }
-  }, [editPanelOpen, createPanelOpen])
+  }, [layoutState.editPanelOpen, layoutState.createPanelOpen])
 
-  const value: LayoutContext = {
-    createPanelOpen,
-    editPanelOpen,
-    sidebarOpen,
-    collectionModalOpen,
-    toggleCreatePanel,
-    toggleEditPanel,
-    toggleSidebar,
-    toggleCollectionModal,
+  const states: LayoutContextState = {
+    createPanelOpen: layoutState.createPanelOpen,
+    editPanelOpen: layoutState.editPanelOpen,
+    sidebarOpen: layoutState.sidebarOpen,
+    devModalOpen: layoutState.devModalOpen,
+    collectionModalOpen: layoutState.collectionModalOpen,
+  }
+
+  const actions: LayoutContextActions = {
+    toggleCreatePanel: () =>
+      toggle("createPanelOpen", !layoutState.createPanelOpen),
+    toggleEditPanel: () => toggle("editPanelOpen", !layoutState.editPanelOpen),
+    toggleSidebar: () => toggle("sidebarOpen", !layoutState.sidebarOpen),
+    toggleDevModal: () => toggle("devModalOpen", !layoutState.devModalOpen),
+    toggleCollectionModal: () =>
+      toggle("collectionModalOpen", !layoutState.collectionModalOpen),
   }
 
   return (
-    <LayoutContext.Provider value={value}>
+    <LayoutContext.Provider value={{ ...states, ...actions }}>
       {children}
-      {process.env.NODE_ENV === "development" && (
+      {dev && (
         <ContextDevTool
           context={LayoutContext}
           id="layoutContext"
