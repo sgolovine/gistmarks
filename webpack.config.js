@@ -3,7 +3,6 @@ const path = require("path")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const webpack = require("webpack")
 const Dotenv = require("dotenv-webpack")
-const WebpackBar = require("webpackbar")
 const TerserPlugin = require("terser-webpack-plugin")
 
 // Helpers
@@ -27,7 +26,7 @@ module.exports = {
   devServer: {
     contentBase: devFolderPath,
     hot: true,
-    port: 3000,
+    port: 3001,
   },
   optimization: {
     minimize: true,
@@ -79,6 +78,5 @@ module.exports = {
       systemvars: true,
       silent: true,
     }),
-    new WebpackBar(),
   ],
 }
