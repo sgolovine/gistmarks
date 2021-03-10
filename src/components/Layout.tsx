@@ -1,5 +1,6 @@
 import React, { ReactNode, useContext } from "react"
 import { LayoutContext } from "../context/LayoutContext"
+import { CollectionEditor } from "./collections/CollectionEditor"
 import { CreatePanel, EditPanel } from "./editor"
 import Header from "./Header"
 import Sidebar from "./Sidebar"
@@ -21,6 +22,7 @@ const Layout: React.FC<Props> = ({ children }) => {
         {layoutContext.createPanelOpen && <CreatePanel />}
         {layoutContext.editPanelOpen && <EditPanel />}
       </div>
+      <CollectionEditor />
     </div>
   )
 }

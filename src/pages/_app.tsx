@@ -10,6 +10,7 @@ import {
 
 import "~/styles/tailwind.css"
 import "~/styles/button.css"
+import "~/styles/form.css"
 
 const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (

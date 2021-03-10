@@ -6,18 +6,22 @@ interface LayoutContext {
   toggleCreatePanel: () => void
   toggleEditPanel: () => void
   toggleSidebar: () => void
+  toggleCollectionModal: () => void
   createPanelOpen: boolean
   editPanelOpen: boolean
   sidebarOpen: boolean
+  collectionModalOpen: boolean
 }
 
 export const LayoutContext = createContext<LayoutContext>({
   toggleCreatePanel: () => null,
   toggleEditPanel: () => null,
   toggleSidebar: () => null,
+  toggleCollectionModal: () => null,
   createPanelOpen: false,
   editPanelOpen: false,
   sidebarOpen: true,
+  collectionModalOpen: false,
 })
 
 export const LayoutContextProvider: React.FC<ContextProviderProps> = ({
@@ -26,10 +30,13 @@ export const LayoutContextProvider: React.FC<ContextProviderProps> = ({
   const [createPanelOpen, setCreatePanelOpen] = useState<boolean>(false)
   const [editPanelOpen, setEditPanelOpen] = useState<boolean>(false)
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true)
+  const [collectionModalOpen, setCollectionModalOpen] = useState<boolean>(false)
 
   const toggleCreatePanel = () => setCreatePanelOpen(!createPanelOpen)
   const toggleEditPanel = () => setEditPanelOpen(!editPanelOpen)
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
+  const toggleCollectionModal = () =>
+    setCollectionModalOpen(!collectionModalOpen)
 
   useEffect(() => {
     if (createPanelOpen) {
@@ -44,9 +51,11 @@ export const LayoutContextProvider: React.FC<ContextProviderProps> = ({
     createPanelOpen,
     editPanelOpen,
     sidebarOpen,
+    collectionModalOpen,
     toggleCreatePanel,
     toggleEditPanel,
     toggleSidebar,
+    toggleCollectionModal,
   }
 
   return (
