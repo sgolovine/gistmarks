@@ -7,6 +7,8 @@ import {
   BookmarkContextProvider,
   EditorStateContextProvider,
 } from "~/context"
+import { Provider } from "react-redux"
+import { store } from "~/redux"
 
 import "~/styles/tailwind.css"
 import "~/styles/button.css"
@@ -19,7 +21,9 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         <CollectionsContextProvider>
           <BookmarkContextProvider>
             <EditorStateContextProvider>
-              <Component {...pageProps} />
+              <Provider store={store}>
+                <Component {...pageProps} />
+              </Provider>
             </EditorStateContextProvider>
           </BookmarkContextProvider>
         </CollectionsContextProvider>
