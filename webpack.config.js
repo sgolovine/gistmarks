@@ -1,14 +1,18 @@
 const path = require("path")
+// Webpack Plugins
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const webpack = require("webpack")
+const Dotenv = require("dotenv-webpack")
+const WebpackBar = require("webpackbar")
 
+// Variables
 const devFolder = "__dev__"
 const devFolderPath = path.resolve(__dirname, devFolder)
 
 module.exports = {
   mode: "development",
   devtool: "cheap-module-source-map",
-  entry: "./src/entry/index.tsx",
+  entry: path.resolve(__dirname, "src", "entry", "index.tsx"),
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx", ".html", ".css"],
   },
@@ -36,11 +40,15 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: "./src/entry/index.html" }),
-    new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
-      GITHUB_CLIENT_ID: JSON.stringify(process.env.GITHUB_CLIENT_ID),
-      REDIRECT_URI: JSON.stringify(process.env.REDIRECT_URI),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, "src", "entry", "index.html"),
     }),
+    new Dotenv({
+      path: path.resolve(__dirname, ".env"),
+      safe: true,
+      systemvars: true,
+      silent: true,
+    }),
+    new WebpackBar(),
   ],
 }
