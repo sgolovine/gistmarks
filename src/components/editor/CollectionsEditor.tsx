@@ -21,7 +21,7 @@ interface Props {
 }
 
 export const CollectionsEditor: React.FC<Props> = ({
-  collectionType,
+  collectionType = "local",
   collectionName,
   collectionDescription,
   collectionGistId,
@@ -44,7 +44,6 @@ export const CollectionsEditor: React.FC<Props> = ({
         <label className="form-label">Collection Type</label>
         <select
           className="form-field"
-          defaultValue="local"
           value={collectionType}
           onChange={(e) =>
             onCollectionTypeChange(e.target.value as CollectionType)

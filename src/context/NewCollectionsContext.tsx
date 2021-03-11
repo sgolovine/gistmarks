@@ -11,6 +11,7 @@ interface CollectionsState {
   collections: {
     [guid: string]: NewCollection
   }
+  activeCollection?: string
 }
 
 interface CollectionsActions {
@@ -21,6 +22,7 @@ interface CollectionsActions {
     collectionId: string,
     bookmarks: BookmarkCollection
   ) => void
+  setActiveCollection: (collectionId?: string) => void
 }
 
 type CollectionsContext = CollectionsState & CollectionsActions
@@ -35,6 +37,7 @@ export const NewCollectionsContextProvider: React.FC<ContextProviderProps> = ({
   const bookmarkContext = useContext(BookmarkContext)
   const [state, setState] = useState<CollectionsState>({
     collections: {},
+    activeCollection: undefined,
   })
 
   const addCollection = (collection: NewCollection) => {
@@ -44,14 +47,21 @@ export const NewCollectionsContextProvider: React.FC<ContextProviderProps> = ({
         ...state.collections,
         [collection.guid]: collection,
       },
+      activeCollection: collection.guid,
     })
   }
 
   const removeCollection = (collectionGuid: string) => {
     const newData = omitKey(collectionGuid, state.collections)
+    // Check if the collection about to be deleted is active. If it is then set the active collection to null
+    const newActiveCollection =
+      collectionGuid === state.activeCollection
+        ? undefined
+        : state.activeCollection
     setState({
       ...state,
       collections: newData,
+      activeCollection: newActiveCollection,
     })
   }
 
@@ -80,11 +90,19 @@ export const NewCollectionsContextProvider: React.FC<ContextProviderProps> = ({
     })
   }
 
+  const setActiveCollection = (newCollection?: string) => {
+    setState({
+      ...state,
+      activeCollection: newCollection,
+    })
+  }
+
   const actions: CollectionsActions = {
     addCollection,
     removeCollection,
     loadBookmarksFromCollection,
     saveBookmarksToCollection,
+    setActiveCollection,
   }
 
   return (

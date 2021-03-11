@@ -28,24 +28,26 @@ const SidebarCollectionsSection: React.FC = () => {
   const layoutContext = useContext(LayoutContext)
   const collectionKeys = Object.keys(collectionsContext.collections)
 
+  const handleEditClick = () => {}
+
   return (
     <div className="flex flex-row">
       <select
-        defaultValue={undefined}
-        onChange={(e) => null}
+        value={collectionsContext.activeCollection}
+        onChange={(e) => collectionsContext.setActiveCollection(e.target.value)}
         className="flex-grow mb-4 border p-1 rounded shadow mr-2"
       >
         {collectionKeys.map((key) => {
           const currentCollection = collectionsContext.collections[key]
 
           return (
-            <option value={currentCollection.guid}>
+            <option value={currentCollection.guid} key={key}>
               {currentCollection.name}
             </option>
           )
         })}
       </select>
-      {/* <IconButton onClick={() => layoutContext.toggleCollectionModal()}>
+      {/* <IconButton onClick={}>
         <EditIcon />
       </IconButton> */}
     </div>

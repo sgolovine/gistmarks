@@ -1,8 +1,10 @@
 import React, { useContext, useState } from "react"
 import { CollectionsEditor } from "./CollectionsEditor"
 import { CollectionsContext, LayoutContext } from "~/context"
-import { CollectionType } from "~/model/Collection"
+import { CollectionType, NewCollection } from "~/model/Collection"
 import { DEFAULT_COLLECTION_FILENAME } from "~/defines"
+import { generateUUID } from "~/helpers"
+import { NewCollectionsContext } from "~/context/NewCollectionsContext"
 
 interface State {
   collectionType: CollectionType
@@ -14,7 +16,7 @@ interface State {
 
 export const CreateCollectionsPanel: React.FC = () => {
   const layoutContext = useContext(LayoutContext)
-  const collectionsContext = useContext(CollectionsContext)
+  const collectionsContext = useContext(NewCollectionsContext)
 
   const [state, setState] = useState<State>({
     collectionType: "local",
@@ -59,9 +61,31 @@ export const CreateCollectionsPanel: React.FC = () => {
     })
   }
 
-  const handleCreate = () => {}
+  const handleCreate = () => {
+    if (!state.collectionName) {
+      alert("Missing collection name")
+      return
+    }
+    if (state.collectionType === "remote" && !state.collectionFilename) {
+      alert("Missing filename")
+      return
+    }
+    const guid = generateUUID()
+    const collection: NewCollection = {
+      guid,
+      name: state.collectionName,
+      description: state.collectionDescription,
+      bookmarks: {},
+      gistId: state.collectionGistId,
+      gistFilename: state.collectionFilename,
+    }
+    collectionsContext.addCollection(collection)
+    layoutContext.toggleCollectionsPanel()
+  }
 
-  const handleCancel = () => {}
+  const handleCancel = () => {
+    layoutContext.toggleCollectionsPanel()
+  }
 
   return (
     <CollectionsEditor

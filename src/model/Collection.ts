@@ -19,6 +19,8 @@ export interface NewCollection {
   bookmarks: BookmarkCollection
   // Remote Gist ID
   gistId: string | null
+  // gist filename
+  gistFilename: string | null
 }
 
 export type CollectionType = "local" | "remote"
