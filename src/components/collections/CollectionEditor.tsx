@@ -1,6 +1,9 @@
 import React, { useContext, useState } from "react"
 import Modal from "react-modal"
 import { LayoutContext } from "~/context"
+import { NewCollectionsContext } from "~/context/NewCollectionsContext"
+import { generateUUID } from "~/helpers"
+import { NewCollection } from "~/model/Collection"
 import Button from "../common/Button"
 import IconButton from "../common/IconButton"
 import CloseIcon from "../icons/CloseIcon"
@@ -15,6 +18,7 @@ interface FormState {
 
 export const CollectionEditor = () => {
   const layoutContext = useContext(LayoutContext)
+  const collectionsContext = useContext(NewCollectionsContext)
 
   const [formState, setFormState] = useState<FormState>({
     collectionType: "local",
@@ -36,6 +40,19 @@ export const CollectionEditor = () => {
       ...formState,
       [field]: newValue,
     })
+  }
+
+  const handleCreateCollection = () => {
+    const collectionGuid = generateUUID()
+    const collection: NewCollection = {
+      guid: collectionGuid,
+      name: formState.collectionName,
+      description: formState.collectionDescription,
+      bookmarks: {},
+      gistId: null,
+    }
+    console.log("about to create collection", collection)
+    // collectionsContext.addCollection(collection)
   }
 
   return (
@@ -131,10 +148,21 @@ export const CollectionEditor = () => {
           </>
         )}
         <div className="flex flex-row py-4">
-          <Button danger label="Cancel" additionalClassnames="mr-2" />
-          <Button label="Create" additionalClassnames="ml-2" />
+          <Button
+            danger
+            label="Cancel"
+            additionalClassnames="mr-2"
+            onClick={() => layoutContext.toggleCollectionModal()}
+          />
+          {/* <Button
+            label="Create"
+            onClick={() => console.log("this button has been clicked")}
+            additionalClassnames="ml-2"
+          /> */}
+          <button onClick={() => console.log("I have been clicked")}>
+            Click me!
+          </button>
         </div>
-        {/* <pre>{JSON.stringify(formState, null, 2)}</pre> */}
       </div>
     </Modal>
   )
