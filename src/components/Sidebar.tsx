@@ -45,9 +45,9 @@ const SidebarCollectionsSection: React.FC = () => {
           )
         })}
       </select>
-      <IconButton onClick={() => layoutContext.toggleCollectionModal()}>
+      {/* <IconButton onClick={() => layoutContext.toggleCollectionModal()}>
         <EditIcon />
-      </IconButton>
+      </IconButton> */}
     </div>
   )
 }
@@ -61,7 +61,7 @@ const Sidebar: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("")
 
   const handleCreateCollection = () => {
-    layoutContext.toggleCollectionModal()
+    layoutContext.toggleCollectionsPanel()
   }
 
   return (

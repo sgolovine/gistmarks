@@ -38,6 +38,7 @@ const Editor: React.FC<EditorProps> = ({
                 label="Autofill"
                 onClick={() =>
                   onDirectEdit({
+                    guid: generateUUID(),
                     name: "New bookmark",
                     href: "https://gistmarks.io",
                     description: "This is a sample description",

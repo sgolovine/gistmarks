@@ -9,6 +9,7 @@ export const EditPanel = () => {
   const editorState = useContext(EditorStateContext)
 
   const [state, setState] = useState<Bookmark>({
+    guid: editorState.guid,
     name: editorState.name,
     href: editorState.href,
     category: editorState.category,
@@ -27,7 +28,7 @@ export const EditPanel = () => {
     }
 
     if (editorState.guid) {
-      bookmarkContext.actions.addBookmark(state, editorState.guid)
+      bookmarkContext.actions.addBookmark(state)
       layoutContext.toggleCreatePanel()
     } else {
       alert("ERR: Unable to edit, no guid found")

@@ -19,13 +19,13 @@ type BookmarksData = {
 
 interface BookmarkContext {
   actions: {
-    addBookmark: (b: Bookmark, guid: string) => void
+    addBookmark: (bookmark: Bookmark) => void
     removeBookmark: (guid: string) => void
     editName: (name: string) => void
     editDescription: (desc: string) => void
     editGistID: (gistID: string) => void
     save: () => void
-    loadBookmarks: (c: NewCollection) => void
+    loadBookmarks: (collection: NewCollection) => void
   }
   data: {
     meta: BookmarkMeta
@@ -83,10 +83,10 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
     )
   }, [bookmarkMeta, bookmarkData])
 
-  const addBookmark = (bookmark: Bookmark, guid: string) => {
+  const addBookmark = (bookmark: Bookmark) => {
     setBookmarkData({
       ...bookmarkData,
-      [guid]: bookmark,
+      [bookmark.guid]: bookmark,
     })
   }
 

@@ -7,7 +7,7 @@ import { ContextProviderProps } from "~/model/Context"
 type Fields = "name" | "href" | "category" | "description"
 
 interface EditorStateContext {
-  guid: string | null
+  guid: string
   name: string
   href: string
   category: string
@@ -28,7 +28,7 @@ interface EditorStateContext {
 }
 
 export const EditorStateContext = createContext<EditorStateContext>({
-  guid: null,
+  guid: "",
   name: "",
   href: "",
   category: "",

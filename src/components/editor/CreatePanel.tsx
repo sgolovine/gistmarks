@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react"
 import { BookmarkContext, LayoutContext } from "~/context"
+import { generateUUID } from "~/helpers"
 import { Bookmark } from "~/model/Bookmark"
 import Editor from "./Editor"
 
@@ -7,7 +8,12 @@ export const CreatePanel = () => {
   const bookmarkContext = useContext(BookmarkContext)
   const layoutContext = useContext(LayoutContext)
 
-  const [state, setState] = useState<Bookmark>({
+  const [state, setState] = useState<{
+    name: string
+    href: string
+    category: string
+    description: string
+  }>({
     name: "",
     href: "",
     category: "",
@@ -25,7 +31,15 @@ export const CreatePanel = () => {
       return
     }
 
-    bookmarkContext.actions.addBookmark(state)
+    const guid = generateUUID()
+    const bookmark: Bookmark = {
+      guid,
+      name: state.name,
+      href: state.href,
+      description: state.description,
+      category: state.category,
+    }
+    bookmarkContext.actions.addBookmark(bookmark)
     layoutContext.toggleCreatePanel()
   }
 
