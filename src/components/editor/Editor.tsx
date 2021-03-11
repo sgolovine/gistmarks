@@ -6,6 +6,7 @@ import Button from "~/components/common/Button"
 import { dev } from "~/helpers/isDev"
 
 export interface EditorProps {
+  editMode: boolean
   name: string
   href: string
   category: string
@@ -17,6 +18,7 @@ export interface EditorProps {
 }
 
 const Editor: React.FC<EditorProps> = ({
+  editMode,
   name,
   href,
   category,
@@ -26,10 +28,12 @@ const Editor: React.FC<EditorProps> = ({
   onSave,
   onCancel,
 }) => {
+  const headingText = editMode ? "Edit Bookmark" : "Create Bookmark"
+  const submitButtonText = editMode ? "Save Changes" : "Create"
   return (
     <div className="min-w-create-panel border">
       <div>
-        <p className="font-bold text-2xl p-1">Create Bookmark</p>
+        <p className="font-bold text-2xl p-1">{headingText}</p>
         {dev && (
           <div className="flex flex-col py-2 px-1">
             <label className="text-sm font-bold">Dev Options</label>
@@ -97,7 +101,11 @@ const Editor: React.FC<EditorProps> = ({
 
       {/* ACTION BUTTONS */}
       <div className="p-2">
-        <Button onClick={onSave} label="Create" additionalClassnames="mx-2" />
+        <Button
+          onClick={onSave}
+          label={submitButtonText}
+          additionalClassnames="mx-2"
+        />
         <Button
           onClick={onCancel}
           danger

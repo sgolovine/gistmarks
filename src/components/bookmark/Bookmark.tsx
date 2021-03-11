@@ -25,7 +25,7 @@ export const Bookmark: React.FC<Props> = ({
   const handleEdit = () => {
     const bookmark = bookmarkContext.data.bookmarks[guid]
     if (bookmark) {
-      editorStateContext.setFields({
+      editorStateContext.bookmark.setFields({
         guid,
         name: bookmark.name,
         href: bookmark.href,

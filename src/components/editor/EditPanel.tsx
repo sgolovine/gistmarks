@@ -9,11 +9,11 @@ export const EditPanel = () => {
   const editorState = useContext(EditorStateContext)
 
   const [state, setState] = useState<Bookmark>({
-    guid: editorState.guid,
-    name: editorState.name,
-    href: editorState.href,
-    category: editorState.category,
-    description: editorState.description,
+    guid: editorState.bookmark.guid,
+    name: editorState.bookmark.name,
+    href: editorState.bookmark.href,
+    category: editorState.bookmark.category,
+    description: editorState.bookmark.description,
   })
 
   const handleSave = () => {
@@ -27,16 +27,16 @@ export const EditPanel = () => {
       return
     }
 
-    if (editorState.guid) {
+    if (editorState.bookmark.guid) {
       bookmarkContext.actions.addBookmark(state)
-      layoutContext.toggleCreatePanel()
+      layoutContext.toggleEditPanel()
     } else {
       alert("ERR: Unable to edit, no guid found")
     }
   }
 
   const handleCancel = () => {
-    layoutContext.toggleCreatePanel()
+    layoutContext.toggleEditPanel()
   }
 
   const handleEditField = (key: keyof Bookmark, value: string) => {
@@ -48,6 +48,7 @@ export const EditPanel = () => {
 
   return (
     <Editor
+      editMode={true}
       name={state.name}
       href={state.href}
       category={state.category}

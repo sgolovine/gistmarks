@@ -1,8 +1,9 @@
 .form-container {
   @apply flex;
   @apply flex-col;
-  @apply max-w-md;
+  /* @apply max-w-md; */
   @apply my-4;
+  @apply px-2;
 }
 
 .form-label {
@@ -12,7 +13,7 @@
 
 .form-field {
   @apply border;
-  @apply shadow;
+  /* @apply shadow; */
   @apply rounded;
   @apply p-2;
 }

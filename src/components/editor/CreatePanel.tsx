@@ -56,6 +56,7 @@ export const CreatePanel = () => {
 
   return (
     <Editor
+      editMode={false}
       name={state.name}
       href={state.href}
       category={state.category}

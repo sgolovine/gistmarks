@@ -14,7 +14,7 @@ export interface NewCollection {
   // Auto generated guid
   guid: string
   // Optional Description
-  description: string
+  description: string | null
   // Bookmark Data
   bookmarks: BookmarkCollection
   // Remote Gist ID
