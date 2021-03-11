@@ -20,3 +20,5 @@ export interface NewCollection {
   // Remote Gist ID
   gistId: string | null
 }
+
+export type CollectionType = "local" | "remote"

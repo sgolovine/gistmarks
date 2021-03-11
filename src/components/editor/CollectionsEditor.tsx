@@ -3,59 +3,37 @@ import Button from "~/components/common/Button"
 import { LayoutContext } from "~/context"
 import { NewCollectionsContext } from "~/context/NewCollectionsContext"
 import { generateUUID } from "~/helpers"
-import { NewCollection } from "~/model/Collection"
+import { CollectionType, NewCollection } from "~/model/Collection"
 
-interface FormState {
-  collectionType: "local" | "remote"
+interface Props {
+  collectionType: CollectionType
   collectionName: string
-  collectionDescription: string
-  gistFilename: string
-  gistID?: string
+  collectionDescription: string | null
+  collectionGistId: string | null
+  collectionFilename: string
+  onCollectionTypeChange: (type: CollectionType) => void
+  onCollectionNameChange: (newName: string) => void
+  onCollectionDescriptionChange: (newDescription: string) => void
+  onCollectionGistIdChange: (newGistId: string) => void
+  onCollectionFilenameChange: (newFilename: string) => void
+  onCancel: () => void
+  onCreate: () => void
 }
 
-export const CollectionsEditor = () => {
-  const collectionsContext = useContext(NewCollectionsContext)
-  const layoutContext = useContext(LayoutContext)
-
-  const [formState, setFormState] = useState<FormState>({
-    collectionType: "local",
-    collectionName: "",
-    collectionDescription: "",
-    gistID: "",
-    gistFilename: "bookmarks.json",
-  })
-
-  const handleLocalRemoteChange = (newValue: "local" | "remote") => {
-    setFormState({
-      ...formState,
-      collectionType: newValue,
-    })
-  }
-
-  const handleCollectionField = (field: keyof FormState, newValue: string) => {
-    setFormState({
-      ...formState,
-      [field]: newValue,
-    })
-  }
-
-  const handleCreateCollection = () => {
-    if (!formState.collectionName) {
-      alert("Please enter a collection name!")
-      return
-    }
-    const guid = generateUUID()
-    const collection: NewCollection = {
-      guid,
-      name: formState.collectionName,
-      description: formState.collectionDescription || null,
-      bookmarks: {},
-      gistId: formState.gistID || null,
-    }
-    collectionsContext.addCollection(collection)
-    layoutContext.toggleCollectionsPanel()
-  }
-
+export const CollectionsEditor: React.FC<Props> = ({
+  collectionType,
+  collectionName,
+  collectionDescription,
+  collectionGistId,
+  collectionFilename,
+  onCollectionDescriptionChange,
+  onCollectionFilenameChange,
+  onCollectionGistIdChange,
+  onCollectionNameChange,
+  onCollectionTypeChange,
+  onCancel,
+  onCreate,
+}) => {
   return (
     <div className="min-w-create-panel border">
       <div>
@@ -67,9 +45,9 @@ export const CollectionsEditor = () => {
         <select
           className="form-field"
           defaultValue="local"
-          value={formState.collectionType}
+          value={collectionType}
           onChange={(e) =>
-            handleLocalRemoteChange(e.target.value as "local" | "remote")
+            onCollectionTypeChange(e.target.value as CollectionType)
           }
         >
           <option value="local">Local</option>
@@ -82,10 +60,8 @@ export const CollectionsEditor = () => {
         <input
           className="form-field"
           placeholder="Enter collection name"
-          value={formState.collectionName}
-          onChange={(e) =>
-            handleCollectionField("collectionName", e.target.value)
-          }
+          value={collectionName}
+          onChange={(e) => onCollectionNameChange(e.target.value)}
         />
       </div>
 
@@ -94,22 +70,20 @@ export const CollectionsEditor = () => {
         <textarea
           className="form-field"
           placeholder="Optional description"
-          value={formState.collectionDescription}
-          onChange={(e) =>
-            handleCollectionField("collectionDescription", e.target.value)
-          }
+          value={collectionDescription || ""}
+          onChange={(e) => onCollectionDescriptionChange(e.target.value)}
           rows={4}
         />
       </div>
-      {formState.collectionType === "remote" && (
+      {collectionType === "remote" && (
         <>
           <div className="form-container">
             <label className="form-label">Gist ID (optional)</label>
             <input
               className="form-field"
               placeholder="Leave blank to create a new Gist"
-              value={formState.gistID}
-              onChange={(e) => handleCollectionField("gistID", e.target.value)}
+              value={collectionGistId || ""}
+              onChange={(e) => onCollectionGistIdChange(e.target.value)}
             />
           </div>
 
@@ -117,10 +91,8 @@ export const CollectionsEditor = () => {
             <label className="form-label">Gist Filename</label>
             <input
               className="form-field"
-              value={formState.gistFilename}
-              onChange={(e) =>
-                handleCollectionField("gistFilename", e.target.value)
-              }
+              value={collectionFilename}
+              onChange={(e) => onCollectionFilenameChange(e.target.value)}
             />
           </div>
         </>
@@ -130,13 +102,9 @@ export const CollectionsEditor = () => {
           danger
           label="Cancel"
           additionalClassnames="mr-2"
-          onClick={() => layoutContext.toggleCollectionsPanel()}
+          onClick={onCancel}
         />
-        <Button
-          label="Create"
-          additionalClassnames="ml-2"
-          onClick={() => handleCreateCollection()}
-        />
+        <Button label="Create" additionalClassnames="ml-2" onClick={onCreate} />
       </div>
     </div>
   )
