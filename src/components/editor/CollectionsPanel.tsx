@@ -1,6 +1,10 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { CollectionsEditor } from "./CollectionsEditor"
-import { CollectionsContext, LayoutContext } from "~/context"
+import {
+  CollectionsContext,
+  EditorStateContext,
+  LayoutContext,
+} from "~/context"
 import { CollectionType, NewCollection } from "~/model/Collection"
 import { DEFAULT_COLLECTION_FILENAME } from "~/defines"
 import { generateUUID } from "~/helpers"
@@ -14,8 +18,9 @@ interface State {
   collectionFilename: string
 }
 
-export const CreateCollectionsPanel: React.FC = () => {
+export const CollectionsPanel: React.FC = () => {
   const layoutContext = useContext(LayoutContext)
+  const editorStateContext = useContext(EditorStateContext)
   const collectionsContext = useContext(NewCollectionsContext)
 
   const [state, setState] = useState<State>({
@@ -25,6 +30,21 @@ export const CreateCollectionsPanel: React.FC = () => {
     collectionGistId: null,
     collectionFilename: DEFAULT_COLLECTION_FILENAME,
   })
+
+  useEffect(() => {
+    if (layoutContext.collectionPanel.editMode) {
+      setState({
+        collectionType: !!editorStateContext.collection.gistId
+          ? "remote"
+          : "local",
+        collectionName: editorStateContext.collection.name,
+        collectionDescription: editorStateContext.collection.description,
+        collectionGistId: editorStateContext.collection.gistId,
+        collectionFilename:
+          editorStateContext.collection.filename || DEFAULT_COLLECTION_FILENAME,
+      })
+    }
+  }, [])
 
   const handleCollectionTypeChange = (newCollectionType: CollectionType) => {
     setState({
@@ -70,9 +90,12 @@ export const CreateCollectionsPanel: React.FC = () => {
       alert("Missing filename")
       return
     }
-    const guid = generateUUID()
+    const generatedGuid = generateUUID()
+
     const collection: NewCollection = {
-      guid,
+      guid: layoutContext.collectionPanel.editMode
+        ? editorStateContext.collection.guid
+        : generatedGuid,
       name: state.collectionName,
       description: state.collectionDescription,
       bookmarks: {},
@@ -80,15 +103,16 @@ export const CreateCollectionsPanel: React.FC = () => {
       gistFilename: state.collectionFilename,
     }
     collectionsContext.addCollection(collection)
-    layoutContext.toggleCollectionsPanel()
+    layoutContext.toggleCollectionsPanel({ open: false, editMode: false })
   }
 
   const handleCancel = () => {
-    layoutContext.toggleCollectionsPanel()
+    layoutContext.toggleCollectionsPanel({ open: false, editMode: false })
   }
 
   return (
     <CollectionsEditor
+      editMode={layoutContext.collectionPanel.editMode}
       collectionType={state.collectionType}
       collectionName={state.collectionName}
       collectionDescription={state.collectionDescription}

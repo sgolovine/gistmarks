@@ -6,6 +6,7 @@ import { generateUUID } from "~/helpers"
 import { CollectionType, NewCollection } from "~/model/Collection"
 
 interface Props {
+  editMode: boolean
   collectionType: CollectionType
   collectionName: string
   collectionDescription: string | null
@@ -21,6 +22,7 @@ interface Props {
 }
 
 export const CollectionsEditor: React.FC<Props> = ({
+  editMode = false,
   collectionType = "local",
   collectionName,
   collectionDescription,
@@ -37,7 +39,9 @@ export const CollectionsEditor: React.FC<Props> = ({
   return (
     <div className="min-w-create-panel border">
       <div>
-        <p className="font-bold text-2xl p-1">Create Collection</p>
+        <p className="font-bold text-2xl p-1">
+          {editMode ? "Edit" : "Create"} Collection
+        </p>
       </div>
       {/* Fields */}
       <div className="form-container">
@@ -103,7 +107,11 @@ export const CollectionsEditor: React.FC<Props> = ({
           additionalClassnames="mr-2"
           onClick={onCancel}
         />
-        <Button label="Create" additionalClassnames="ml-2" onClick={onCreate} />
+        <Button
+          label={editMode ? "Update" : "Create"}
+          additionalClassnames="ml-2"
+          onClick={onCreate}
+        />
       </div>
     </div>
   )

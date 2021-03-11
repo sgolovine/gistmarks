@@ -1,5 +1,9 @@
 import React, { useContext, useState } from "react"
-import { CollectionsContext, LayoutContext } from "~/context"
+import {
+  CollectionsContext,
+  EditorStateContext,
+  LayoutContext,
+} from "~/context"
 import { NewCollectionsContext } from "~/context/NewCollectionsContext"
 import { NewCollection } from "~/model/Collection"
 import Button from "./common/Button"
@@ -26,9 +30,27 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ name, id }) => {
 const SidebarCollectionsSection: React.FC = () => {
   const collectionsContext = useContext(NewCollectionsContext)
   const layoutContext = useContext(LayoutContext)
+  const editorStateContext = useContext(EditorStateContext)
   const collectionKeys = Object.keys(collectionsContext.collections)
 
-  const handleEditClick = () => {}
+  const handleEditClick = () => {
+    if (!collectionsContext.activeCollection) {
+      alert("Err: No active collection found")
+      return
+    }
+    const fullCollection =
+      collectionsContext.collections[collectionsContext.activeCollection]
+
+    editorStateContext.collection.setFields({
+      guid: fullCollection.guid,
+      name: fullCollection.name,
+      description: fullCollection.description,
+      gistId: fullCollection.gistId,
+      filename: fullCollection.gistFilename,
+    })
+
+    layoutContext.toggleCollectionsPanel({ open: true, editMode: true })
+  }
 
   return (
     <div className="flex flex-row">
@@ -47,9 +69,11 @@ const SidebarCollectionsSection: React.FC = () => {
           )
         })}
       </select>
-      {/* <IconButton onClick={}>
-        <EditIcon />
-      </IconButton> */}
+      {collectionsContext.activeCollection && (
+        <IconButton onClick={handleEditClick}>
+          <EditIcon />
+        </IconButton>
+      )}
     </div>
   )
 }
@@ -63,7 +87,7 @@ const Sidebar: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("")
 
   const handleCreateCollection = () => {
-    layoutContext.toggleCollectionsPanel()
+    layoutContext.toggleCollectionsPanel({ open: true })
   }
 
   return (

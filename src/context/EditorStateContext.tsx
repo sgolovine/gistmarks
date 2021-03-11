@@ -6,62 +6,74 @@ import { ContextProviderProps } from "~/model/Context"
 
 type Fields = "name" | "href" | "category" | "description"
 
-interface EditorStateContext {
-  bookmark: {
+interface EditorBookmarkState {
+  guid: string
+  name: string
+  href: string
+  category: string
+  description: string
+  setFields: ({
+    guid,
+    name,
+    href,
+    category,
+    description,
+  }: {
     guid: string
     name: string
     href: string
     category: string
     description: string
-    setFields: ({
-      guid,
-      name,
-      href,
-      category,
-      description,
-    }: {
-      guid: string
-      name: string
-      href: string
-      category: string
-      description: string
-    }) => void
-  }
-  collection: {
+  }) => void
+}
+
+interface EditorCollectionState {
+  guid: string
+  name: string
+  description: string | null
+  gistId: string | null
+  filename: string | null
+  setFields: ({
+    guid,
+    name,
+    description,
+    gistId,
+    filename,
+  }: {
     guid: string
     name: string
     description: string | null
     gistId: string | null
-    setFields: ({
-      guid,
-      name,
-      description,
-      gistId,
-    }: {
-      guid: string
-      name: string
-      description: string
-      gistId: string
-    }) => void
-  }
+    filename: string | null
+  }) => void
+}
+
+interface EditorStateContext {
+  bookmark: EditorBookmarkState
+  collection: EditorCollectionState
+}
+
+const bookmarkInitialState: EditorBookmarkState = {
+  guid: "",
+  name: "",
+  href: "",
+  category: "",
+  description: "",
+  setFields: () => null,
+}
+
+const collectionInitialState: EditorCollectionState = {
+  guid: "",
+  name: "",
+  description: null,
+  gistId: null,
+  filename: null,
+  setFields: () => null,
 }
 
 export const EditorStateContext = createContext<EditorStateContext>({
-  bookmark: {
-    guid: "",
-    name: "",
-    href: "",
-    category: "",
-    description: "",
-    setFields: () => null,
-  },
-  collection: {
-    guid: "",
-    name: "",
-    description: null,
-    gistId: null,
-    setFields: () => null,
-  },
+  bookmark: bookmarkInitialState,
+  collection: collectionInitialState,
 })
 
 export const EditorStateContextProvider: React.FC<ContextProviderProps> = ({
@@ -86,11 +98,13 @@ export const EditorStateContextProvider: React.FC<ContextProviderProps> = ({
     name: string
     description: string | null
     gistId: string | null
+    filename: string | null
   }>({
     guid: "",
     name: "",
     description: null,
     gistId: null,
+    filename: null,
   })
 
   const setBookmarkFields = ({
@@ -120,17 +134,20 @@ export const EditorStateContextProvider: React.FC<ContextProviderProps> = ({
     name,
     description,
     gistId,
+    filename,
   }: {
     guid: string
     name: string
     description: string | null
     gistId: string | null
+    filename: string | null
   }) => {
     setCollectionState({
       guid,
       name,
       description,
       gistId,
+      filename,
     })
   }
 
@@ -148,6 +165,7 @@ export const EditorStateContextProvider: React.FC<ContextProviderProps> = ({
       name: collectionState.name,
       description: collectionState.description,
       gistId: collectionState.gistId,
+      filename: collectionState.filename,
       setFields: setCollectionFields,
     },
   }
