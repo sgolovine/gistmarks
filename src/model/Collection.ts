@@ -1,6 +1,6 @@
 // Represents a "shallow" collection
 
-import { Bookmark } from "./Bookmark"
+import { Bookmark, BookmarkCollection } from "./Bookmark"
 
 // with a guid and a name
 export interface Collection {
@@ -16,7 +16,7 @@ export interface NewCollection {
   // Optional Description
   description: string
   // Bookmark Data
-  bookmarks: Bookmark[]
+  bookmarks: BookmarkCollection
   // Remote Gist ID
-  gistId: string
+  gistId: string | null
 }

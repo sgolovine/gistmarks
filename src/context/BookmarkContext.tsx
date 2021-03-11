@@ -5,6 +5,7 @@ import { ContextDevTool } from "react-context-devtool"
 import { BOOKMARK_STORAGE_KEY } from "~/defines/localStorage"
 import { generateUUID, omitKey } from "~/helpers"
 import { dev } from "~/helpers/isDev"
+import { NewCollection } from "~/model/Collection"
 
 type BookmarkMeta = {
   name: string | null
@@ -24,6 +25,7 @@ interface BookmarkContext {
     editDescription: (desc: string) => void
     editGistID: (gistID: string) => void
     save: () => void
+    loadBookmarks: (c: NewCollection) => void
   }
   data: {
     meta: BookmarkMeta
@@ -39,6 +41,7 @@ const coldContext: BookmarkContext = {
     editDescription: () => null,
     editGistID: () => null,
     save: () => null,
+    loadBookmarks: () => null,
   },
   data: {
     meta: {
@@ -120,6 +123,17 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
     })
   }
 
+  // Loads bookmarks from collections context
+  // into bookmark context
+  const loadBookmarks = (collection: NewCollection) => {
+    setBookmarkMeta({
+      name: collection.name,
+      description: collection.description,
+      gistID: null,
+    })
+    setBookmarkData(collection.bookmarks)
+  }
+
   const save = () => {
     console.log("~~ Saving to Github Gist Coming Soon! ~~")
   }
@@ -132,6 +146,7 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
       editDescription,
       editGistID,
       save,
+      loadBookmarks,
     },
     data: {
       meta: bookmarkMeta,
@@ -145,8 +160,8 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
       {dev && (
         <ContextDevTool
           context={BookmarkContext}
-          id="authContext"
-          displayName="Auth Context"
+          id="bookmarkContext"
+          displayName="Bookmark Context"
         />
       )}
     </BookmarkContext.Provider>

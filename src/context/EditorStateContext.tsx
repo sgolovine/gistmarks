@@ -1,5 +1,7 @@
 import { stringify } from "query-string"
 import React, { useState, useEffect, createContext } from "react"
+import { ContextDevTool } from "react-context-devtool"
+import { dev } from "~/helpers/isDev"
 import { ContextProviderProps } from "~/model/Context"
 
 type Fields = "name" | "href" | "category" | "description"
@@ -85,6 +87,13 @@ export const EditorStateContextProvider: React.FC<ContextProviderProps> = ({
   return (
     <EditorStateContext.Provider value={contextValue}>
       {children}
+      {dev && (
+        <ContextDevTool
+          context={EditorStateContext}
+          id="editorStateContext"
+          displayName="Editor State Context"
+        />
+      )}
     </EditorStateContext.Provider>
   )
 }

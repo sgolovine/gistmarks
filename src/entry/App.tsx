@@ -6,12 +6,14 @@ import {
   CollectionsContextProvider,
   EditorStateContextProvider,
   LayoutContextProvider,
+  BookmarkContextProvider,
 } from "~/context"
 import DebugWindow from "~/components/DebugWindow"
 
 import "~/styles/tailwind.css"
 import "~/styles/button.css"
 import "~/styles/form.css"
+import { NewCollectionsContextProvider } from "~/context/NewCollectionsContext"
 
 interface ContextWrapperProps {
   children: ReactNode
@@ -23,7 +25,13 @@ const ContextWrapper: React.FC<ContextWrapperProps> = ({ children }) => {
     <AuthContextProvider>
       <LayoutContextProvider>
         <CollectionsContextProvider>
-          <EditorStateContextProvider>{children}</EditorStateContextProvider>
+          <NewCollectionsContextProvider>
+            <BookmarkContextProvider>
+              <EditorStateContextProvider>
+                {children}
+              </EditorStateContextProvider>
+            </BookmarkContextProvider>
+          </NewCollectionsContextProvider>
         </CollectionsContextProvider>
       </LayoutContextProvider>
     </AuthContextProvider>
