@@ -1,3 +1,4 @@
+import { stat } from "node:fs"
 import React, { useState, useEffect, createContext, useContext } from "react"
 import { ContextDevTool } from "react-context-devtool"
 import { generateUUID, omitKey } from "~/helpers"
@@ -11,9 +12,7 @@ interface CollectionsState {
     [guid: string]: NewCollection
   }
   activeCollection?: string
-  activeBookmarks: {
-    [guid: string]: Bookmark
-  }
+  activeBookmarks: BookmarkCollection
 }
 
 interface CollectionsActions {
@@ -39,104 +38,112 @@ export const NewCollectionsContext = createContext<CollectionsContext>(
 export const NewCollectionsContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  const [state, setState] = useState<CollectionsState>({
-    collections: {},
-    activeCollection: undefined,
-    activeBookmarks: {},
-  })
+  const [collectionsState, setCollectionsState] = useState<{
+    [guid: string]: NewCollection
+  }>({})
+
+  const [activeCollectionState, setActiveCollectionState] = useState<
+    string | undefined
+  >(undefined)
+
+  const [
+    activeBookmarksState,
+    setActiveBookmarksState,
+  ] = useState<BookmarkCollection>({})
 
   const addCollection = (collection: NewCollection) => {
-    setState({
-      ...state,
-      collections: {
-        ...state.collections,
-        [collection.guid]: collection,
+    setCollectionsState({
+      ...collectionsState,
+      [collection.guid]: {
+        ...collection,
+        bookmarks: !!activeCollectionState ? {} : activeBookmarksState,
       },
-      activeCollection: collection.guid,
     })
+    setActiveCollection(
+      !!activeCollectionState ? activeCollectionState : collection.guid
+    )
   }
 
   const removeCollection = (collectionGuid: string) => {
-    const newData = omitKey(collectionGuid, state.collections)
+    const newData = omitKey(collectionGuid, collectionsState)
+
     // Check if the collection about to be deleted is active. If it is then set the active collection to null
     const newActiveCollection =
-      collectionGuid === state.activeCollection
+      collectionGuid === activeCollectionState
         ? undefined
-        : state.activeCollection
-    setState({
-      ...state,
-      collections: newData,
-      activeCollection: newActiveCollection,
-    })
+        : activeCollectionState
+
+    setCollectionsState(newData)
+
+    setActiveCollection(newActiveCollection)
   }
 
   const loadBookmarksFromCollection = (collectionId: string) => {
-    const collection = state.collections[collectionId]
-    setState({
-      ...state,
-      activeBookmarks: collection.bookmarks,
-    })
+    const collection = collectionsState[collectionId]
+    setActiveBookmarksState(collection.bookmarks)
   }
 
-  const saveBookmarksToCollection = (collectionId: string) => {
+  const saveBookmarksToCollection = (
+    collectionId: string,
+    bookmarksToSave: BookmarkCollection
+  ) => {
     const newCollection: NewCollection = {
-      ...state.collections[collectionId],
-      bookmarks: state.activeBookmarks,
+      ...collectionsState[collectionId],
+      bookmarks: bookmarksToSave,
     }
-    setState({
-      ...state,
-      collections: {
-        ...state.collections,
-        [collectionId]: newCollection,
-      },
+    setCollectionsState({
+      ...collectionsState,
+      [collectionId]: newCollection,
     })
   }
 
   const setActiveCollection = (newCollectionId?: string) => {
-    // Get the ID of the current collection
-    const currentActiveCollectionId = state.activeCollection
-
     // If an active collection exists, save bookmarks to
     // that collection
-    if (currentActiveCollectionId) {
-      const bookmarks = state.activeBookmarks
-      saveBookmarksToCollection(currentActiveCollectionId)
+    if (activeCollectionState) {
+      saveBookmarksToCollection(activeCollectionState, activeBookmarksState)
     }
 
     // Switch to the new collection
-    setState({
-      ...state,
-      activeCollection: newCollectionId,
-    })
+    setActiveCollection(newCollectionId)
 
     // If the new collection exists (newCollection can be undefined)
     // Take the bookmarks from the new collection and apply it
     // to bookmarks context
     if (newCollectionId) {
-      const newCollection = state.collections[newCollectionId]
-      setState({
-        ...state,
-        activeBookmarks: newCollection.bookmarks,
-      })
+      const newCollection = collectionsState[newCollectionId]
+      setActiveBookmarksState(newCollection.bookmarks)
     }
   }
 
+  const switchCollections = (newCollectionId?: string) => {
+    // Check if we have an activeCollection and activeBookmarks
+    if (
+      !!activeCollectionState &&
+      Object.keys(activeBookmarksState).length > 0
+    ) {
+      saveBookmarksToCollection(activeCollectionState, activeBookmarksState)
+    }
+
+    // MORE WIP
+  }
+
   const addBookmark = (bookmark: Bookmark) => {
-    setState({
-      ...state,
-      activeBookmarks: {
-        ...state.activeBookmarks,
-        [bookmark.guid]: bookmark,
-      },
+    setActiveBookmarksState({
+      ...activeBookmarksState,
+      [bookmark.guid]: bookmark,
     })
   }
 
   const removeBookmark = (bookmarkGuid: string) => {
-    const newBookmarks = omitKey(bookmarkGuid, state.activeBookmarks)
-    setState({
-      ...state,
-      activeBookmarks: newBookmarks,
-    })
+    const newBookmarks = omitKey(bookmarkGuid, activeBookmarksState)
+    setActiveBookmarksState(newBookmarks)
+  }
+
+  const state: CollectionsState = {
+    collections: collectionsState,
+    activeCollection: activeCollectionState,
+    activeBookmarks: activeBookmarksState,
   }
 
   const actions: CollectionsActions = {
