@@ -12,6 +12,9 @@ interface CollectionsState {
     [guid: string]: NewCollection
   }
   activeCollection?: string
+  activeBookmarks: {
+    [guid: string]: Bookmark
+  }
 }
 
 interface CollectionsActions {
@@ -23,6 +26,9 @@ interface CollectionsActions {
     bookmarks: BookmarkCollection
   ) => void
   setActiveCollection: (collectionId?: string) => void
+  // Bookmark Actions
+  addBookmark: (bookmark: Bookmark) => void
+  removeBookmark: (bookmarkGuid: string) => void
 }
 
 type CollectionsContext = CollectionsState & CollectionsActions
@@ -38,6 +44,7 @@ export const NewCollectionsContextProvider: React.FC<ContextProviderProps> = ({
   const [state, setState] = useState<CollectionsState>({
     collections: {},
     activeCollection: undefined,
+    activeBookmarks: {},
   })
 
   const addCollection = (collection: NewCollection) => {
@@ -67,50 +74,70 @@ export const NewCollectionsContextProvider: React.FC<ContextProviderProps> = ({
 
   const loadBookmarksFromCollection = (collectionId: string) => {
     const collection = state.collections[collectionId]
-    bookmarkContext.actions.loadBookmarks(collection)
+    setState({
+      ...state,
+      activeBookmarks: collection.bookmarks,
+    })
   }
 
-  const saveBookmarksToCollection = (
-    collectionId: string,
-    bookmarks: BookmarkCollection
-  ) => {
+  const saveBookmarksToCollection = (collectionId: string) => {
     const newCollection: NewCollection = {
       ...state.collections[collectionId],
-      bookmarks,
+      bookmarks: state.activeBookmarks,
     }
     setState({
       ...state,
       collections: {
         ...state.collections,
-        [collectionId]: {
-          ...state.collections[collectionId],
-          bookmarks,
-        },
+        [collectionId]: newCollection,
       },
     })
   }
 
-  const setActiveCollection = (newCollection?: string) => {
-    // Things that need to happen when the user switches a collection
-    //
-    // - [OLD COLLECTION]
-    // - Gather current bookmarks
-    // - check for current collection
-    // - sync current bookmarks with collection
-    //
-    // - [NEW COLLECTION]
-    // - switch to new active collection
-    // - take bookmarks from new active collection
-    // - set the bookmarks as active from the new collection
-    const currentActiveCollection = state.activeCollection
-    alert(`
-      Collection Changed
-      prev: ${currentActiveCollection}
-      new: ${newCollection}
-    `)
+  const setActiveCollection = (newCollectionId?: string) => {
+    // Get the ID of the current collection
+    const currentActiveCollectionId = state.activeCollection
+
+    // If an active collection exists, save bookmarks to
+    // that collection
+    if (currentActiveCollectionId) {
+      const bookmarks = bookmarkContext.data.bookmarks
+      saveBookmarksToCollection(currentActiveCollectionId)
+    }
+
+    // Switch to the new collection
     setState({
       ...state,
-      activeCollection: newCollection,
+      activeCollection: newCollectionId,
+    })
+
+    // If the new collection exists (newCollection can be undefined)
+    // Take the bookmarks from the new collection and apply it
+    // to bookmarks context
+    if (newCollectionId) {
+      const newCollection = state.collections[newCollectionId]
+      setState({
+        ...state,
+        activeBookmarks: newCollection.bookmarks,
+      })
+    }
+  }
+
+  const addBookmark = (bookmark: Bookmark) => {
+    setState({
+      ...state,
+      activeBookmarks: {
+        ...state.activeBookmarks,
+        [bookmark.guid]: bookmark,
+      },
+    })
+  }
+
+  const removeBookmark = (bookmarkGuid: string) => {
+    const newBookmarks = omitKey(bookmarkGuid, state.activeBookmarks)
+    setState({
+      ...state,
+      activeBookmarks: newBookmarks,
     })
   }
 
@@ -120,6 +147,8 @@ export const NewCollectionsContextProvider: React.FC<ContextProviderProps> = ({
     loadBookmarksFromCollection,
     saveBookmarksToCollection,
     setActiveCollection,
+    addBookmark,
+    removeBookmark,
   }
 
   return (
