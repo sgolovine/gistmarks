@@ -56,7 +56,7 @@ const SidebarCollectionsSection: React.FC = () => {
     <div className="flex flex-row">
       <select
         value={collectionsContext.activeCollection}
-        onChange={(e) => collectionsContext.setActiveCollection(e.target.value)}
+        onChange={(e) => collectionsContext.switchCollections(e.target.value)}
         className="flex-grow mb-4 border p-1 rounded shadow mr-2"
       >
         {collectionKeys.map((key) => {

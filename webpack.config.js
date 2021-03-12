@@ -14,7 +14,7 @@ const prodFolderPath = path.resolve(__dirname, "dist")
 
 module.exports = {
   mode: dev ? "development" : "production",
-  devtool: dev ? "cheap-module-source-map" : false,
+  devtool: dev ? "eval-source-map" : false,
   entry: path.resolve(__dirname, "src", "entry", "index.tsx"),
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx", ".html", ".css"],
