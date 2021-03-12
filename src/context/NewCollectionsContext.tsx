@@ -17,11 +17,6 @@ interface CollectionsState {
 interface CollectionsActions {
   addCollection: (collection: NewCollection) => void
   removeCollection: (collectionGuid: string) => void
-  loadBookmarksFromCollection: (collectionId: string) => void
-  saveBookmarksToCollection: (
-    collectionId: string,
-    bookmarks: BookmarkCollection
-  ) => void
   switchCollections: (collectionId?: string) => void
   // Bookmark Actions
   addBookmark: (bookmark: Bookmark) => void
@@ -41,106 +36,114 @@ export const NewCollectionsContextProvider: React.FC<ContextProviderProps> = ({
     [guid: string]: NewCollection
   }>({})
 
-  const [activeCollectionState, setActiveCollectionState] = useState<
+  const [nextActiveCollection, setNextActiveCollection] = useState<
     string | undefined
   >(undefined)
 
-  const [
-    activeBookmarksState,
-    setActiveBookmarksState,
-  ] = useState<BookmarkCollection>({})
+  const [activeCollection, setActiveCollection] = useState<string | undefined>(
+    undefined
+  )
+
+  const [activeBookmarks, setActiveBookmarks] = useState<BookmarkCollection>({})
+
+  useEffect(() => {
+    // Get the previous collection and set the new collection
+    const previousCollectionId = activeCollection
+    const currentCollection = nextActiveCollection
+    setActiveCollection(nextActiveCollection)
+
+    // Set the bookmarks for the previous collection
+    if (previousCollectionId && activeBookmarks) {
+      const previousCollection = collectionsState[previousCollectionId]
+      const previousCollectionWithBookmarks: NewCollection = {
+        ...previousCollection,
+        bookmarks: activeBookmarks,
+      }
+      setCollectionsState({
+        ...collectionsState,
+        [previousCollectionId]: previousCollectionWithBookmarks,
+      })
+    }
+
+    // Check if the new collection has bookmarks and apply them
+    if (
+      currentCollection &&
+      Object.keys(collectionsState[currentCollection].bookmarks).length > 0
+    ) {
+      const newCollectionBookmarks =
+        collectionsState[currentCollection].bookmarks
+      setActiveBookmarks(newCollectionBookmarks)
+    } else {
+      // If the new collection does not have any bookmarks
+      // Empty the active bookmarks object
+      setActiveBookmarks({})
+    }
+  }, [nextActiveCollection])
+
+  useEffect(() => {
+    console.log("active bookmarks sync for collection", activeCollection)
+    if (activeCollection) {
+      console.log("syncing active bookmarks")
+      const collection = collectionsState[activeCollection]
+      const newCollection = {
+        ...collection,
+        bookmarks: activeBookmarks,
+      }
+      setCollectionsState({
+        ...collectionsState,
+        [newCollection.guid]: newCollection,
+      })
+    }
+  }, [activeBookmarks])
 
   const addCollection = (collection: NewCollection) => {
     setCollectionsState({
       ...collectionsState,
       [collection.guid]: {
         ...collection,
-        bookmarks: !!activeCollectionState ? {} : activeBookmarksState,
+        bookmarks: !!activeCollection ? {} : activeBookmarks,
       },
     })
-    if (!activeCollectionState) {
-      switchCollections(collection.guid)
+    if (!activeCollection) {
+      setNextActiveCollection(collection.guid)
     }
   }
 
   const removeCollection = (collectionGuid: string) => {
-    const newData = omitKey(collectionGuid, collectionsState)
-
-    // Check if the collection about to be deleted is active. If it is then set the active collection to null
-    const newActiveCollection =
-      collectionGuid === activeCollectionState
-        ? undefined
-        : activeCollectionState
-
-    setCollectionsState(newData)
-
-    switchCollections(newActiveCollection)
-  }
-
-  const loadBookmarksFromCollection = (collectionId: string) => {
-    const collection = collectionsState[collectionId]
-    if (collection && collection.bookmarks) {
-      setActiveBookmarksState(collection.bookmarks)
-    } else {
-      setActiveBookmarksState({})
-    }
-  }
-
-  const saveBookmarksToCollection = (
-    collectionId: string,
-    bookmarksToSave: BookmarkCollection
-  ) => {
-    const newCollection: NewCollection = {
-      ...collectionsState[collectionId],
-      bookmarks: bookmarksToSave,
-    }
-    setCollectionsState({
-      ...collectionsState,
-      [collectionId]: newCollection,
-    })
-  }
-
-  const switchCollections = (newCollectionId?: string) => {
-    // If an active collection exists, save bookmarks to
-    // that collection
-    if (activeCollectionState) {
-      saveBookmarksToCollection(activeCollectionState, activeBookmarksState)
-    }
-
-    // Switch to the new collection
-    setActiveCollectionState(newCollectionId)
-
-    // If the new collection exists (newCollection can be undefined)
-    // Take the bookmarks from the new collection and apply it
-    // to bookmarks context
-    if (newCollectionId) {
-      loadBookmarksFromCollection(newCollectionId)
-    }
+    const newCollectionsData: { [guid: string]: NewCollection } = omitKey(
+      collectionGuid,
+      collectionsState
+    )
+    setCollectionsState(newCollectionsData)
+    setActiveBookmarks({})
+    // setNextActiveCollection(undefined)
   }
 
   const addBookmark = (bookmark: Bookmark) => {
-    setActiveBookmarksState({
-      ...activeBookmarksState,
+    setActiveBookmarks({
+      ...activeBookmarks,
       [bookmark.guid]: bookmark,
     })
   }
 
   const removeBookmark = (bookmarkGuid: string) => {
-    const newBookmarks = omitKey(bookmarkGuid, activeBookmarksState)
-    setActiveBookmarksState(newBookmarks)
+    const newBookmarks = omitKey(bookmarkGuid, activeBookmarks)
+    setActiveBookmarks(newBookmarks)
+  }
+
+  const switchCollections = (newCollectionId?: string) => {
+    setNextActiveCollection(newCollectionId || undefined)
   }
 
   const state: CollectionsState = {
     collections: collectionsState,
-    activeCollection: activeCollectionState,
-    activeBookmarks: activeBookmarksState,
+    activeCollection,
+    activeBookmarks,
   }
 
   const actions: CollectionsActions = {
     addCollection,
     removeCollection,
-    loadBookmarksFromCollection,
-    saveBookmarksToCollection,
     switchCollections,
     addBookmark,
     removeBookmark,

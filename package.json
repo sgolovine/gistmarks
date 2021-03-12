@@ -7,7 +7,7 @@
     "start": "netlify dev",
     "format": "prettier --write ./src/**/*.{ts,tsx}",
     "ci": "yarn format && tsc",
-    "bundle": "NODE_ENV=development webpack serve --config webpack.config.js",
+    "bundle": "NODE_ENV=development webpack serve --config webpack.config.js --progress",
     "build": "NODE_ENV=production webpack --config webpack.config.js",
     "serve": "node_modules/serve/bin/serve.js -s dist"
   },

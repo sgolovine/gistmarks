@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react"
-import { BookmarkContext, LayoutContext } from "~/context"
+import { LayoutContext } from "~/context"
 import { generateUUID } from "~/helpers"
 import { Bookmark } from "~/model/Bookmark"
 import Button from "~/components/common/Button"
