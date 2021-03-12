@@ -5,7 +5,6 @@ import { dev } from "~/helpers/isDev"
 import { Bookmark, BookmarkCollection } from "~/model/Bookmark"
 import { NewCollection } from "~/model/Collection"
 import { ContextProviderProps } from "~/model/Context"
-import { BookmarkContext } from "./BookmarkContext"
 
 interface CollectionsState {
   collections: {
@@ -40,7 +39,6 @@ export const NewCollectionsContext = createContext<CollectionsContext>(
 export const NewCollectionsContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  const bookmarkContext = useContext(BookmarkContext)
   const [state, setState] = useState<CollectionsState>({
     collections: {},
     activeCollection: undefined,
@@ -101,7 +99,7 @@ export const NewCollectionsContextProvider: React.FC<ContextProviderProps> = ({
     // If an active collection exists, save bookmarks to
     // that collection
     if (currentActiveCollectionId) {
-      const bookmarks = bookmarkContext.data.bookmarks
+      const bookmarks = state.activeBookmarks
       saveBookmarksToCollection(currentActiveCollectionId)
     }
 

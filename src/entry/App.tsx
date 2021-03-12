@@ -6,7 +6,6 @@ import {
   CollectionsContextProvider,
   EditorStateContextProvider,
   LayoutContextProvider,
-  BookmarkContextProvider,
 } from "~/context"
 import DebugWindow from "~/components/DebugWindow"
 
@@ -26,11 +25,7 @@ const ContextWrapper: React.FC<ContextWrapperProps> = ({ children }) => {
       <LayoutContextProvider>
         <CollectionsContextProvider>
           <NewCollectionsContextProvider>
-            <BookmarkContextProvider>
-              <EditorStateContextProvider>
-                {children}
-              </EditorStateContextProvider>
-            </BookmarkContextProvider>
+            <EditorStateContextProvider>{children}</EditorStateContextProvider>
           </NewCollectionsContextProvider>
         </CollectionsContextProvider>
       </LayoutContextProvider>

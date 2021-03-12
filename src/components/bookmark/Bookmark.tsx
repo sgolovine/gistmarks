@@ -1,5 +1,6 @@
 import React, { useContext } from "react"
-import { BookmarkContext, EditorStateContext, LayoutContext } from "~/context"
+import { EditorStateContext, LayoutContext } from "~/context"
+import { NewCollectionsContext } from "~/context/NewCollectionsContext"
 import EditIcon from "../icons/EditIcon"
 import TrashIcon from "../icons/TrashIcon"
 
@@ -19,11 +20,11 @@ export const Bookmark: React.FC<Props> = ({
   description,
 }) => {
   const editorStateContext = useContext(EditorStateContext)
-  const bookmarkContext = useContext(BookmarkContext)
   const layoutContext = useContext(LayoutContext)
+  const collectionsContext = useContext(NewCollectionsContext)
 
   const handleEdit = () => {
-    const bookmark = bookmarkContext.data.bookmarks[guid]
+    const bookmark = collectionsContext.activeBookmarks[guid]
     if (bookmark) {
       editorStateContext.bookmark.setFields({
         guid,
@@ -37,7 +38,7 @@ export const Bookmark: React.FC<Props> = ({
   }
 
   const handleDelete = () => {
-    bookmarkContext.actions.removeBookmark(guid)
+    collectionsContext.removeBookmark(guid)
   }
 
   return (
