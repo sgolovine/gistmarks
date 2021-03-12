@@ -19,6 +19,7 @@ interface Props {
   onCollectionFilenameChange: (newFilename: string) => void
   onCancel: () => void
   onCreate: () => void
+  onDelete?: () => void
 }
 
 export const CollectionsEditor: React.FC<Props> = ({
@@ -35,6 +36,7 @@ export const CollectionsEditor: React.FC<Props> = ({
   onCollectionTypeChange,
   onCancel,
   onCreate,
+  onDelete,
 }) => {
   return (
     <div className="min-w-create-panel border">
@@ -99,6 +101,14 @@ export const CollectionsEditor: React.FC<Props> = ({
             />
           </div>
         </>
+      )}
+      {editMode && onDelete && (
+        <Button
+          danger
+          label="Delete Collection"
+          additionalClassnames="mx-2"
+          onClick={onDelete}
+        />
       )}
       <div className="px-2 flex flex-row py-4">
         <Button

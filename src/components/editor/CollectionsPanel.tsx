@@ -110,6 +110,13 @@ export const CollectionsPanel: React.FC = () => {
     layoutContext.toggleCollectionsPanel({ open: false, editMode: false })
   }
 
+  const handleDelete = () => {
+    if (editorStateContext.collection.guid) {
+      collectionsContext.removeCollection(editorStateContext.collection.guid)
+      layoutContext.toggleCollectionsPanel({ open: false, editMode: false })
+    }
+  }
+
   return (
     <CollectionsEditor
       editMode={layoutContext.collectionPanel.editMode}
@@ -125,6 +132,7 @@ export const CollectionsPanel: React.FC = () => {
       onCollectionFilenameChange={handleCollectionFilenameChange}
       onCancel={handleCancel}
       onCreate={handleCreate}
+      onDelete={handleDelete}
     />
   )
 }
