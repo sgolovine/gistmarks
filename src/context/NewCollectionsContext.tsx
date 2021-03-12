@@ -110,21 +110,8 @@ export const NewCollectionsContextProvider: React.FC<ContextProviderProps> = ({
     // Take the bookmarks from the new collection and apply it
     // to bookmarks context
     if (newCollectionId) {
-      const newCollection = collectionsState[newCollectionId]
-      setActiveBookmarksState(newCollection.bookmarks)
+      loadBookmarksFromCollection(newCollectionId)
     }
-  }
-
-  const switchCollections = (newCollectionId?: string) => {
-    // Check if we have an activeCollection and activeBookmarks
-    if (
-      !!activeCollectionState &&
-      Object.keys(activeBookmarksState).length > 0
-    ) {
-      saveBookmarksToCollection(activeCollectionState, activeBookmarksState)
-    }
-
-    // MORE WIP
   }
 
   const addBookmark = (bookmark: Bookmark) => {
