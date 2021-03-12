@@ -91,6 +91,23 @@ export const NewCollectionsContextProvider: React.FC<ContextProviderProps> = ({
   }
 
   const setActiveCollection = (newCollection?: string) => {
+    // Things that need to happen when the user switches a collection
+    //
+    // - [OLD COLLECTION]
+    // - Gather current bookmarks
+    // - check for current collection
+    // - sync current bookmarks with collection
+    //
+    // - [NEW COLLECTION]
+    // - switch to new active collection
+    // - take bookmarks from new active collection
+    // - set the bookmarks as active from the new collection
+    const currentActiveCollection = state.activeCollection
+    alert(`
+      Collection Changed
+      prev: ${currentActiveCollection}
+      new: ${newCollection}
+    `)
     setState({
       ...state,
       activeCollection: newCollection,

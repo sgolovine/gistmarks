@@ -40,8 +40,8 @@ module.exports = {
         terserOptions: {
           warnings: true,
           compress: {
-            drop_console: true,
-            drop_debugger: true,
+            drop_console: dev ? false : true,
+            drop_debugger: dev ? false : true,
           },
           parse: {},
           mangle: true,
