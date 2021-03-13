@@ -1,14 +1,10 @@
 import React, { useContext, useEffect, useState } from "react"
 import { CollectionsEditor } from "./CollectionsEditor"
-import {
-  CollectionsContext,
-  EditorStateContext,
-  LayoutContext,
-} from "~/context"
+import { EditorStateContext, LayoutContext } from "~/context"
 import { CollectionType, NewCollection } from "~/model/Collection"
 import { DEFAULT_COLLECTION_FILENAME } from "~/defines"
 import { generateUUID } from "~/helpers"
-import { NewCollectionsContext } from "~/context/NewCollectionsContext"
+import { NewCollectionsContext } from "~/context/CollectionsContext"
 
 interface State {
   collectionType: CollectionType
@@ -34,7 +30,7 @@ export const CollectionsPanel: React.FC = () => {
   useEffect(() => {
     if (layoutContext.collectionPanel.editMode) {
       setState({
-        collectionType: !!editorStateContext.collection.gistId
+        collectionType: editorStateContext.collection.gistId
           ? "remote"
           : "local",
         collectionName: editorStateContext.collection.name,

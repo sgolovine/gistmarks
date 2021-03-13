@@ -1,5 +1,7 @@
 tsconfig.json
 *.config.js
+*.css
+*.html
 /node_modules
 /dist
 /functions

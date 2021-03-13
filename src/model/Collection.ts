@@ -1,14 +1,6 @@
-// Represents a "shallow" collection
+import { BookmarkCollection } from "./Bookmark"
 
-import { Bookmark, BookmarkCollection } from "./Bookmark"
-
-// with a guid and a name
 export interface Collection {
-  name: string
-  guid: string
-}
-
-export interface NewCollection {
   // Then name of the collection
   name: string
   // Auto generated guid

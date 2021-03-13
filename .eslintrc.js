@@ -20,7 +20,11 @@ module.exports = {
       jsx: true,
     },
   },
-  rules: {},
+  rules: {
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "react/prop-types": 0,
+    "@typescript-eslint/no-unused-vars": "error",
+  },
   settings: {
     react: {
       version: "detect",

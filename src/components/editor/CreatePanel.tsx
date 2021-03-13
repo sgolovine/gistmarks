@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react"
 import { LayoutContext } from "~/context"
-import { NewCollectionsContext } from "~/context/NewCollectionsContext"
+import { NewCollectionsContext } from "~/context/CollectionsContext"
 import { generateUUID } from "~/helpers"
 import { Bookmark } from "~/model/Bookmark"
 import Editor from "./Editor"
