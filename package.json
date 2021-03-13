@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "netlify dev",
-    "format": "prettier --write ./src/**/*.{ts,tsx}",
-    "ci": "yarn format && tsc",
     "bundle": "NODE_ENV=development webpack serve --config webpack.config.js --progress",
     "build": "NODE_ENV=production webpack --config webpack.config.js",
     "serve": "node_modules/serve/bin/serve.js -s dist",
-    "lint": "eslint 'src/**/*'"
+    "format": "prettier --write ./src/**/*.{ts,tsx}",
+    "lint": "eslint 'src/**/*'",
+    "ci": "yarn format && tsc && yarn lint"
   },
   "repository": {
     "type": "git",
