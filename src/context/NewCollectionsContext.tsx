@@ -81,9 +81,7 @@ export const NewCollectionsContextProvider: React.FC<ContextProviderProps> = ({
   }, [nextActiveCollection])
 
   useEffect(() => {
-    console.log("active bookmarks sync for collection", activeCollection)
     if (activeCollection) {
-      console.log("syncing active bookmarks")
       const collection = collectionsState[activeCollection]
       const newCollection = {
         ...collection,
