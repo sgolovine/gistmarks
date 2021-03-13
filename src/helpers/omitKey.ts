@@ -1,6 +1,7 @@
-import { v4 as uuidv4 } from "uuid"
-
-export const omitKey = (key: string, data: { [key: string]: unknown }) => {
+export const omitKey = (key: string, data: any) => {
+  if (Object.keys(data).length === 0) {
+    return {}
+  }
   return Object.keys(data).reduce((acc: object, currentKey: string) => {
     if (currentKey != key) {
       return {
@@ -11,9 +12,4 @@ export const omitKey = (key: string, data: { [key: string]: unknown }) => {
       return acc
     }
   }, {})
-}
-
-export const generateUUID = () => {
-  const guid = uuidv4()
-  return guid
 }

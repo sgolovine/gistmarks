@@ -3,7 +3,6 @@ const path = require("path")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const webpack = require("webpack")
 const Dotenv = require("dotenv-webpack")
-const WebpackBar = require("webpackbar")
 const TerserPlugin = require("terser-webpack-plugin")
 
 // Helpers
@@ -15,7 +14,7 @@ const prodFolderPath = path.resolve(__dirname, "dist")
 
 module.exports = {
   mode: dev ? "development" : "production",
-  devtool: dev ? "cheap-module-source-map" : false,
+  devtool: dev ? "eval-source-map" : false,
   entry: path.resolve(__dirname, "src", "entry", "index.tsx"),
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx", ".html", ".css"],
@@ -27,7 +26,7 @@ module.exports = {
   devServer: {
     contentBase: devFolderPath,
     hot: true,
-    port: 3000,
+    port: 3001,
   },
   optimization: {
     minimize: true,
@@ -41,8 +40,8 @@ module.exports = {
         terserOptions: {
           warnings: true,
           compress: {
-            drop_console: true,
-            drop_debugger: true,
+            drop_console: dev ? false : true,
+            drop_debugger: dev ? false : true,
           },
           parse: {},
           mangle: true,
@@ -79,6 +78,5 @@ module.exports = {
       systemvars: true,
       silent: true,
     }),
-    new WebpackBar(),
   ],
 }

@@ -1,18 +1,20 @@
 import React, { useContext, useState } from "react"
-import { BookmarkContext, EditorStateContext, LayoutContext } from "~/context"
+import { EditorStateContext, LayoutContext } from "~/context"
+import { NewCollectionsContext } from "~/context/NewCollectionsContext"
 import { Bookmark } from "~/model/Bookmark"
 import Editor from "./Editor"
 
 export const EditPanel = () => {
-  const bookmarkContext = useContext(BookmarkContext)
+  const collectionContext = useContext(NewCollectionsContext)
   const layoutContext = useContext(LayoutContext)
   const editorState = useContext(EditorStateContext)
 
   const [state, setState] = useState<Bookmark>({
-    name: editorState.name,
-    href: editorState.href,
-    category: editorState.category,
-    description: editorState.description,
+    guid: editorState.bookmark.guid,
+    name: editorState.bookmark.name,
+    href: editorState.bookmark.href,
+    category: editorState.bookmark.category,
+    description: editorState.bookmark.description,
   })
 
   const handleSave = () => {
@@ -26,16 +28,16 @@ export const EditPanel = () => {
       return
     }
 
-    if (editorState.guid) {
-      bookmarkContext.actions.addBookmark(state, editorState.guid)
-      layoutContext.toggleCreatePanel()
+    if (editorState.bookmark.guid) {
+      collectionContext.addBookmark(state)
+      layoutContext.toggleEditPanel()
     } else {
       alert("ERR: Unable to edit, no guid found")
     }
   }
 
   const handleCancel = () => {
-    layoutContext.toggleCreatePanel()
+    layoutContext.toggleEditPanel()
   }
 
   const handleEditField = (key: keyof Bookmark, value: string) => {
@@ -47,6 +49,7 @@ export const EditPanel = () => {
 
   return (
     <Editor
+      editMode={true}
       name={state.name}
       href={state.href}
       category={state.category}

@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "netlify dev",
+    "start": "netlify dev",
     "format": "prettier --write ./src/**/*.{ts,tsx}",
     "ci": "yarn format && tsc",
-    "start": "NODE_ENV=development webpack serve --config webpack.config.js",
+    "bundle": "NODE_ENV=development webpack serve --config webpack.config.js --progress",
     "build": "NODE_ENV=production webpack --config webpack.config.js",
     "serve": "node_modules/serve/bin/serve.js -s dist"
   },
@@ -58,7 +58,6 @@
     "typescript": "^4.2.2",
     "webpack": "^5.24.4",
     "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^3.11.2",
-    "webpackbar": "^5.0.0-3"
+    "webpack-dev-server": "^3.11.2"
   }
 }

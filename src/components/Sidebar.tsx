@@ -1,10 +1,21 @@
 import React, { useContext, useState } from "react"
-import { CollectionsContext } from "~/context"
+import {
+  CollectionsContext,
+  EditorStateContext,
+  LayoutContext,
+} from "~/context"
+import { NewCollectionsContext } from "~/context/NewCollectionsContext"
+import { NewCollection } from "~/model/Collection"
 import Button from "./common/Button"
+import IconButton from "./common/IconButton"
+import EditIcon from "./icons/EditIcon"
 
 type SidebarItemProps = {
   name: string
   id: string
+}
+interface SidebarCollectionSectionProps {
+  collections: Pick<NewCollection, "bookmarks">
 }
 
 const SidebarItem: React.FC<SidebarItemProps> = ({ name, id }) => {
@@ -16,40 +27,77 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ name, id }) => {
   )
 }
 
+const SidebarCollectionsSection: React.FC = () => {
+  const collectionsContext = useContext(NewCollectionsContext)
+  const layoutContext = useContext(LayoutContext)
+  const editorStateContext = useContext(EditorStateContext)
+  const collectionKeys = Object.keys(collectionsContext.collections)
+
+  const handleEditClick = () => {
+    if (!collectionsContext.activeCollection) {
+      alert("Err: No active collection found")
+      return
+    }
+    const fullCollection =
+      collectionsContext.collections[collectionsContext.activeCollection]
+
+    editorStateContext.collection.setFields({
+      guid: fullCollection.guid,
+      name: fullCollection.name,
+      description: fullCollection.description,
+      gistId: fullCollection.gistId,
+      filename: fullCollection.gistFilename,
+    })
+
+    layoutContext.toggleCollectionsPanel({ open: true, editMode: true })
+  }
+
+  return (
+    <div className="flex flex-row">
+      <select
+        value={collectionsContext.activeCollection}
+        onChange={(e) => collectionsContext.switchCollections(e.target.value)}
+        className="flex-grow mb-4 border p-1 rounded shadow mr-2"
+      >
+        {collectionKeys.map((key) => {
+          const currentCollection = collectionsContext.collections[key]
+
+          return (
+            <option value={currentCollection.guid} key={key}>
+              {currentCollection.name}
+            </option>
+          )
+        })}
+      </select>
+      {collectionsContext.activeCollection && (
+        <IconButton onClick={handleEditClick}>
+          <EditIcon />
+        </IconButton>
+      )}
+    </div>
+  )
+}
+
 const Sidebar: React.FC = () => {
-  const collectionsContext = useContext(CollectionsContext)
+  const collectionsContext = useContext(NewCollectionsContext)
+  const layoutContext = useContext(LayoutContext)
+
+  const collectionKeys = Object.keys(collectionsContext.collections)
 
   const [inputValue, setInputValue] = useState<string>("")
 
-  const addCollection = () => {
-    collectionsContext.add(inputValue)
-    setInputValue("")
-    alert("added collection!")
+  const handleCreateCollection = () => {
+    layoutContext.toggleCollectionsPanel({ open: true })
   }
 
   return (
     <div className="flex flex-col min-w-sidebar p-4 h-full">
       <div className="pb-2 flex flex-col">
         <p className="font-bold pb-2">Collections</p>
-        {collectionsContext.collections.length > 0 && (
-          <select
-            defaultValue={collectionsContext.activeCollection ?? undefined}
-            onChange={(e) => collectionsContext.setActive(e.target.value)}
-            className="mb-4 border p-1 rounded shadow"
-          >
-            {collectionsContext.collections.map((item) => {
-              return <option key={item}>{item}</option>
-            })}
-          </select>
-        )}
-        <div className="flex flex-row">
-          <input
-            className="flex-grow border mr-2 px-2 rounded"
-            placeholder="Enter GistID of collection"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-          <Button label="Add" onClick={addCollection} />
+        {collectionKeys.length > 0 && <SidebarCollectionsSection />}
+        <div className="flex flex-row justify-evenly">
+          <Button label="Create Collection" onClick={handleCreateCollection} />
+          <Button label="Import Collection" onClick={handleCreateCollection} />
         </div>
       </div>
       <div className="pt-2">
