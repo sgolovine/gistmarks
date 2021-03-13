@@ -1,4 +1,8 @@
-export const omitKey = (key: string, data: { [key: string]: unknown }) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const omitKey = <ObjectReturnType>(
+  key: string,
+  data: { [key: string]: ObjectReturnType }
+): { [key: string]: ObjectReturnType } => {
   if (Object.keys(data).length === 0) {
     return {}
   }
@@ -14,5 +18,5 @@ export const omitKey = (key: string, data: { [key: string]: unknown }) => {
       }
     },
     {}
-  )
+  ) as { [key: string]: ObjectReturnType }
 }

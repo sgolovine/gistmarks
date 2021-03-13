@@ -1,12 +1,11 @@
 import React, { useContext, useState } from "react"
-import { LayoutContext } from "~/context"
-import { NewCollectionsContext } from "~/context/CollectionsContext"
+import { LayoutContext, CollectionsContext } from "~/context"
 import { generateUUID } from "~/helpers"
 import { Bookmark } from "~/model/Bookmark"
 import Editor from "./Editor"
 
 export const CreatePanel = () => {
-  const collectionContext = useContext(NewCollectionsContext)
+  const collectionContext = useContext(CollectionsContext)
   const layoutContext = useContext(LayoutContext)
 
   const [state, setState] = useState<{

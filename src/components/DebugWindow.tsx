@@ -1,11 +1,10 @@
 import React, { useContext } from "react"
-import { LayoutContext } from "~/context"
-import { NewCollectionsContext } from "~/context/NewCollectionsContext"
+import { LayoutContext, CollectionsContext } from "~/context"
 import AppModal from "./common/AppModal"
 
 const DebugWindow = () => {
   const layoutContext = useContext(LayoutContext)
-  const collectionsContext = useContext(NewCollectionsContext)
+  const collectionsContext = useContext(CollectionsContext)
 
   return (
     <AppModal

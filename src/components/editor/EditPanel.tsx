@@ -1,11 +1,14 @@
 import React, { useContext, useState } from "react"
-import { EditorStateContext, LayoutContext } from "~/context"
-import { NewCollectionsContext } from "~/context/CollectionsContext"
+import {
+  EditorStateContext,
+  LayoutContext,
+  CollectionsContext,
+} from "~/context"
 import { Bookmark } from "~/model/Bookmark"
 import Editor from "./Editor"
 
 export const EditPanel = () => {
-  const collectionContext = useContext(NewCollectionsContext)
+  const collectionContext = useContext(CollectionsContext)
   const layoutContext = useContext(LayoutContext)
   const editorState = useContext(EditorStateContext)
 

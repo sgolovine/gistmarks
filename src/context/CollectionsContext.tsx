@@ -108,13 +108,12 @@ export const CollectionsContextProvider: React.FC<ContextProviderProps> = ({
   }
 
   const removeCollection = (collectionGuid: string) => {
-    const newCollectionsData: { [guid: string]: Collection } = omitKey(
+    const newCollectionsData = omitKey<Collection>(
       collectionGuid,
       collectionsState
     )
     setCollectionsState(newCollectionsData)
     setActiveBookmarks({})
-    // setNextActiveCollection(undefined)
   }
 
   const addBookmark = (bookmark: Bookmark) => {
