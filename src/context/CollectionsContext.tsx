@@ -1,78 +1,159 @@
 import React, { useState, useEffect, createContext } from "react"
-import { COLLECTIONS_STORAGE_KEY } from "~/defines/localStorage"
-import { removeItem, uniq } from "~/helpers"
-import { ContextProviderProps } from "~/model/Context"
 import { ContextDevTool } from "react-context-devtool"
+import { omitKey } from "~/helpers"
 import { dev } from "~/helpers/isDev"
+import { Bookmark, BookmarkCollection } from "~/model/Bookmark"
+import { Collection } from "~/model/Collection"
+import { ContextProviderProps } from "~/model/Context"
 
-interface CollectionsContext {
-  collections: string[]
-  activeCollection: string | null
-  setActive: (guid: string) => void
-  add: (guid: string) => void
-  remove: (guid: string) => void
+interface CollectionsState {
+  collections: {
+    [guid: string]: Collection
+  }
+  activeCollection?: string
+  activeBookmarks: BookmarkCollection
 }
 
-export const CollectionsContext = createContext<CollectionsContext>({
-  collections: [],
-  activeCollection: null,
-  setActive: () => null,
-  add: () => null,
-  remove: () => null,
-})
+interface CollectionsActions {
+  addCollection: (collection: Collection) => void
+  removeCollection: (collectionGuid: string) => void
+  switchCollections: (collectionId?: string) => void
+  // Bookmark Actions
+  addBookmark: (bookmark: Bookmark) => void
+  removeBookmark: (bookmarkGuid: string) => void
+}
+
+type CollectionsContext = CollectionsState & CollectionsActions
+
+export const CollectionsContext = createContext<CollectionsContext>(
+  {} as CollectionsContext
+)
 
 export const CollectionsContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  const [collections, setCollections] = useState<string[]>([])
-  const [activeCollection, setActiveCollection] = useState<string>("")
+  const [collectionsState, setCollectionsState] = useState<{
+    [guid: string]: Collection
+  }>({})
 
-  // Rehydrate collections from local storage
+  const [nextActiveCollection, setNextActiveCollection] = useState<
+    string | undefined
+  >(undefined)
+
+  const [activeCollection, setActiveCollection] = useState<string | undefined>(
+    undefined
+  )
+
+  const [activeBookmarks, setActiveBookmarks] = useState<BookmarkCollection>({})
+
   useEffect(() => {
-    const data = localStorage.getItem(COLLECTIONS_STORAGE_KEY)
-    if (data) {
-      const parsedData = JSON.parse(data)
-      setCollections(parsedData.collections)
-      setActiveCollection(parsedData.activeCollection)
+    // Get the previous collection and set the new collection
+    const previousCollectionId = activeCollection
+    const currentCollection = nextActiveCollection
+    setActiveCollection(nextActiveCollection)
+
+    // Set the bookmarks for the previous collection
+    if (previousCollectionId && activeBookmarks) {
+      const previousCollection = collectionsState[previousCollectionId]
+      const previousCollectionWithBookmarks: Collection = {
+        ...previousCollection,
+        bookmarks: activeBookmarks,
+      }
+      setCollectionsState({
+        ...collectionsState,
+        [previousCollectionId]: previousCollectionWithBookmarks,
+      })
     }
-  }, [])
 
-  // Persist collections into local storage on any change
+    // Check if the new collection has bookmarks and apply them
+    if (
+      currentCollection &&
+      Object.keys(collectionsState[currentCollection].bookmarks).length > 0
+    ) {
+      const newCollectionBookmarks =
+        collectionsState[currentCollection].bookmarks
+      setActiveBookmarks(newCollectionBookmarks)
+    } else {
+      // If the new collection does not have any bookmarks
+      // Empty the active bookmarks object
+      setActiveBookmarks({})
+    }
+  }, [nextActiveCollection])
+
   useEffect(() => {
-    localStorage.setItem(
-      COLLECTIONS_STORAGE_KEY,
-      JSON.stringify({ collections, activeCollection })
+    if (activeCollection) {
+      const collection = collectionsState[activeCollection]
+      const newCollection = {
+        ...collection,
+        bookmarks: activeBookmarks,
+      }
+      setCollectionsState({
+        ...collectionsState,
+        [newCollection.guid]: newCollection,
+      })
+    }
+  }, [activeBookmarks])
+
+  const addCollection = (collection: Collection) => {
+    setCollectionsState({
+      ...collectionsState,
+      [collection.guid]: {
+        ...collection,
+        bookmarks: activeCollection ? {} : activeBookmarks,
+      },
+    })
+    if (!activeCollection) {
+      setNextActiveCollection(collection.guid)
+    }
+  }
+
+  const removeCollection = (collectionGuid: string) => {
+    const newCollectionsData = omitKey<Collection>(
+      collectionGuid,
+      collectionsState
     )
-  }, [collections, activeCollection])
-
-  const add = (collection: string) => {
-    setCollections(uniq([...collections, collection]))
+    setCollectionsState(newCollectionsData)
+    setActiveBookmarks({})
   }
 
-  const remove = (collection: string) => {
-    setCollections(removeItem(collections, collection))
+  const addBookmark = (bookmark: Bookmark) => {
+    setActiveBookmarks({
+      ...activeBookmarks,
+      [bookmark.guid]: bookmark,
+    })
   }
 
-  const setActive = (collection: string) => {
-    setActiveCollection(collection)
+  const removeBookmark = (bookmarkGuid: string) => {
+    const newBookmarks = omitKey(bookmarkGuid, activeBookmarks)
+    setActiveBookmarks(newBookmarks)
   }
 
-  const contextValue: CollectionsContext = {
-    collections,
+  const switchCollections = (newCollectionId?: string) => {
+    setNextActiveCollection(newCollectionId || undefined)
+  }
+
+  const state: CollectionsState = {
+    collections: collectionsState,
     activeCollection,
-    add,
-    remove,
-    setActive,
+    activeBookmarks,
+  }
+
+  const actions: CollectionsActions = {
+    addCollection,
+    removeCollection,
+    switchCollections,
+    addBookmark,
+    removeBookmark,
   }
 
   return (
-    <CollectionsContext.Provider value={contextValue}>
+    <CollectionsContext.Provider value={{ ...state, ...actions }}>
       {children}
       {dev && (
         <ContextDevTool
           context={CollectionsContext}
-          id="collectionsContext"
-          displayName="Collections Context"
+          id="CollectionsContext"
+          displayName="NEW Collections Context"
         />
       )}
     </CollectionsContext.Provider>

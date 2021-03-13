@@ -1,34 +1,15 @@
-import React, { useContext, useState } from "react"
+import React, { useContext } from "react"
 import {
-  CollectionsContext,
   EditorStateContext,
   LayoutContext,
+  CollectionsContext,
 } from "~/context"
-import { NewCollectionsContext } from "~/context/NewCollectionsContext"
-import { NewCollection } from "~/model/Collection"
 import Button from "./common/Button"
 import IconButton from "./common/IconButton"
 import EditIcon from "./icons/EditIcon"
 
-type SidebarItemProps = {
-  name: string
-  id: string
-}
-interface SidebarCollectionSectionProps {
-  collections: Pick<NewCollection, "bookmarks">
-}
-
-const SidebarItem: React.FC<SidebarItemProps> = ({ name, id }) => {
-  return (
-    <div>
-      <input type="checkbox" />
-      <p>{name}</p>
-    </div>
-  )
-}
-
 const SidebarCollectionsSection: React.FC = () => {
-  const collectionsContext = useContext(NewCollectionsContext)
+  const collectionsContext = useContext(CollectionsContext)
   const layoutContext = useContext(LayoutContext)
   const editorStateContext = useContext(EditorStateContext)
   const collectionKeys = Object.keys(collectionsContext.collections)
@@ -79,12 +60,10 @@ const SidebarCollectionsSection: React.FC = () => {
 }
 
 const Sidebar: React.FC = () => {
-  const collectionsContext = useContext(NewCollectionsContext)
+  const collectionsContext = useContext(CollectionsContext)
   const layoutContext = useContext(LayoutContext)
 
   const collectionKeys = Object.keys(collectionsContext.collections)
-
-  const [inputValue, setInputValue] = useState<string>("")
 
   const handleCreateCollection = () => {
     layoutContext.toggleCollectionsPanel({ open: true })

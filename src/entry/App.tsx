@@ -3,16 +3,15 @@ import { BookmarkList } from "~/components/bookmark"
 import Layout from "~/components/Layout"
 import {
   AuthContextProvider,
-  CollectionsContextProvider,
   EditorStateContextProvider,
   LayoutContextProvider,
+  CollectionsContextProvider,
 } from "~/context"
 import DebugWindow from "~/components/DebugWindow"
 
 import "~/styles/tailwind.css"
 import "~/styles/button.css"
 import "~/styles/form.css"
-import { NewCollectionsContextProvider } from "~/context/NewCollectionsContext"
 
 interface ContextWrapperProps {
   children: ReactNode
@@ -24,9 +23,7 @@ const ContextWrapper: React.FC<ContextWrapperProps> = ({ children }) => {
     <AuthContextProvider>
       <LayoutContextProvider>
         <CollectionsContextProvider>
-          <NewCollectionsContextProvider>
-            <EditorStateContextProvider>{children}</EditorStateContextProvider>
-          </NewCollectionsContextProvider>
+          <EditorStateContextProvider>{children}</EditorStateContextProvider>
         </CollectionsContextProvider>
       </LayoutContextProvider>
     </AuthContextProvider>

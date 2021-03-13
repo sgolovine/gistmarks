@@ -7,7 +7,7 @@ type Props = {
 
 const IconButton: React.FC<Props> = ({ onClick, children }) => {
   const handleClick = () =>
-    !!onClick ? onClick() : console.log("no click handler")
+    onClick ? onClick() : console.log("no click handler")
 
   return (
     <button

@@ -1,13 +1,13 @@
 import React, { useContext } from "react"
-import { NewCollectionsContext } from "~/context/NewCollectionsContext"
+import { CollectionsContext } from "~/context"
 import { Bookmark } from "./Bookmark"
 
 export const BookmarkList: React.FC = () => {
-  const collectionContext = useContext(NewCollectionsContext)
+  const collectionContext = useContext(CollectionsContext)
   const bookmarkKeys = Object.keys(collectionContext.activeBookmarks)
 
   if (bookmarkKeys.length === 0) {
-    return <p>You don't have any bookmarks yet!</p>
+    return <p>You don&apos;t have any bookmarks yet!</p>
   }
 
   return (

@@ -1,6 +1,6 @@
 import React, { useContext } from "react"
 import { EditorStateContext, LayoutContext } from "~/context"
-import { NewCollectionsContext } from "~/context/NewCollectionsContext"
+import { CollectionsContext } from "~/context"
 import EditIcon from "../icons/EditIcon"
 import TrashIcon from "../icons/TrashIcon"
 
@@ -21,7 +21,7 @@ export const Bookmark: React.FC<Props> = ({
 }) => {
   const editorStateContext = useContext(EditorStateContext)
   const layoutContext = useContext(LayoutContext)
-  const collectionsContext = useContext(NewCollectionsContext)
+  const collectionsContext = useContext(CollectionsContext)
 
   const handleEdit = () => {
     const bookmark = collectionsContext.activeBookmarks[guid]

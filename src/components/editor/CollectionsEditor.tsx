@@ -1,9 +1,6 @@
-import React, { useContext, useState } from "react"
+import React from "react"
 import Button from "~/components/common/Button"
-import { LayoutContext } from "~/context"
-import { NewCollectionsContext } from "~/context/NewCollectionsContext"
-import { generateUUID } from "~/helpers"
-import { CollectionType, NewCollection } from "~/model/Collection"
+import { CollectionType } from "~/model/Collection"
 
 interface Props {
   editMode: boolean

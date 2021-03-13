@@ -1,12 +1,9 @@
 import React, { useContext } from "react"
-import Button, { LinkButton } from "./common/Button"
+import Button from "./common/Button"
 import IconButton from "./common/IconButton"
 import MenuIcon from "./icons/MenuIcon"
-import { buildAuthUrl } from "~/helpers"
 import { AuthContext, LayoutContext } from "~/context"
 import { dev } from "~/helpers/isDev"
-
-const authUrl = buildAuthUrl()
 
 const Header: React.FC = () => {
   const layoutContext = useContext(LayoutContext)

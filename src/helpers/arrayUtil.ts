@@ -6,6 +6,6 @@ export const removeItem = (arr: string[], targetItem: string) => {
 // Given any input array, will return an array with
 // just the unique values
 // source: https://stackoverflow.com/a/14438954
-export function uniq(arr: any[]) {
+export function uniq(arr: unknown[]) {
   return arr.filter((v, i, a) => a.indexOf(v) === i)
 }

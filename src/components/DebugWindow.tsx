@@ -1,21 +1,10 @@
-import React, { useContext, useState } from "react"
-import { CollectionsContext, LayoutContext } from "~/context"
-import { NewCollectionsContext } from "~/context/NewCollectionsContext"
-import { generateUUID } from "~/helpers"
-import { Bookmark } from "~/model/Bookmark"
-import { NewCollection } from "~/model/Collection"
+import React, { useContext } from "react"
+import { LayoutContext, CollectionsContext } from "~/context"
 import AppModal from "./common/AppModal"
-import Button from "./common/Button"
-
-const collectionsContextWhitelist = [
-  "collections",
-  "activeCollections",
-  "bookmarks",
-]
 
 const DebugWindow = () => {
   const layoutContext = useContext(LayoutContext)
-  const collectionsContext = useContext(NewCollectionsContext)
+  const collectionsContext = useContext(CollectionsContext)
 
   return (
     <AppModal

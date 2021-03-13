@@ -1,10 +1,23 @@
-import { stringify } from "query-string"
-import React, { useState, useEffect, createContext } from "react"
+import React, { useState, createContext } from "react"
 import { ContextDevTool } from "react-context-devtool"
 import { dev } from "~/helpers/isDev"
 import { ContextProviderProps } from "~/model/Context"
 
-type Fields = "name" | "href" | "category" | "description"
+type BookmarkArgs = {
+  guid: string
+  name: string
+  href: string
+  category: string
+  description: string
+}
+
+type CollectionArgs = {
+  guid: string
+  name: string
+  description: string | null
+  gistId: string | null
+  filename: string | null
+}
 
 interface EditorBookmarkState {
   guid: string
@@ -12,19 +25,7 @@ interface EditorBookmarkState {
   href: string
   category: string
   description: string
-  setFields: ({
-    guid,
-    name,
-    href,
-    category,
-    description,
-  }: {
-    guid: string
-    name: string
-    href: string
-    category: string
-    description: string
-  }) => void
+  setFields: ({ guid, name, href, category, description }: BookmarkArgs) => void
 }
 
 interface EditorCollectionState {
@@ -39,13 +40,7 @@ interface EditorCollectionState {
     description,
     gistId,
     filename,
-  }: {
-    guid: string
-    name: string
-    description: string | null
-    gistId: string | null
-    filename: string | null
-  }) => void
+  }: CollectionArgs) => void
 }
 
 interface EditorStateContext {
@@ -79,13 +74,7 @@ export const EditorStateContext = createContext<EditorStateContext>({
 export const EditorStateContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  const [bookmarkState, setBookmarkState] = useState<{
-    guid: string
-    name: string
-    href: string
-    category: string
-    description: string
-  }>({
+  const [bookmarkState, setBookmarkState] = useState<BookmarkArgs>({
     guid: "",
     name: "",
     href: "",
@@ -93,13 +82,7 @@ export const EditorStateContextProvider: React.FC<ContextProviderProps> = ({
     description: "",
   })
 
-  const [collectionState, setCollectionState] = useState<{
-    guid: string
-    name: string
-    description: string | null
-    gistId: string | null
-    filename: string | null
-  }>({
+  const [collectionState, setCollectionState] = useState<CollectionArgs>({
     guid: "",
     name: "",
     description: null,
@@ -113,13 +96,7 @@ export const EditorStateContextProvider: React.FC<ContextProviderProps> = ({
     href,
     category,
     description,
-  }: {
-    guid: string
-    name: string
-    href: string
-    category: string
-    description: string
-  }) => {
+  }: BookmarkArgs) => {
     setBookmarkState({
       guid,
       name,
@@ -135,13 +112,7 @@ export const EditorStateContextProvider: React.FC<ContextProviderProps> = ({
     description,
     gistId,
     filename,
-  }: {
-    guid: string
-    name: string
-    description: string | null
-    gistId: string | null
-    filename: string | null
-  }) => {
+  }: CollectionArgs) => {
     setCollectionState({
       guid,
       name,
@@ -158,7 +129,7 @@ export const EditorStateContextProvider: React.FC<ContextProviderProps> = ({
       href: bookmarkState.href,
       category: bookmarkState.category,
       description: bookmarkState.description,
-      setFields: setBookmarkState,
+      setFields: setBookmarkFields,
     },
     collection: {
       guid: collectionState.guid,
