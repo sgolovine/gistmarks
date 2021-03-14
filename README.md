@@ -13,7 +13,7 @@ Gistmarks.io is a bookmark manager that uses Github Gist to save and share bookm
 
 ### Setup
 
-1. Clone the repository (duh....)
+1. Clone the repository (`git clone git@github.com:sgolovine/gistmarks.git`)
 2. Copy `.env.example` to `.env` and replace the keys inside with your own.
 3. Run `yarn install` to install dependencies
 4. Run `yarn start` to start the development server
