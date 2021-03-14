@@ -2,6 +2,8 @@
 
 Gistmarks.io is a bookmark manager that uses Github Gist to save and share bookmarks.
 
+[![Build Status](https://github.com/sgolovine/gistmarks/actions/workflows/ci.yml/badge.svg)](https://github.com/sgolovine/gistmarks/actions/workflows/ci.yml)
+
 ## Development
 
 ### Pre-requisites
