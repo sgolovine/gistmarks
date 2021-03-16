@@ -1,10 +1,10 @@
 import React, { useContext } from "react"
-import { CollectionsContext } from "~/context"
+import { BookmarkContext } from "~/context/BookmarkContext"
 import { Bookmark } from "./Bookmark"
 
 export const BookmarkList: React.FC = () => {
-  const collectionContext = useContext(CollectionsContext)
-  const bookmarkKeys = Object.keys(collectionContext.activeBookmarks)
+  const bookmarkContext = useContext(BookmarkContext)
+  const bookmarkKeys = Object.keys(bookmarkContext.bookmarks)
 
   if (bookmarkKeys.length === 0) {
     return <p>You don&apos;t have any bookmarks yet!</p>
@@ -13,7 +13,7 @@ export const BookmarkList: React.FC = () => {
   return (
     <div className="flex flex-row flex-wrap">
       {bookmarkKeys.map((key) => {
-        const bookmarkData = collectionContext.activeBookmarks[key]
+        const bookmarkData = bookmarkContext.bookmarks[key]
         return (
           <Bookmark
             key={key}
