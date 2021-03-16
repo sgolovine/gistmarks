@@ -21,6 +21,7 @@ export const BookmarkList: React.FC = () => {
             title={bookmarkData.name}
             href={bookmarkData.href}
             description={bookmarkData.description}
+            category={bookmarkData.category}
           />
         )
       })}

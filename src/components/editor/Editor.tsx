@@ -1,8 +1,9 @@
-import React from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { generateUUID } from "~/helpers"
 import { Bookmark } from "~/model/Bookmark"
 import Button from "~/components/common/Button"
 import { dev } from "~/helpers/isDev"
+import { BookmarkContext } from "~/context"
 
 export interface EditorProps {
   editMode: boolean
@@ -27,8 +28,26 @@ const Editor: React.FC<EditorProps> = ({
   onSave,
   onCancel,
 }) => {
+  const bookmarkContext = useContext(BookmarkContext)
+
+  const [internalSelectValue, setInternalSelectValue] = useState<
+    string | undefined
+  >(undefined)
+
+  useEffect(() => {
+    if (internalSelectValue) {
+      if (internalSelectValue === "---") {
+        onEditField("category", "")
+      } else {
+        onEditField("category", internalSelectValue)
+      }
+    }
+  }, [internalSelectValue])
+
+  const shouldShowSelect = bookmarkContext.categories.length > 0
   const headingText = editMode ? "Edit Bookmark" : "Create Bookmark"
   const submitButtonText = editMode ? "Save Changes" : "Create"
+
   return (
     <div className="min-w-create-panel border">
       <div>
@@ -83,6 +102,25 @@ const Editor: React.FC<EditorProps> = ({
             className="border rounded px-1 py-2"
             placeholder="Category"
           />
+          {shouldShowSelect && (
+            <select
+              value={internalSelectValue}
+              onChange={(e) => setInternalSelectValue(e.target.value)}
+              className="border rounded px-1 py-2 mb-1"
+            >
+              <option value={undefined}>---</option>
+              {bookmarkContext.categories.map((item, index) => {
+                return (
+                  <option
+                    value={item}
+                    key={`${item.replace(" ", "")}-${index}`}
+                  >
+                    {item}
+                  </option>
+                )
+              })}
+            </select>
+          )}
         </div>
 
         {/* DESCRIPTION */}

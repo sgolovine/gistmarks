@@ -9,6 +9,7 @@ interface Props {
   title?: string
   href?: string
   description?: string
+  category?: string
 }
 
 const CARD_SIZE = "72"
@@ -18,6 +19,7 @@ export const Bookmark: React.FC<Props> = ({
   title,
   href,
   description,
+  category,
 }) => {
   const editorStateContext = useContext(EditorStateContext)
   const layoutContext = useContext(LayoutContext)
@@ -59,6 +61,13 @@ export const Bookmark: React.FC<Props> = ({
           >
             {href}
           </a>
+          {category && (
+            <div className="flex flex-row pt-2">
+              <p className="border m-1 px-2 py-1 rounded-full text-sm font-bold bg-blue-500 text-white">
+                {category}
+              </p>
+            </div>
+          )}
           <div className="pt-4">
             <p>{description}</p>
           </div>
