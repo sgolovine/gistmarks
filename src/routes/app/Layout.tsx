@@ -1,14 +1,14 @@
 import React, { ReactNode, useContext } from "react"
-import { LayoutContext } from "../context/LayoutContext"
-import { CreatePanel, EditPanel } from "./editor"
-import Header from "./Header"
-import Sidebar from "./Sidebar"
+import { CreatePanel, EditPanel } from "~/components/editor"
+import { LayoutContext } from "~/context"
+import { Header } from "./Header"
+import { Sidebar } from "./SIdebar"
 
 type Props = {
   children: ReactNode
 }
 
-const Layout: React.FC<Props> = ({ children }) => {
+export const Layout: React.FC<Props> = ({ children }) => {
   const layoutContext = useContext(LayoutContext)
   return (
     <div className="h-screen overflow-hidden">
@@ -24,5 +24,3 @@ const Layout: React.FC<Props> = ({ children }) => {
     </div>
   )
 }
-
-export default Layout

@@ -5,6 +5,7 @@ const webpack = require("webpack")
 const Dotenv = require("dotenv-webpack")
 const TerserPlugin = require("terser-webpack-plugin")
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 
 // Helpers
 const dev = process.env.NODE_ENV === "development"
@@ -85,5 +86,6 @@ module.exports = {
       silent: true,
     }),
     dev && new ReactRefreshWebpackPlugin(),
+    new CleanWebpackPlugin(),
   ].filter(Boolean),
 }

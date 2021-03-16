@@ -1,6 +1,4 @@
 import React, { ReactNode } from "react"
-import { BookmarkList } from "~/components/bookmark"
-import Layout from "~/components/Layout"
 import {
   AuthContextProvider,
   EditorStateContextProvider,
@@ -11,6 +9,7 @@ import "~/styles/tailwind.css"
 import "~/styles/button.css"
 import "~/styles/form.css"
 import { BookmarkContextProvider } from "~/context/BookmarkContext"
+import { Router } from "~/routes"
 
 interface ContextWrapperProps {
   children: ReactNode
@@ -32,9 +31,7 @@ const ContextWrapper: React.FC<ContextWrapperProps> = ({ children }) => {
 const App = () => {
   return (
     <ContextWrapper>
-      <Layout>
-        <BookmarkList />
-      </Layout>
+      <Router />
     </ContextWrapper>
   )
 }

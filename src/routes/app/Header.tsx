@@ -1,10 +1,10 @@
 import React, { useContext } from "react"
-import Button from "./common/Button"
-import IconButton from "./common/IconButton"
-import MenuIcon from "./icons/MenuIcon"
+import Button from "~/components/common/Button"
+import IconButton from "~/components/common/IconButton"
+import MenuIcon from "~/components/icons/MenuIcon"
 import { AuthContext, BookmarkContext, LayoutContext } from "~/context"
 
-const Header: React.FC = () => {
+export const Header: React.FC = () => {
   const layoutContext = useContext(LayoutContext)
   const authContext = useContext(AuthContext)
   const bookmarkContext = useContext(BookmarkContext)
@@ -52,5 +52,3 @@ const Header: React.FC = () => {
     </div>
   )
 }
-
-export default Header
