@@ -1,15 +1,12 @@
 import React, { useContext, useState } from "react"
-import {
-  EditorStateContext,
-  LayoutContext,
-  CollectionsContext,
-} from "~/context"
+import { EditorStateContext, LayoutContext } from "~/context"
+import { BookmarkContext } from "~/context/BookmarkContext"
 import { Bookmark } from "~/model/Bookmark"
 import Editor from "./Editor"
 
 export const EditPanel = () => {
-  const collectionContext = useContext(CollectionsContext)
   const layoutContext = useContext(LayoutContext)
+  const bookmarkContext = useContext(BookmarkContext)
   const editorState = useContext(EditorStateContext)
 
   const [state, setState] = useState<Bookmark>({
@@ -32,7 +29,7 @@ export const EditPanel = () => {
     }
 
     if (editorState.bookmark.guid) {
-      collectionContext.addBookmark(state)
+      bookmarkContext.editBookmark(state, editorState.bookmark.guid)
       layoutContext.toggleEditPanel()
     } else {
       alert("ERR: Unable to edit, no guid found")

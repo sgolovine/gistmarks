@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react"
-import { LayoutContext, CollectionsContext } from "~/context"
+import { LayoutContext } from "~/context"
+import { BookmarkContext } from "~/context/BookmarkContext"
 import { generateUUID } from "~/helpers"
 import { Bookmark } from "~/model/Bookmark"
 import Editor from "./Editor"
 
 export const CreatePanel = () => {
-  const collectionContext = useContext(CollectionsContext)
+  const bookmarkContext = useContext(BookmarkContext)
   const layoutContext = useContext(LayoutContext)
 
   const [state, setState] = useState<{
@@ -39,7 +40,7 @@ export const CreatePanel = () => {
       description: state.description,
       category: state.category,
     }
-    collectionContext.addBookmark(bookmark)
+    bookmarkContext.addBookmark(bookmark, guid)
     layoutContext.toggleCreatePanel()
   }
 

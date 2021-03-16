@@ -5,13 +5,12 @@ import {
   AuthContextProvider,
   EditorStateContextProvider,
   LayoutContextProvider,
-  CollectionsContextProvider,
 } from "~/context"
-import DebugWindow from "~/components/DebugWindow"
 
 import "~/styles/tailwind.css"
 import "~/styles/button.css"
 import "~/styles/form.css"
+import { BookmarkContextProvider } from "~/context/BookmarkContext"
 
 interface ContextWrapperProps {
   children: ReactNode
@@ -22,20 +21,11 @@ const ContextWrapper: React.FC<ContextWrapperProps> = ({ children }) => {
   return (
     <AuthContextProvider>
       <LayoutContextProvider>
-        <CollectionsContextProvider>
+        <BookmarkContextProvider>
           <EditorStateContextProvider>{children}</EditorStateContextProvider>
-        </CollectionsContextProvider>
+        </BookmarkContextProvider>
       </LayoutContextProvider>
     </AuthContextProvider>
-  )
-}
-
-// Modals used by the app
-const AppModals = () => {
-  return (
-    <>
-      <DebugWindow />
-    </>
   )
 }
 
@@ -45,7 +35,6 @@ const App = () => {
       <Layout>
         <BookmarkList />
       </Layout>
-      <AppModals />
     </ContextWrapper>
   )
 }
