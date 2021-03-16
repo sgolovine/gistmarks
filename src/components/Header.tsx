@@ -2,11 +2,12 @@ import React, { useContext } from "react"
 import Button from "./common/Button"
 import IconButton from "./common/IconButton"
 import MenuIcon from "./icons/MenuIcon"
-import { AuthContext, LayoutContext } from "~/context"
+import { AuthContext, BookmarkContext, LayoutContext } from "~/context"
 
 const Header: React.FC = () => {
   const layoutContext = useContext(LayoutContext)
   const authContext = useContext(AuthContext)
+  const bookmarkContext = useContext(BookmarkContext)
   const buttonText = layoutContext.createPanelOpen
     ? "Close Window"
     : "Create Bookmark"
@@ -27,6 +28,14 @@ const Header: React.FC = () => {
           <MenuIcon />
         </IconButton>
         <p className="text-lg font-bold">GistMarks</p>
+        <div>
+          <input
+            value={bookmarkContext.searchTerm}
+            onChange={(e) => bookmarkContext.setSearch(e.target.value)}
+            placeholder="Search"
+            className="ml-2 py-2 px-1 border rounded"
+          />
+        </div>
       </div>
       <div>
         <Button
