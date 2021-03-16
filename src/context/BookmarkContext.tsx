@@ -1,3 +1,4 @@
+import { escapeRegExp } from "lodash"
 import React, { createContext, useEffect, useState } from "react"
 import { BOOKMARK_STORAGE_KEY } from "~/defines"
 import { omitKey, removeItem, uniq } from "~/helpers"
@@ -13,23 +14,69 @@ interface BookmarkContext {
   bookmarks: Bookmarks
   categories: string[]
   activeCategories: string[]
+  searchTerm: string
   addActiveCategory: (category: string) => void
   removeActiveCategory: (category: string) => void
   addBookmark: (bookmark: Bookmark, guid: string) => void
   removeBookmark: (guid: string) => void
   editBookmark: (bookmark: Partial<Bookmark>, guid: string) => void
+  setSearch: (newTerm: string) => void
 }
 
 export const BookmarkContext = createContext<BookmarkContext>({
   bookmarks: {},
   categories: [],
   activeCategories: [],
+  searchTerm: "",
   addActiveCategory: () => null,
   removeActiveCategory: () => null,
   addBookmark: () => null,
   removeBookmark: () => null,
   editBookmark: () => null,
+  setSearch: () => null,
 })
+
+function filterByCategories(bookmarks: Bookmarks, activeCategories: string[]) {
+  const filterBookmarks = Object.keys(bookmarks).reduce(
+    (acc: Bookmarks, key: string) => {
+      if (activeCategories.indexOf(bookmarks[key].category) > -1) {
+        return {
+          ...acc,
+          [key]: bookmarks[key],
+        }
+      } else {
+        return acc
+      }
+    },
+    {} as Bookmarks
+  )
+  return filterBookmarks
+}
+
+function filterBySearchTerm(bookmarks: Bookmarks, searchTerm: string) {
+  const re = new RegExp(escapeRegExp(searchTerm), "i")
+
+  const filteredBookmarks = Object.keys(bookmarks).reduce(
+    (acc: Bookmarks, key: string) => {
+      const bookmark = bookmarks[key]
+      if (
+        (searchTerm && re.test(bookmark.name)) ||
+        re.test(bookmark.href) ||
+        re.test(bookmark.category)
+      ) {
+        return {
+          ...acc,
+          [key]: bookmark,
+        }
+      } else {
+        return acc
+      }
+    },
+    {} as Bookmarks
+  )
+
+  return filteredBookmarks
+}
 
 export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
   children,
@@ -44,6 +91,8 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
 
   const [categories, setCategories] = useState<string[]>([])
 
+  const [searchTerm, setSearchTerm] = useState<string>("")
+
   const [activeCategories, setActiveCategories] = useState<string[]>([])
 
   useEffect(() => {
@@ -55,26 +104,16 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
   }, [bookmarks])
 
   useEffect(() => {
-    if (activeCategories.length > 0) {
-      console.log("filtering categories")
-      const filterBookmarks = Object.keys(bookmarks).reduce(
-        (acc: Bookmarks, key: string) => {
-          if (activeCategories.indexOf(bookmarks[key].category) > -1) {
-            return {
-              ...acc,
-              [key]: bookmarks[key],
-            }
-          } else {
-            return acc
-          }
-        },
-        {} as Bookmarks
-      )
+    if (searchTerm) {
+      const filteredBookmarks = filterBySearchTerm(bookmarks, searchTerm)
+      setFilteredBookmarks(filteredBookmarks)
+    } else if (activeCategories.length > 0) {
+      const filterBookmarks = filterByCategories(bookmarks, activeCategories)
       setFilteredBookmarks(filterBookmarks)
     } else {
       setFilteredBookmarks(bookmarks)
     }
-  }, [bookmarks, categories, activeCategories])
+  }, [bookmarks, categories, activeCategories, searchTerm])
 
   const addBookmark = (bookmark: Bookmark, guid: string) => {
     setBookmarks({
@@ -107,15 +146,21 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
     setActiveCategories(removeItem(activeCategories, category))
   }
 
+  const setSearch = (newSearchTerm: string) => {
+    setSearchTerm(newSearchTerm)
+  }
+
   const value: BookmarkContext = {
     bookmarks: filteredBookmarks,
     activeCategories,
     categories,
+    searchTerm,
     addBookmark,
     editBookmark,
     removeBookmark,
     addActiveCategory,
     removeActiveCategory,
+    setSearch,
   }
 
   return (
