@@ -13,8 +13,8 @@ interface BookmarkContext {
   bookmarks: Bookmarks
   categories: string[]
   activeCategories: string[]
-  addCategory: (category: string) => void
-  removeCategory: (category: string) => void
+  addActiveCategory: (category: string) => void
+  removeActiveCategory: (category: string) => void
   addBookmark: (bookmark: Bookmark, guid: string) => void
   removeBookmark: (guid: string) => void
   editBookmark: (bookmark: Partial<Bookmark>, guid: string) => void
@@ -24,8 +24,8 @@ export const BookmarkContext = createContext<BookmarkContext>({
   bookmarks: {},
   categories: [],
   activeCategories: [],
-  addCategory: () => null,
-  removeCategory: () => null,
+  addActiveCategory: () => null,
+  removeActiveCategory: () => null,
   addBookmark: () => null,
   removeBookmark: () => null,
   editBookmark: () => null,
@@ -51,11 +51,12 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
     const categories = bookmarkKeys.reduce((acc: string[], key: string) => {
       return [...acc, bookmarks[key].category]
     }, [])
-    setCategories(categories)
+    setCategories(uniq(categories))
   }, [bookmarks])
 
   useEffect(() => {
     if (activeCategories.length > 0) {
+      console.log("filtering categories")
       const filterBookmarks = Object.keys(bookmarks).reduce(
         (acc: Bookmarks, key: string) => {
           if (activeCategories.indexOf(bookmarks[key].category) > -1) {
@@ -73,7 +74,7 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
     } else {
       setFilteredBookmarks(bookmarks)
     }
-  }, [bookmarks, categories])
+  }, [bookmarks, categories, activeCategories])
 
   const addBookmark = (bookmark: Bookmark, guid: string) => {
     setBookmarks({
@@ -98,11 +99,11 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
     }
   }
 
-  const addCategory = (category: string) => {
+  const addActiveCategory = (category: string) => {
     setActiveCategories(uniq([...activeCategories, category]))
   }
 
-  const removeCategory = (category: string) => {
+  const removeActiveCategory = (category: string) => {
     setActiveCategories(removeItem(activeCategories, category))
   }
 
@@ -113,8 +114,8 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
     addBookmark,
     editBookmark,
     removeBookmark,
-    addCategory,
-    removeCategory,
+    addActiveCategory,
+    removeActiveCategory,
   }
 
   return (

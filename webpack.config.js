@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin")
 const webpack = require("webpack")
 const Dotenv = require("dotenv-webpack")
 const TerserPlugin = require("terser-webpack-plugin")
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 
 // Helpers
 const dev = process.env.NODE_ENV === "development"
@@ -58,7 +59,12 @@ module.exports = {
     rules: [
       {
         test: /.(js|jsx|ts|tsx)/,
-        use: "babel-loader",
+        use: {
+          loader: "babel-loader",
+          options: {
+            plugins: [dev && "react-refresh/babel"].filter(Boolean),
+          },
+        },
         exclude: /node_modules/,
       },
       {
@@ -78,5 +84,6 @@ module.exports = {
       systemvars: true,
       silent: true,
     }),
-  ],
+    dev && new ReactRefreshWebpackPlugin(),
+  ].filter(Boolean),
 }
