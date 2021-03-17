@@ -9,7 +9,6 @@
   from = "/*"
   to = "/index.html"
   status = 200
-  # force = true
 
 # Clean up netlify functions paths
 [[ redirects ]]
