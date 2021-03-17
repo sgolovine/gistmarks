@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext } from "react"
 import Button from "~/components/common/Button"
 import { BookmarkContext } from "~/context"
 import { downloadFile } from "~/helpers"
@@ -49,6 +49,12 @@ export const SavePanel = () => {
           type="file"
           onChange={(e) => handleSelectFile(e)}
         />
+      </div>
+      <div className="py-2">
+        <p className="font-bold text-lg">Backup to Github Gist</p>
+      </div>
+      <div className="py-2">
+        <p className="font-bold text-lg">Restore from Github Gist</p>
       </div>
     </div>
   )
