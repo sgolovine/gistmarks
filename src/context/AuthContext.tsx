@@ -1,9 +1,11 @@
-import React, { useState, useEffect, createContext } from "react"
+import React, { useEffect, createContext } from "react"
 import { ContextProviderProps } from "~/model/Context"
 import axios from "axios"
 import { AUTH_STORAGE_KEY } from "~/defines/localStorage"
 import { ContextDevTool } from "react-context-devtool"
 import { dev } from "~/helpers/isDev"
+import useLocalStorage from "~/hooks/useLocalStorage"
+import { buildAuthUrl } from "~/helpers"
 
 interface AuthContext {
   authCode: string | null
@@ -12,6 +14,7 @@ interface AuthContext {
   tokenType: string | null
   isLoggedIn: boolean
   logout: () => void
+  login: () => void
 }
 
 type AuthState = Pick<
@@ -26,76 +29,21 @@ export const AuthContext = createContext<AuthContext>({
   tokenType: null,
   isLoggedIn: false,
   logout: () => null,
+  login: () => null,
 })
 
 export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  const [authState, setAuthState] = useState<AuthState>({
-    authCode: null,
-    accessToken: null,
-    scope: null,
-    tokenType: null,
-  })
-
-  // Helper function - set state
-  const setState = (key: keyof AuthState, value: string) =>
-    setAuthState({ ...authState, [key]: value })
-
-  // Helper function - persist state
-  const persistState = ({ accessToken, scope, tokenType }: AuthState) => {
-    const value = JSON.stringify({
-      accessToken,
-      scope,
-      tokenType,
-    })
-    localStorage.setItem(AUTH_STORAGE_KEY, value)
-  }
-
-  const logout = () => {
-    setAuthState({
+  const [authState, setAuthState] = useLocalStorage<AuthState>(
+    AUTH_STORAGE_KEY,
+    {
       authCode: null,
       accessToken: null,
       scope: null,
       tokenType: null,
-    })
-    localStorage.removeItem(AUTH_STORAGE_KEY)
-  }
-
-  const providerValue: AuthContext = {
-    authCode: authState.authCode,
-    accessToken: authState.accessToken,
-    scope: authState.scope,
-    tokenType: authState.tokenType,
-    isLoggedIn:
-      !!authState.accessToken && !!authState.scope && !!authState.tokenType,
-    logout,
-  }
-
-  // Rehydrate context from local storage
-  useEffect(() => {
-    // If the URL bar contains a ?code=, then we know that
-    // We are currently in the auth flow and we should
-    // ignore rehydration
-    if (
-      typeof window !== undefined &&
-      window.location.search.includes("?code=")
-    ) {
-      return
-    } else {
-      const persistedAuthState = localStorage.getItem(AUTH_STORAGE_KEY)
-      if (persistedAuthState) {
-        const value = JSON.parse(persistedAuthState)
-        const { accessToken, tokenType, scope } = value
-        setAuthState({
-          ...authState,
-          accessToken,
-          tokenType,
-          scope,
-        })
-      }
     }
-  }, [])
+  )
 
   // Once we are redirected back from github, look at the URL
   // and grab the code
@@ -128,15 +76,39 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
             tokenType,
             scope,
           })
-          persistState({
-            authCode: authState.authCode,
-            accessToken: accessToken,
-            scope: scope,
-            tokenType: tokenType,
-          })
         })
     }
   }, [authState.authCode])
+
+  // Helper function - set state
+  const setState = (key: keyof AuthState, value: string) =>
+    setAuthState({ ...authState, [key]: value })
+
+  const logout = () => {
+    setAuthState({
+      authCode: null,
+      accessToken: null,
+      scope: null,
+      tokenType: null,
+    })
+    localStorage.removeItem(AUTH_STORAGE_KEY)
+  }
+
+  const login = () => {
+    const authUrl = buildAuthUrl()
+    window.location.href = authUrl
+  }
+
+  const providerValue: AuthContext = {
+    authCode: authState.authCode,
+    accessToken: authState.accessToken,
+    scope: authState.scope,
+    tokenType: authState.tokenType,
+    isLoggedIn:
+      !!authState.accessToken && !!authState.scope && !!authState.tokenType,
+    logout,
+    login,
+  }
 
   return (
     <AuthContext.Provider value={providerValue}>

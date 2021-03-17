@@ -14,6 +14,9 @@ module.exports = {
     extend: {
       boxShadow: ["active"],
       backgroundColor: ["active"],
+      colors: {
+        github: "#181717",
+      },
     },
   },
   variants: {
