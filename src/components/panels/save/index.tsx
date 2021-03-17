@@ -47,6 +47,7 @@ export const SavePanel = () => {
     <div className="min-w-create-panel border p-1">
       <div>
         <p className="font-bold text-2xl">Backup and Sync</p>
+        {/* BACKUP TO JSON */}
         <div className="py-4">
           <p className="font-bold text-lg">Backup to JSON File</p>
           <Button
@@ -55,6 +56,8 @@ export const SavePanel = () => {
             onClick={handleBackupToJSON}
           />
         </div>
+
+        {/* RESTORE FROM JSON */}
         <div className="py-4">
           <p className="font-bold text-lg">Restore from JSON File</p>
           <p className="max-w-sm">
@@ -67,6 +70,8 @@ export const SavePanel = () => {
             onChange={(e) => handleSelectFile(e)}
           />
         </div>
+
+        {/* BACKUP TO GITHUB GIST */}
         <div className="py-4">
           <p className="font-bold text-lg">Backup to Github Gist</p>
           {authContext.isLoggedIn ? (
@@ -109,6 +114,8 @@ export const SavePanel = () => {
             <GithubAuthButton />
           )}
         </div>
+
+        {/* RESTORE FROM GITHUB GIST */}
         <div className="py-4">
           <p className="font-bold text-lg">Restore from Github Gist</p>
           <div className="form-container">
@@ -134,6 +141,8 @@ export const SavePanel = () => {
           </div>
           <Button label="Restore Collection" />
         </div>
+
+        {/* LOGOUT BUTTON */}
         {authContext.isLoggedIn && (
           <div className="pt-32">
             <Button label="Logout" onClick={() => authContext.logout()} />
