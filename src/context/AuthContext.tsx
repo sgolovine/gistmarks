@@ -67,7 +67,7 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   // After we get an authcode, call out to our API to get
   // the access token
   useEffect(() => {
-    if (authState.authCode) {
+    if (authState.authCode && authState.authCode !== null) {
       axios
         .post("/api/authWithGithub", {
           code: authState.authCode,
@@ -76,6 +76,10 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
           const { accessToken, tokenType, scope } = resp.data
           setAuthState({
             ...authState,
+            // Set the auth code to null
+            // upon success to prevent
+            // caching issues
+            authCode: null,
             accessToken,
             tokenType,
             scope,

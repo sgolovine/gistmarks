@@ -22,13 +22,5 @@ export function navigate(url: string) {
 }
 
 export function removeCodeInUrl() {
-  const urlObject = new URL(window.location.toString())
-  // Check if the code is present
-  // return if no code
-  if (!getCodeFromUrl(window.location.toString())) {
-    return
-  }
-  urlObject.search = ""
-  const newUrl = urlObject.toString()
-  window.location.replace(newUrl)
+  window.history.replaceState(null, document.title, "/app")
 }
