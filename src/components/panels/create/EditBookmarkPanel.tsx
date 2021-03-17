@@ -1,24 +1,20 @@
 import React, { useContext, useState } from "react"
-import { LayoutContext } from "~/context"
+import { EditorStateContext, LayoutContext } from "~/context"
 import { BookmarkContext } from "~/context/BookmarkContext"
-import { generateUUID } from "~/helpers"
 import { Bookmark } from "~/model/Bookmark"
 import Editor from "./Editor"
 
-export const CreatePanel = () => {
-  const bookmarkContext = useContext(BookmarkContext)
+export const EditBookmarkPanel = () => {
   const layoutContext = useContext(LayoutContext)
+  const bookmarkContext = useContext(BookmarkContext)
+  const editorState = useContext(EditorStateContext)
 
-  const [state, setState] = useState<{
-    name: string
-    href: string
-    category: string
-    description: string
-  }>({
-    name: "",
-    href: "",
-    category: "",
-    description: "",
+  const [state, setState] = useState<Bookmark>({
+    guid: editorState.bookmark.guid,
+    name: editorState.bookmark.name,
+    href: editorState.bookmark.href,
+    category: editorState.bookmark.category,
+    description: editorState.bookmark.description,
   })
 
   const handleSave = () => {
@@ -32,20 +28,16 @@ export const CreatePanel = () => {
       return
     }
 
-    const guid = generateUUID()
-    const bookmark: Bookmark = {
-      guid,
-      name: state.name,
-      href: state.href,
-      description: state.description,
-      category: state.category,
+    if (editorState.bookmark.guid) {
+      bookmarkContext.editBookmark(state, editorState.bookmark.guid)
+      layoutContext.toggleEditPanel()
+    } else {
+      alert("ERR: Unable to edit, no guid found")
     }
-    bookmarkContext.addBookmark(bookmark, guid)
-    layoutContext.toggleCreatePanel()
   }
 
   const handleCancel = () => {
-    layoutContext.toggleCreatePanel()
+    layoutContext.toggleEditPanel()
   }
 
   const handleEditField = (key: keyof Bookmark, value: string) => {
@@ -57,7 +49,7 @@ export const CreatePanel = () => {
 
   return (
     <Editor
-      editMode={false}
+      editMode={true}
       name={state.name}
       href={state.href}
       category={state.category}

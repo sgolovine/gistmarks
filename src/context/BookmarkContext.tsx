@@ -21,6 +21,7 @@ interface BookmarkContext {
   removeBookmark: (guid: string) => void
   editBookmark: (bookmark: Partial<Bookmark>, guid: string) => void
   setSearch: (newTerm: string) => void
+  restoreBookmarks: (data: string) => void
 }
 
 export const BookmarkContext = createContext<BookmarkContext>({
@@ -34,6 +35,7 @@ export const BookmarkContext = createContext<BookmarkContext>({
   removeBookmark: () => null,
   editBookmark: () => null,
   setSearch: () => null,
+  restoreBookmarks: () => null,
 })
 
 function filterByCategories(bookmarks: Bookmarks, activeCategories: string[]) {
@@ -150,6 +152,14 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
     setSearchTerm(newSearchTerm)
   }
 
+  const restoreBookmarks = (backup: string) => {
+    try {
+      const parsedData = JSON.parse(backup)
+      setBookmarks(parsedData)
+    } catch {
+      alert("Unable to restore backup")
+    }
+  }
   const value: BookmarkContext = {
     bookmarks: filteredBookmarks,
     activeCategories,
@@ -161,6 +171,7 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
     addActiveCategory,
     removeActiveCategory,
     setSearch,
+    restoreBookmarks,
   }
 
   return (

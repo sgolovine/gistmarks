@@ -1,8 +1,12 @@
 import React, { ReactNode, useContext } from "react"
-import { CreatePanel, EditPanel } from "~/components/editor"
+import {
+  CreateBookmarkPanel,
+  EditBookmarkPanel,
+} from "~/components/panels/create"
+import { SavePanel } from "~/components/panels/save"
 import { LayoutContext } from "~/context"
 import { Header } from "./Header"
-import { Sidebar } from "./SIdebar"
+import { Sidebar } from "./Sidebar"
 
 type Props = {
   children: ReactNode
@@ -18,8 +22,9 @@ export const Layout: React.FC<Props> = ({ children }) => {
         <div className="border flex-grow overflow-y-scroll mb-14 h-screen">
           {children}
         </div>
-        {layoutContext.createPanelOpen && <CreatePanel />}
-        {layoutContext.editPanelOpen && <EditPanel />}
+        {layoutContext.createPanelOpen && <CreateBookmarkPanel />}
+        {layoutContext.editPanelOpen && <EditBookmarkPanel />}
+        {layoutContext.savePanelOpen && <SavePanel />}
       </div>
     </div>
   )

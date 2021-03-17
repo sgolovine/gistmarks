@@ -7,25 +7,14 @@ interface LayoutContextState {
   createPanelOpen: boolean
   editPanelOpen: boolean
   sidebarOpen: boolean
-  devModalOpen: boolean
-  collectionPanel: {
-    open: boolean
-    editMode: boolean
-  }
+  savePanelOpen: boolean
 }
 
 interface LayoutContextActions {
   toggleCreatePanel: () => void
   toggleEditPanel: () => void
   toggleSidebar: () => void
-  toggleDevModal: () => void
-  toggleCollectionsPanel: ({
-    open,
-    editMode,
-  }: {
-    open: boolean
-    editMode?: boolean
-  }) => void
+  toggleSavePanel: () => void
 }
 
 type LayoutContext = LayoutContextState & LayoutContextActions
@@ -39,11 +28,7 @@ export const LayoutContextProvider: React.FC<ContextProviderProps> = ({
     createPanelOpen: false,
     editPanelOpen: false,
     sidebarOpen: true,
-    devModalOpen: false,
-    collectionPanel: {
-      open: false,
-      editMode: false,
-    },
+    savePanelOpen: false,
   })
 
   const toggle = (field: keyof LayoutContextState, newValue: boolean) => {
@@ -53,25 +38,8 @@ export const LayoutContextProvider: React.FC<ContextProviderProps> = ({
     })
   }
 
-  const toggleCollectionsPanel = ({
-    open,
-    editMode = false,
-  }: {
-    open: boolean
-    editMode?: boolean
-  }) => {
-    setLayoutState({
-      ...layoutState,
-      collectionPanel: {
-        open,
-        editMode,
-      },
-    })
-  }
-
   useEffect(() => {
     if (layoutState.editPanelOpen) {
-      toggleCollectionsPanel({ open: false })
       toggle("createPanelOpen", false)
     }
   }, [layoutState.editPanelOpen])
@@ -79,23 +47,14 @@ export const LayoutContextProvider: React.FC<ContextProviderProps> = ({
   useEffect(() => {
     if (layoutState.createPanelOpen) {
       toggle("editPanelOpen", false)
-      toggleCollectionsPanel({ open: false })
     }
   }, [layoutState.createPanelOpen])
-
-  useEffect(() => {
-    if (layoutState.collectionPanel.open) {
-      toggle("editPanelOpen", false)
-      toggle("createPanelOpen", false)
-    }
-  }, [layoutState.collectionPanel.open])
 
   const states: LayoutContextState = {
     createPanelOpen: layoutState.createPanelOpen,
     editPanelOpen: layoutState.editPanelOpen,
     sidebarOpen: layoutState.sidebarOpen,
-    devModalOpen: layoutState.devModalOpen,
-    collectionPanel: layoutState.collectionPanel,
+    savePanelOpen: layoutState.savePanelOpen,
   }
 
   const actions: LayoutContextActions = {
@@ -103,8 +62,7 @@ export const LayoutContextProvider: React.FC<ContextProviderProps> = ({
       toggle("createPanelOpen", !layoutState.createPanelOpen),
     toggleEditPanel: () => toggle("editPanelOpen", !layoutState.editPanelOpen),
     toggleSidebar: () => toggle("sidebarOpen", !layoutState.sidebarOpen),
-    toggleDevModal: () => toggle("devModalOpen", !layoutState.devModalOpen),
-    toggleCollectionsPanel,
+    toggleSavePanel: () => toggle("savePanelOpen", !layoutState.savePanelOpen),
   }
 
   return (
