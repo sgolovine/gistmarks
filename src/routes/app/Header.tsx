@@ -3,24 +3,14 @@ import Button from "~/components/common/Button"
 import { GithubAuthButton } from "~/components/common/GithubAuthButton"
 import IconButton from "~/components/common/IconButton"
 import MenuIcon from "~/components/icons/MenuIcon"
-import { AuthContext, BookmarkContext, LayoutContext } from "~/context"
+import { BookmarkContext, LayoutContext } from "~/context"
 
 export const Header: React.FC = () => {
   const layoutContext = useContext(LayoutContext)
-  const authContext = useContext(AuthContext)
   const bookmarkContext = useContext(BookmarkContext)
   const buttonText = layoutContext.createPanelOpen
     ? "Close Window"
     : "Create Bookmark"
-
-  const handleAuth = () => {
-    if (authContext.isLoggedIn) {
-      authContext.logout()
-    } else {
-      alert("Stub for navigation")
-      console.log("Fix this @: Header.tsx")
-    }
-  }
 
   return (
     <div className="border h-12 flex flex-row justify-between items-center px-4">

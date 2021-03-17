@@ -1,5 +1,5 @@
-export * from "./buildAuthUrl"
 export * from "./arrayUtil"
 export * from "./generateGuid"
 export * from "./isDev"
 export * from "./omitKey"
+export * from "./auth"

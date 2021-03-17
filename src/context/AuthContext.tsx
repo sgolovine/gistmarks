@@ -5,7 +5,12 @@ import { AUTH_STORAGE_KEY } from "~/defines/localStorage"
 import { ContextDevTool } from "react-context-devtool"
 import { dev } from "~/helpers/isDev"
 import useLocalStorage from "~/hooks/useLocalStorage"
-import { buildAuthUrl } from "~/helpers"
+import {
+  buildAuthUrl,
+  getCodeFromUrl,
+  navigate,
+  removeCodeInUrl,
+} from "~/helpers"
 
 interface AuthContext {
   authCode: string | null
@@ -50,12 +55,11 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   useEffect(() => {
     if (typeof window !== undefined) {
       if (window.location.search.includes("?code=")) {
-        const code = window.location.search.replace("?code=", "")
-        setState("authCode", code)
-        // Now remove the code from the URL bar
-        // router.replace("/", undefined, { shallow: true })
-        alert("Router stub")
-        console.log("Fix this @: AuthContext.tsx")
+        const code = getCodeFromUrl(window.location.toString())
+        if (code) {
+          setState("authCode", code)
+        }
+        removeCodeInUrl()
       }
     }
   }, [])
@@ -96,7 +100,7 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
 
   const login = () => {
     const authUrl = buildAuthUrl()
-    window.location.href = authUrl
+    navigate(authUrl)
   }
 
   const providerValue: AuthContext = {
