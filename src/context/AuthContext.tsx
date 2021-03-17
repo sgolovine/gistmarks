@@ -1,9 +1,16 @@
-import React, { useState, useEffect, createContext } from "react"
+import React, { useEffect, createContext } from "react"
 import { ContextProviderProps } from "~/model/Context"
 import axios from "axios"
 import { AUTH_STORAGE_KEY } from "~/defines/localStorage"
 import { ContextDevTool } from "react-context-devtool"
 import { dev } from "~/helpers/isDev"
+import useLocalStorage from "~/hooks/useLocalStorage"
+import {
+  buildAuthUrl,
+  getCodeFromUrl,
+  navigate,
+  removeCodeInUrl,
+} from "~/helpers"
 
 interface AuthContext {
   authCode: string | null
@@ -12,6 +19,7 @@ interface AuthContext {
   tokenType: string | null
   isLoggedIn: boolean
   logout: () => void
+  login: () => void
 }
 
 type AuthState = Pick<
@@ -26,31 +34,63 @@ export const AuthContext = createContext<AuthContext>({
   tokenType: null,
   isLoggedIn: false,
   logout: () => null,
+  login: () => null,
 })
 
 export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  const [authState, setAuthState] = useState<AuthState>({
-    authCode: null,
-    accessToken: null,
-    scope: null,
-    tokenType: null,
-  })
+  const [authState, setAuthState] = useLocalStorage<AuthState>(
+    AUTH_STORAGE_KEY,
+    {
+      authCode: null,
+      accessToken: null,
+      scope: null,
+      tokenType: null,
+    }
+  )
+
+  // Once we are redirected back from github, look at the URL
+  // and grab the code
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      if (window.location.search.includes("?code=")) {
+        const code = getCodeFromUrl(window.location.toString())
+        if (code) {
+          setState("authCode", code)
+        }
+        removeCodeInUrl()
+      }
+    }
+  }, [])
+
+  // After we get an authcode, call out to our API to get
+  // the access token
+  useEffect(() => {
+    if (authState.authCode && authState.authCode !== null) {
+      axios
+        .post("/api/authWithGithub", {
+          code: authState.authCode,
+        })
+        .then((resp) => {
+          const { accessToken, tokenType, scope } = resp.data
+          setAuthState({
+            ...authState,
+            // Set the auth code to null
+            // upon success to prevent
+            // caching issues
+            authCode: null,
+            accessToken,
+            tokenType,
+            scope,
+          })
+        })
+    }
+  }, [authState.authCode])
 
   // Helper function - set state
   const setState = (key: keyof AuthState, value: string) =>
     setAuthState({ ...authState, [key]: value })
-
-  // Helper function - persist state
-  const persistState = ({ accessToken, scope, tokenType }: AuthState) => {
-    const value = JSON.stringify({
-      accessToken,
-      scope,
-      tokenType,
-    })
-    localStorage.setItem(AUTH_STORAGE_KEY, value)
-  }
 
   const logout = () => {
     setAuthState({
@@ -62,6 +102,11 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
     localStorage.removeItem(AUTH_STORAGE_KEY)
   }
 
+  const login = () => {
+    const authUrl = buildAuthUrl()
+    navigate(authUrl)
+  }
+
   const providerValue: AuthContext = {
     authCode: authState.authCode,
     accessToken: authState.accessToken,
@@ -70,73 +115,8 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
     isLoggedIn:
       !!authState.accessToken && !!authState.scope && !!authState.tokenType,
     logout,
+    login,
   }
-
-  // Rehydrate context from local storage
-  useEffect(() => {
-    // If the URL bar contains a ?code=, then we know that
-    // We are currently in the auth flow and we should
-    // ignore rehydration
-    if (
-      typeof window !== undefined &&
-      window.location.search.includes("?code=")
-    ) {
-      return
-    } else {
-      const persistedAuthState = localStorage.getItem(AUTH_STORAGE_KEY)
-      if (persistedAuthState) {
-        const value = JSON.parse(persistedAuthState)
-        const { accessToken, tokenType, scope } = value
-        setAuthState({
-          ...authState,
-          accessToken,
-          tokenType,
-          scope,
-        })
-      }
-    }
-  }, [])
-
-  // Once we are redirected back from github, look at the URL
-  // and grab the code
-  useEffect(() => {
-    if (typeof window !== undefined) {
-      if (window.location.search.includes("?code=")) {
-        const code = window.location.search.replace("?code=", "")
-        setState("authCode", code)
-        // Now remove the code from the URL bar
-        // router.replace("/", undefined, { shallow: true })
-        alert("Router stub")
-        console.log("Fix this @: AuthContext.tsx")
-      }
-    }
-  }, [])
-
-  // After we get an authcode, call out to our API to get
-  // the access token
-  useEffect(() => {
-    if (authState.authCode) {
-      axios
-        .post("/api/authWithGithub", {
-          code: authState.authCode,
-        })
-        .then((resp) => {
-          const { accessToken, tokenType, scope } = resp.data
-          setAuthState({
-            ...authState,
-            accessToken,
-            tokenType,
-            scope,
-          })
-          persistState({
-            authCode: authState.authCode,
-            accessToken: accessToken,
-            scope: scope,
-            tokenType: tokenType,
-          })
-        })
-    }
-  }, [authState.authCode])
 
   return (
     <AuthContext.Provider value={providerValue}>

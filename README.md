@@ -18,6 +18,12 @@ Gistmarks.io is a bookmark manager that uses Github Gist to save and share bookm
 3. Run `yarn install` to install dependencies
 4. Run `yarn start` to start the development server
 
+### Testing Production builds Locally
+
+1. `yarn build`
+2. `yarn serve`
+3. `https://localhost:5000`
+
 ### Deployment
 
 WIP

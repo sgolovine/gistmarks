@@ -4,9 +4,18 @@
   functions = "/functions"
   command = "yarn build"
 
+
+# Clean up netlify functions paths
 [[ redirects ]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
+  status = 200
+
+
+# Client Side Routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
   status = 200
 
 [dev]

@@ -1,8 +1,8 @@
 import React, { useContext } from "react"
+import CloseIcon from "~/components/icons/CloseIcon"
 import { BookmarkContext } from "~/context"
-import CloseIcon from "./icons/CloseIcon"
 
-const Sidebar: React.FC = () => {
+export const Sidebar: React.FC = () => {
   const bookmarkContext = useContext(BookmarkContext)
 
   return (
@@ -47,5 +47,3 @@ const Sidebar: React.FC = () => {
     </div>
   )
 }
-
-export default Sidebar
