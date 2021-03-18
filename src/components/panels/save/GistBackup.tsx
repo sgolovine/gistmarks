@@ -1,21 +1,36 @@
 import React, { useContext, useEffect, useState } from "react"
 import Button from "~/components/common/Button"
 import { GithubAuthButton } from "~/components/common/GithubAuthButton"
+import ExternalLinkIcon from "~/components/icons/ExternalLinkIcon"
+import { Loader } from "~/components/icons/Loader"
 import { AuthContext } from "~/context"
 
 interface Props {
   filenameValue: string
   descriptionValue: string
   gistIdValue: string
+  htmlUrlValue?: string
+  backupCreated: boolean
+  backupLoading: boolean
   onGistIdChange: (newDesc: string) => void
   onDescriptionChange: (newDesc: string) => void
   onFilenameChange: (newFilename: string) => void
+  onSubmit: () => void
 }
 
 export type GistBackupState = Pick<
   Props,
   "filenameValue" | "descriptionValue" | "gistIdValue"
->
+> & {
+  backupLoading: boolean
+}
+
+export interface GistBackupResultState {
+  gistId: string
+  description: string
+  htmlUrl: string
+  backupCreated: boolean
+}
 
 export const GistBackup: React.FC<Props> = ({
   filenameValue,
@@ -24,6 +39,10 @@ export const GistBackup: React.FC<Props> = ({
   onGistIdChange,
   onFilenameChange,
   onDescriptionChange,
+  onSubmit,
+  htmlUrlValue,
+  backupCreated,
+  backupLoading,
 }) => {
   const authContext = useContext(AuthContext)
 
@@ -39,9 +58,27 @@ export const GistBackup: React.FC<Props> = ({
 
   return (
     <div className="py-4">
-      <p className="font-bold text-lg">Backup to Github Gist</p>
+      <div className="flex flex-row items-center">
+        <p className="font-bold text-lg mr-2">Backup to Github Gist</p>
+        {backupLoading && (
+          <div className="h-8 w-8">
+            <Loader />
+          </div>
+        )}
+      </div>
       {authContext.isLoggedIn ? (
         <>
+          {backupCreated && htmlUrlValue && (
+            <div className="m-4 p-2 border rounded">
+              <p className="text-lg pb-2">Backup Created</p>
+              <div className="flex flex-row items-center text-blue-600 hover:underline">
+                <a href={htmlUrlValue}>View on Github</a>
+                <div className="h-4 w-4">
+                  <ExternalLinkIcon />
+                </div>
+              </div>
+            </div>
+          )}
           <div className="form-container">
             <label className="form-label">Filename</label>
             <input
@@ -74,6 +111,7 @@ export const GistBackup: React.FC<Props> = ({
 
           <Button
             label={isUpdating ? "Update Existing Gist" : "Create new Gist"}
+            onClick={onSubmit}
           />
         </>
       ) : (

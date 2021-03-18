@@ -1,8 +1,21 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect } from "react"
 import Button from "~/components/common/Button"
 import { AuthContext, BookmarkContext } from "~/context"
+import {
+  GIST_BACKUP_RESULT_STATE,
+  GIST_BACKUP_STATE,
+  GIST_RESTORE_STATE,
+} from "~/defines"
 import { downloadFile } from "~/helpers"
-import { GistBackup, GistBackupState } from "./GistBackup"
+import useLocalStorage from "~/hooks/useLocalStorage"
+import { createGist } from "~/requests/createGist"
+import { createInstance } from "~/requests/setup"
+import { updateGist } from "~/requests/updateGist"
+import {
+  GistBackup,
+  GistBackupResultState,
+  GistBackupState,
+} from "./GistBackup"
 import { GistRestore, GistRestoreState } from "./GistRestore"
 import { LocalBackup } from "./LocalBackup"
 import { LocalRestore } from "./LocalRestore"
@@ -11,18 +24,44 @@ export const SavePanel = () => {
   const authContext = useContext(AuthContext)
   const bookmarkContext = useContext(BookmarkContext)
 
-  const [gistRestoreState, setGistRestoreState] = useState<GistRestoreState>({
+  const [
+    gistRestoreState,
+    setGistRestoreState,
+  ] = useLocalStorage<GistRestoreState>(GIST_RESTORE_STATE, {
     filenameValue: "",
     gistIdValue: "",
   })
 
-  const [gistBackupState, setGistBackupState] = useState<GistBackupState>({
-    filenameValue: "",
+  const [
+    gistBackupState,
+    setGistBackupState,
+  ] = useLocalStorage<GistBackupState>(GIST_BACKUP_STATE, {
+    backupLoading: false,
+    filenameValue: "bookmarks.json",
     descriptionValue: "",
     gistIdValue: "",
   })
 
-  const setBackupField = (key: keyof GistBackupState, newValue: string) => {
+  const [
+    backupResultState,
+    setBackupResultState,
+  ] = useLocalStorage<GistBackupResultState>(GIST_BACKUP_RESULT_STATE, {
+    gistId: "",
+    description: "",
+    htmlUrl: "",
+    backupCreated: false,
+  })
+
+  useEffect(() => {
+    if (backupResultState.gistId) {
+      setBackupField("gistIdValue", backupResultState.gistId)
+    }
+  }, [backupResultState.gistId])
+
+  const setBackupField = (
+    key: keyof GistBackupState,
+    newValue: string | boolean
+  ) => {
     setGistBackupState({
       ...gistBackupState,
       [key]: newValue,
@@ -57,6 +96,61 @@ export const SavePanel = () => {
     }
   }
 
+  const handleGistCreateBackup = async () => {
+    if (authContext.accessToken) {
+      setBackupField("backupLoading", true)
+      const instance = createInstance(authContext.accessToken)
+      const resp = await createGist(
+        instance,
+        gistBackupState.filenameValue,
+        gistBackupState.descriptionValue,
+        bookmarkContext.bookmarks
+      )
+      if (resp && resp.status === 201) {
+        setBackupField("backupLoading", false)
+        const { html_url, id, description } = resp.data
+        setBackupResultState({
+          gistId: id,
+          htmlUrl: html_url,
+          description,
+          backupCreated: true,
+        })
+      } else {
+        setBackupField("backupLoading", false)
+        // TODO: Handle Error
+      }
+    }
+  }
+
+  const handleGistUpdateBackup = async () => {
+    if (authContext.accessToken && gistBackupState.gistIdValue) {
+      setBackupField("backupLoading", true)
+      const instance = createInstance(authContext.accessToken)
+      const resp = await updateGist({
+        instance,
+        gistId: gistBackupState.gistIdValue,
+        filename: gistBackupState.filenameValue,
+        description: gistBackupState.descriptionValue,
+        bookmarks: bookmarkContext.bookmarks,
+      })
+      if (resp && resp.status === 201) {
+        setBackupField("backupLoading", false)
+        const { html_url, id, description } = resp.data
+        setBackupResultState({
+          gistId: id,
+          htmlUrl: html_url,
+          description,
+          backupCreated: true,
+        })
+      } else {
+        setBackupField("backupLoading", false)
+        // TODO: Handle Error
+      }
+    }
+  }
+
+  // const handleGistRestore = () => {}
+
   return (
     <div className="min-w-create-panel border p-1">
       <div>
@@ -72,6 +166,14 @@ export const SavePanel = () => {
           filenameValue={gistBackupState.filenameValue}
           descriptionValue={gistBackupState.descriptionValue}
           gistIdValue={gistBackupState.gistIdValue}
+          backupLoading={gistBackupState.backupLoading}
+          htmlUrlValue={backupResultState.htmlUrl}
+          backupCreated={backupResultState.backupCreated}
+          onSubmit={
+            gistBackupState.gistIdValue
+              ? handleGistUpdateBackup
+              : handleGistCreateBackup
+          }
           onGistIdChange={(newValue: string) =>
             setBackupField("gistIdValue", newValue)
           }
