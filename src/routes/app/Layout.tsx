@@ -6,7 +6,7 @@ import {
 import { SavePanel } from "~/components/panels/save"
 import { LayoutContext } from "~/context"
 import { Header } from "./Header"
-import { Sidebar } from "./Sidebar"
+import { Sidebar } from "./SIdebar"
 
 type Props = {
   children: ReactNode
