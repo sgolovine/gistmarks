@@ -109,6 +109,19 @@ export const GistBackup: React.FC<Props> = ({
             />
           </div>
 
+          <div className="form-container">
+            <label className="form-label">Autosave</label>
+            <div className="flex flex-row items-center">
+              <input
+                className="mr-2"
+                type="checkbox"
+                id="autosave"
+                name="autosave"
+              />
+              <p>Automatically backup when changes are made</p>
+            </div>
+          </div>
+
           <Button
             label={isUpdating ? "Update Existing Gist" : "Create new Gist"}
             onClick={onSubmit}

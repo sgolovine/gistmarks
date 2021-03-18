@@ -20,7 +20,9 @@ export function updateGist({
     public: false,
     description,
     files: {
-      [filename]: bookmarks,
+      [filename]: {
+        content: JSON.stringify(bookmarks, null, 2),
+      },
     },
   })
 }
