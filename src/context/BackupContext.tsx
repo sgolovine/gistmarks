@@ -1,8 +1,9 @@
-import React, { useState, useEffect, createContext } from "react"
+import React, { useEffect, createContext } from "react"
 import { GistBackupResultState } from "~/components/panels/save/GistBackup"
 import {
   GIST_BACKUP_RESULT_STATE,
   GIST_BACKUP_STATE,
+  GIST_OPTIONS_STATE,
   GIST_RESTORE_STATE,
 } from "~/defines/localStorage"
 import useLocalStorage from "~/hooks/useLocalStorage"
@@ -17,6 +18,7 @@ interface GistBackup {
   backupLoading: boolean
   filename: string
   description: string
+  gistId: string
 }
 
 interface BackupResults {
@@ -35,10 +37,11 @@ interface BackupContext {
     setField: (field: keyof GistRestore, value: string) => void
   }
   gistBackup: GistBackup & {
-    setField: (field: keyof GistBackup, value: string) => void
+    setField: (field: keyof GistBackup, value: string | boolean) => void
   }
   backupResults: BackupResults & {
     setField: (field: keyof BackupResults, value: string) => void
+    setState: (results: BackupResults) => void
   }
   options: Options & {
     setField: (field: keyof Options, value: boolean) => void
@@ -56,6 +59,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       backupLoading: false,
       filename: "",
       description: "",
+      gistId: "",
     }
   )
 
@@ -77,11 +81,14 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
     }
   )
 
-  const [optionsState, setOptionsState] = useState<Options>({
-    autoSave: false,
-  })
+  const [optionsState, setOptionsState] = useLocalStorage<Options>(
+    GIST_OPTIONS_STATE,
+    {
+      autoSave: false,
+    }
+  )
 
-  const setBackupField = (field: keyof GistBackup, value: string) =>
+  const setBackupField = (field: keyof GistBackup, value: string | boolean) =>
     setBackupState({ ...backupState, [field]: value })
 
   const setRestoreField = (field: keyof GistRestore, value: string) =>
@@ -92,32 +99,32 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
     value: string
   ) => setBackupResultsState({ ...backupResultsState, [field]: value })
 
+  const setOptionsField = (field: keyof Options, value: boolean) =>
+    setOptionsState({ [field]: value })
+
   useEffect(() => {
     if (backupResultsState.gistId) {
-      setBackupField("gistIdValue", backupResultState.gistId)
+      setBackupField("gistId", backupResultsState.gistId)
     }
-  }, [backupResultState.gistId])
+  }, [backupResultsState.gistId])
 
   const value: BackupContext = {
     gistBackup: {
       ...backupState,
-      setField: (field, value) =>
-        setBackupState({ ...backupState, [field]: value }),
+      setField: (field, value) => setBackupField(field, value),
     },
     gistRestore: {
       ...restoreState,
-      setField: (field, value) =>
-        setRestoreState({ ...restoreState, [field]: value }),
+      setField: (field, value) => setRestoreField(field, value),
     },
     backupResults: {
       ...backupResultsState,
-      setField: (field, value) =>
-        setBackupResultsState({ ...backupResultsState, [field]: value }),
+      setField: (field, value) => setBackupResultsField(field, value),
+      setState: (state) => setBackupResultsState(state),
     },
     options: {
       ...optionsState,
-      setField: (field, value) =>
-        setOptionsState({ ...optionsState, [field]: value }),
+      setField: (field, value) => setOptionsField(field, value),
     },
   }
 
