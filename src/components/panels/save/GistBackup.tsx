@@ -56,6 +56,14 @@ export const GistBackup: React.FC<Props> = ({
     }
   }, [gistIdValue])
 
+  const handleSubmit = () => {
+    if (!filenameValue) {
+      alert("Enter a filename!")
+      return
+    }
+    onSubmit()
+  }
+
   return (
     <div className="py-4">
       <div className="flex flex-row items-center">
@@ -124,7 +132,7 @@ export const GistBackup: React.FC<Props> = ({
 
           <Button
             label={isUpdating ? "Update Existing Gist" : "Create new Gist"}
-            onClick={onSubmit}
+            onClick={handleSubmit}
           />
         </>
       ) : (
