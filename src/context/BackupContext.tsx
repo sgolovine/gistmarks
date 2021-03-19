@@ -175,11 +175,6 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
     }
   }, [backupResultsState.gistId])
 
-  // Autosave Feature - Listen to bookmarks in the bookmarks context
-  // And upon any changes, run a silent backup in the background
-  // const bookmarksContext = useContext(BookmarkContext)
-  // useEffect(() => {}, [bookmarksContext.bookmarks])
-
   const value: BackupContext = {
     gistBackup: {
       ...backupState,
