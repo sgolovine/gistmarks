@@ -1,4 +1,4 @@
-import React, { useEffect, createContext } from "react"
+import React, { useEffect, createContext, useContext } from "react"
 import { GistBackupResultState } from "~/components/panels/save/GistBackup"
 import {
   GIST_BACKUP_RESULT_STATE,
@@ -8,6 +8,11 @@ import {
 } from "~/defines/localStorage"
 import useLocalStorage from "~/hooks/useLocalStorage"
 import { ContextProviderProps } from "~/model/Context"
+import { createGist } from "~/requests/createGist"
+import { createInstance } from "~/requests/setup"
+import { updateGist } from "~/requests/updateGist"
+import { AuthContext } from "./AuthContext"
+import { BookmarkContext } from "./BookmarkContext"
 
 interface GistRestore {
   filename: string
@@ -46,6 +51,10 @@ interface BackupContext {
   options: Options & {
     setField: (field: keyof Options, value: boolean) => void
   }
+  actions: {
+    createBackup: () => void
+    updateBackup: () => void
+  }
 }
 
 export const BackupContext = createContext<BackupContext>({} as BackupContext)
@@ -53,6 +62,9 @@ export const BackupContext = createContext<BackupContext>({} as BackupContext)
 export const BackupContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
+  const authContext = useContext(AuthContext)
+  const bookmarkContext = useContext(BookmarkContext)
+
   const [backupState, setBackupState] = useLocalStorage<GistBackup>(
     GIST_BACKUP_STATE,
     {
@@ -102,11 +114,71 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
   const setOptionsField = (field: keyof Options, value: boolean) =>
     setOptionsState({ [field]: value })
 
+  const createBackup = async () => {
+    if (authContext.accessToken) {
+      setBackupField("backupLoading", true)
+      const instance = createInstance(authContext.accessToken)
+      const resp = await createGist(
+        instance,
+        backupState.filename,
+        backupState.description,
+        bookmarkContext.bookmarks
+      )
+      if (resp && resp.status === 201) {
+        setBackupField("backupLoading", false)
+        const { html_url, id, description } = resp.data
+        setBackupResultsState({
+          gistId: id,
+          htmlUrl: html_url,
+          description,
+          backupCreated: true,
+        })
+      } else {
+        setBackupField("backupLoading", false)
+        // TODO: Handle Error Here
+      }
+    }
+  }
+
+  const updateBackup = async () => {
+    if (authContext.accessToken && backupState.gistId) {
+      setBackupField("backupLoading", true)
+      const instance = createInstance(authContext.accessToken)
+
+      const resp = await updateGist({
+        instance,
+        gistId: backupState.gistId,
+        filename: backupState.filename,
+        description: backupState.description,
+        bookmarks: bookmarkContext.bookmarks,
+      })
+
+      if (resp && resp.status === 201) {
+        setBackupField("backupLoading", false)
+        const { html_url, id, description } = resp.data
+        setBackupResultsState({
+          gistId: id,
+          htmlUrl: html_url,
+          description,
+          backupCreated: true,
+        })
+      } else {
+        setBackupField("backupLoading", false)
+        // TODO: Handle Error Here
+      }
+    }
+  }
+
   useEffect(() => {
     if (backupResultsState.gistId) {
       setBackupField("gistId", backupResultsState.gistId)
     }
   }, [backupResultsState.gistId])
+
+  // Autosave Feature - Listen to bookmarks in the bookmarks context
+  // And upon any changes, run a silent backup in the background
+  // const bookmarksContext = useContext(BookmarkContext)
+  // useEffect(() => {}, [bookmarksContext.bookmarks])
 
   const value: BackupContext = {
     gistBackup: {
@@ -125,6 +197,10 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
     options: {
       ...optionsState,
       setField: (field, value) => setOptionsField(field, value),
+    },
+    actions: {
+      createBackup,
+      updateBackup,
     },
   }
 

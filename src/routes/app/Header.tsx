@@ -1,12 +1,15 @@
 import React, { useContext } from "react"
 import Button from "~/components/common/Button"
 import IconButton from "~/components/common/IconButton"
+import { Loader } from "~/components/icons/Loader"
 import MenuIcon from "~/components/icons/MenuIcon"
-import { BookmarkContext, LayoutContext } from "~/context"
+import { BackupContext, BookmarkContext, LayoutContext } from "~/context"
 
 export const Header: React.FC = () => {
   const layoutContext = useContext(LayoutContext)
   const bookmarkContext = useContext(BookmarkContext)
+  const backupContext = useContext(BackupContext)
+
   const buttonText = layoutContext.createPanelOpen
     ? "Close Window"
     : "Create Bookmark"
@@ -28,6 +31,11 @@ export const Header: React.FC = () => {
         </div>
       </div>
       <div className="flex flex-row items-center">
+        {backupContext.gistBackup.backupLoading && (
+          <div className="h-8 w-8">
+            <Loader />
+          </div>
+        )}
         <Button
           onClick={layoutContext.toggleSavePanel}
           label="Backup and Sync"

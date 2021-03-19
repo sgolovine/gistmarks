@@ -12,6 +12,8 @@ interface Props {
   htmlUrlValue?: string
   backupCreated: boolean
   backupLoading: boolean
+  autosaveEnabled: boolean
+  toggleAutosave: (newState: boolean) => void
   onGistIdChange: (newDesc: string) => void
   onDescriptionChange: (newDesc: string) => void
   onFilenameChange: (newFilename: string) => void
@@ -43,6 +45,8 @@ export const GistBackup: React.FC<Props> = ({
   htmlUrlValue,
   backupCreated,
   backupLoading,
+  autosaveEnabled,
+  toggleAutosave,
 }) => {
   const authContext = useContext(AuthContext)
 
@@ -125,6 +129,9 @@ export const GistBackup: React.FC<Props> = ({
                 type="checkbox"
                 id="autosave"
                 name="autosave"
+                checked={autosaveEnabled}
+                onChange={() => toggleAutosave(!autosaveEnabled)}
+                // onChange={(e) => console.log(e.target.value)}
               />
               <p>Automatically backup when changes are made</p>
             </div>

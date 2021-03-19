@@ -2,9 +2,6 @@ import React, { useContext } from "react"
 import Button from "~/components/common/Button"
 import { AuthContext, BackupContext, BookmarkContext } from "~/context"
 import { downloadFile } from "~/helpers"
-import { createGist } from "~/requests/createGist"
-import { createInstance } from "~/requests/setup"
-import { updateGist } from "~/requests/updateGist"
 import { GistBackup } from "./GistBackup"
 import { GistRestore } from "./GistRestore"
 import { LocalBackup } from "./LocalBackup"
@@ -36,61 +33,6 @@ export const SavePanel = () => {
     }
   }
 
-  const handleGistCreateBackup = async () => {
-    if (authContext.accessToken) {
-      backupContext.gistBackup.setField("backupLoading", true)
-      const instance = createInstance(authContext.accessToken)
-      const resp = await createGist(
-        instance,
-        backupContext.gistBackup.filename,
-        backupContext.gistBackup.description,
-        bookmarkContext.bookmarks
-      )
-      if (resp && resp.status === 201) {
-        backupContext.gistBackup.setField("backupLoading", false)
-        const { html_url, id, description } = resp.data
-        backupContext.backupResults.setState({
-          gistId: id,
-          htmlUrl: html_url,
-          description,
-          backupCreated: true,
-        })
-      } else {
-        backupContext.gistBackup.setField("backupLoading", false)
-        // TODO: Handle Error
-      }
-    }
-  }
-
-  const handleGistUpdateBackup = async () => {
-    if (authContext.accessToken && backupContext.gistBackup.gistId) {
-      backupContext.gistBackup.setField("backupLoading", true)
-
-      const instance = createInstance(authContext.accessToken)
-
-      const resp = await updateGist({
-        instance,
-        gistId: backupContext.gistBackup.gistId,
-        filename: backupContext.gistBackup.filename,
-        description: backupContext.gistBackup.description,
-        bookmarks: bookmarkContext.bookmarks,
-      })
-      if (resp && resp.status === 201) {
-        backupContext.gistBackup.setField("backupLoading", false)
-        const { html_url, id, description } = resp.data
-        backupContext.backupResults.setState({
-          gistId: id,
-          htmlUrl: html_url,
-          description,
-          backupCreated: true,
-        })
-      } else {
-        backupContext.gistBackup.setField("backupLoading", false)
-        // TODO: Handle Error
-      }
-    }
-  }
-
   // const handleGistRestore = () => {}
 
   return (
@@ -113,8 +55,8 @@ export const SavePanel = () => {
           backupCreated={backupContext.backupResults.backupCreated}
           onSubmit={
             backupContext.gistBackup.gistId
-              ? handleGistUpdateBackup
-              : handleGistCreateBackup
+              ? backupContext.actions.updateBackup
+              : backupContext.actions.createBackup
           }
           onGistIdChange={(newValue: string) =>
             backupContext.gistBackup.setField("gistId", newValue)
@@ -124,6 +66,10 @@ export const SavePanel = () => {
           }
           onDescriptionChange={(newValue: string) =>
             backupContext.gistBackup.setField("description", newValue)
+          }
+          autosaveEnabled={backupContext.options.autoSave}
+          toggleAutosave={(newState: boolean) =>
+            backupContext.options.setField("autoSave", newState)
           }
         />
 
