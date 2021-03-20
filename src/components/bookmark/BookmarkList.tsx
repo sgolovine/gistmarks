@@ -11,7 +11,7 @@ export const BookmarkList: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-row flex-wrap">
+    <div className="flex flex-col lg:flex-row lg:flex-wrap">
       {bookmarkKeys.map((key) => {
         const bookmarkData = bookmarkContext.bookmarks[key]
         return (

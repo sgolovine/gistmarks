@@ -1,8 +1,9 @@
 import React, { useContext } from "react"
 import Button from "~/components/common/Button"
-import IconButton from "~/components/common/IconButton"
+import { CogIcon } from "~/components/icons/CogIcon"
 import { Loader } from "~/components/icons/Loader"
 import MenuIcon from "~/components/icons/MenuIcon"
+import { PlusIcon } from "~/components/icons/PlusIcon"
 import {
   BackupContext,
   BookmarkContext,
@@ -16,17 +17,16 @@ export const Header: React.FC = () => {
   const bookmarkContext = useContext(BookmarkContext)
   const backupContext = useContext(BackupContext)
 
-  const buttonText = layoutContext.createPanelOpen
-    ? "Close Window"
-    : "Create Bookmark"
-
   return (
     <div className="border h-12 flex flex-row justify-between items-center px-4">
       <div className="flex flex-row items-center">
-        <IconButton onClick={layoutContext.toggleSidebar}>
+        <button
+          className="h-10 w-10 p-2 mx-2 border rounded shadow"
+          onClick={layoutContext.toggleSidebar}
+        >
           <MenuIcon />
-        </IconButton>
-        <p className="text-lg font-bold">GistMarks</p>
+        </button>
+        {/* <p className="text-lg font-bold">GistMarks</p> */}
         <div>
           <input
             value={bookmarkContext.searchTerm}
@@ -42,16 +42,18 @@ export const Header: React.FC = () => {
             <Loader />
           </div>
         )}
-        <Button
+        <button
+          className="h-10 w-10 p-2 mx-2 border rounded shadow"
           onClick={layoutContext.toggleSavePanel}
-          label="Backup and Sync"
-          additionalClassnames="w-36 mx-4"
-        />
-        <Button
+        >
+          <CogIcon />
+        </button>
+        <button
+          className="h-10 w-10 p-2 ml-2 border rounded shadow"
           onClick={layoutContext.toggleCreatePanel}
-          label={buttonText}
-          additionalClassnames="w-36"
-        />
+        >
+          <PlusIcon />
+        </button>
         {globalStateContext.unsavedChanges &&
           backupContext.backupResults.backupCreated && (
             <Button
