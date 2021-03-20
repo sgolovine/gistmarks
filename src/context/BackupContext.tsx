@@ -3,7 +3,6 @@ import { GistBackupResultState } from "~/components/panels/save/GistBackup"
 import {
   GIST_BACKUP_RESULT_STATE,
   GIST_BACKUP_STATE,
-  GIST_OPTIONS_STATE,
   GIST_RESTORE_STATE,
 } from "~/defines/localStorage"
 import useLocalStorage from "~/hooks/useLocalStorage"
@@ -33,10 +32,6 @@ interface BackupResults {
   backupCreated: boolean
 }
 
-interface Options {
-  autoSave: boolean
-}
-
 interface BackupContext {
   gistRestore: GistRestore & {
     setField: (field: keyof GistRestore, value: string) => void
@@ -47,9 +42,6 @@ interface BackupContext {
   backupResults: BackupResults & {
     setField: (field: keyof BackupResults, value: string) => void
     setState: (results: BackupResults) => void
-  }
-  options: Options & {
-    setField: (field: keyof Options, value: boolean) => void
   }
   actions: {
     createBackup: () => void
@@ -93,13 +85,6 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
     }
   )
 
-  const [optionsState, setOptionsState] = useLocalStorage<Options>(
-    GIST_OPTIONS_STATE,
-    {
-      autoSave: false,
-    }
-  )
-
   const setBackupField = (field: keyof GistBackup, value: string | boolean) =>
     setBackupState({ ...backupState, [field]: value })
 
@@ -110,9 +95,6 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
     field: keyof GistBackupResultState,
     value: string
   ) => setBackupResultsState({ ...backupResultsState, [field]: value })
-
-  const setOptionsField = (field: keyof Options, value: boolean) =>
-    setOptionsState({ [field]: value })
 
   const createBackup = async () => {
     if (authContext.accessToken) {
@@ -188,10 +170,6 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       ...backupResultsState,
       setField: (field, value) => setBackupResultsField(field, value),
       setState: (state) => setBackupResultsState(state),
-    },
-    options: {
-      ...optionsState,
-      setField: (field, value) => setOptionsField(field, value),
     },
     actions: {
       createBackup,

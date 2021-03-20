@@ -5,7 +5,6 @@ import {
   EditorStateContextProvider,
   LayoutContextProvider,
   BookmarkContextProvider,
-  LogicProvider,
 } from "~/context"
 
 import "~/styles/tailwind.css"
@@ -35,9 +34,7 @@ const ContextWrapper: React.FC<ContextWrapperProps> = ({ children }) => {
 const App = () => {
   return (
     <ContextWrapper>
-      <LogicProvider>
-        <Router />
-      </LogicProvider>
+      <Router />
     </ContextWrapper>
   )
 }
