@@ -21,10 +21,6 @@ export const GistRestore: React.FC<Props> = ({
       <p className="font-bold text-lg">Restore from Github Gist</p>
       <div className="form-container">
         <label className="form-label">Filename</label>
-        <p className="text-sm">
-          If you assigned a different filename to your gist when you saved it.
-          Enter the custom filename so gistmarks can restore it properly.
-        </p>
         <input
           className="form-field"
           value={filenameValue}

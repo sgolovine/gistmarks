@@ -1,10 +1,12 @@
 import React, { useEffect, createContext, useContext } from "react"
 import { GistBackupResultState } from "~/components/panels/save/GistBackup"
+import { GH_DEFAULT_FILENAME } from "~/defines"
 import {
   GIST_BACKUP_RESULT_STATE,
   GIST_BACKUP_STATE,
   GIST_RESTORE_STATE,
 } from "~/defines/localStorage"
+import { validateStatus } from "~/helpers/validateStatus"
 import useLocalStorage from "~/hooks/useLocalStorage"
 import { ContextProviderProps } from "~/model/Context"
 import { createGist } from "~/requests/createGist"
@@ -12,6 +14,7 @@ import { createInstance } from "~/requests/setup"
 import { updateGist } from "~/requests/updateGist"
 import { AuthContext } from "./AuthContext"
 import { BookmarkContext } from "./BookmarkContext"
+import { GlobalStateContext } from "./GlobalStateContext"
 
 interface GistRestore {
   filename: string
@@ -56,12 +59,13 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
 }) => {
   const authContext = useContext(AuthContext)
   const bookmarkContext = useContext(BookmarkContext)
+  const globalStateContext = useContext(GlobalStateContext)
 
   const [backupState, setBackupState] = useLocalStorage<GistBackup>(
     GIST_BACKUP_STATE,
     {
       backupLoading: false,
-      filename: "",
+      filename: GH_DEFAULT_FILENAME,
       description: "",
       gistId: "",
     }
@@ -80,7 +84,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
   const [restoreState, setRestoreState] = useLocalStorage<GistRestore>(
     GIST_RESTORE_STATE,
     {
-      filename: "",
+      filename: GH_DEFAULT_FILENAME,
       gistId: "",
     }
   )
@@ -106,8 +110,9 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
         backupState.description,
         bookmarkContext.bookmarks
       )
-      if (resp && resp.status === 201) {
+      if (resp && validateStatus(resp.status)) {
         setBackupField("backupLoading", false)
+        globalStateContext.setUnsavedChanges(false)
         const { html_url, id, description } = resp.data
         setBackupResultsState({
           gistId: id,
@@ -134,9 +139,9 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
         description: backupState.description,
         bookmarks: bookmarkContext.bookmarks,
       })
-
-      if (resp && resp.status === 201) {
+      if (resp && validateStatus(resp.status)) {
         setBackupField("backupLoading", false)
+        globalStateContext.setUnsavedChanges(false)
         const { html_url, id, description } = resp.data
         setBackupResultsState({
           gistId: id,

@@ -67,10 +67,6 @@ export const SavePanel = () => {
           onDescriptionChange={(newValue: string) =>
             backupContext.gistBackup.setField("description", newValue)
           }
-          autosaveEnabled={backupContext.options.autoSave}
-          toggleAutosave={(newState: boolean) =>
-            backupContext.options.setField("autoSave", newState)
-          }
         />
 
         {/* RESTORE FROM GITHUB GIST */}

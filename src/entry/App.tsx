@@ -5,6 +5,7 @@ import {
   EditorStateContextProvider,
   LayoutContextProvider,
   BookmarkContextProvider,
+  GlobalStateContextProvider,
 } from "~/context"
 
 import "~/styles/tailwind.css"
@@ -19,15 +20,17 @@ interface ContextWrapperProps {
 // Contexts used by the app
 const ContextWrapper: React.FC<ContextWrapperProps> = ({ children }) => {
   return (
-    <AuthContextProvider>
-      <LayoutContextProvider>
-        <BookmarkContextProvider>
-          <EditorStateContextProvider>
-            <BackupContextProvider>{children}</BackupContextProvider>
-          </EditorStateContextProvider>
-        </BookmarkContextProvider>
-      </LayoutContextProvider>
-    </AuthContextProvider>
+    <GlobalStateContextProvider>
+      <AuthContextProvider>
+        <LayoutContextProvider>
+          <BookmarkContextProvider>
+            <EditorStateContextProvider>
+              <BackupContextProvider>{children}</BackupContextProvider>
+            </EditorStateContextProvider>
+          </BookmarkContextProvider>
+        </LayoutContextProvider>
+      </AuthContextProvider>
+    </GlobalStateContextProvider>
   )
 }
 

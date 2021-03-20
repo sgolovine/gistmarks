@@ -3,10 +3,16 @@ import Button from "~/components/common/Button"
 import IconButton from "~/components/common/IconButton"
 import { Loader } from "~/components/icons/Loader"
 import MenuIcon from "~/components/icons/MenuIcon"
-import { BackupContext, BookmarkContext, LayoutContext } from "~/context"
+import {
+  BackupContext,
+  BookmarkContext,
+  GlobalStateContext,
+  LayoutContext,
+} from "~/context"
 
 export const Header: React.FC = () => {
   const layoutContext = useContext(LayoutContext)
+  const globalStateContext = useContext(GlobalStateContext)
   const bookmarkContext = useContext(BookmarkContext)
   const backupContext = useContext(BackupContext)
 
@@ -46,6 +52,15 @@ export const Header: React.FC = () => {
           label={buttonText}
           additionalClassnames="w-36"
         />
+        {globalStateContext.unsavedChanges &&
+          backupContext.backupResults.backupCreated && (
+            <Button
+              onClick={backupContext.actions.updateBackup}
+              danger
+              label="Save Changes"
+              additionalClassnames="w-36 mx-4"
+            />
+          )}
       </div>
     </div>
   )

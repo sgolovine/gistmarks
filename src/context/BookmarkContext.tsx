@@ -1,17 +1,14 @@
 import { escapeRegExp } from "lodash"
-import React, { createContext, useEffect, useState } from "react"
+import React, { createContext, useContext, useEffect, useState } from "react"
 import { BOOKMARK_STORAGE_KEY } from "~/defines"
 import { omitKey, removeItem, uniq } from "~/helpers"
 import useLocalStorage from "~/hooks/useLocalStorage"
-import { Bookmark } from "~/model/Bookmark"
+import { Bookmark, BookmarkCollection } from "~/model/Bookmark"
 import { ContextProviderProps } from "~/model/Context"
-
-type Bookmarks = {
-  [guid: string]: Bookmark
-}
+import { GlobalStateContext } from "./GlobalStateContext"
 
 interface BookmarkContext {
-  bookmarks: Bookmarks
+  bookmarks: BookmarkCollection
   categories: string[]
   activeCategories: string[]
   searchTerm: string
@@ -38,9 +35,12 @@ export const BookmarkContext = createContext<BookmarkContext>({
   restoreBookmarks: () => null,
 })
 
-function filterByCategories(bookmarks: Bookmarks, activeCategories: string[]) {
+function filterByCategories(
+  bookmarks: BookmarkCollection,
+  activeCategories: string[]
+) {
   const filterBookmarks = Object.keys(bookmarks).reduce(
-    (acc: Bookmarks, key: string) => {
+    (acc: BookmarkCollection, key: string) => {
       if (activeCategories.indexOf(bookmarks[key].category) > -1) {
         return {
           ...acc,
@@ -50,16 +50,16 @@ function filterByCategories(bookmarks: Bookmarks, activeCategories: string[]) {
         return acc
       }
     },
-    {} as Bookmarks
+    {} as BookmarkCollection
   )
   return filterBookmarks
 }
 
-function filterBySearchTerm(bookmarks: Bookmarks, searchTerm: string) {
+function filterBySearchTerm(bookmarks: BookmarkCollection, searchTerm: string) {
   const re = new RegExp(escapeRegExp(searchTerm), "i")
 
   const filteredBookmarks = Object.keys(bookmarks).reduce(
-    (acc: Bookmarks, key: string) => {
+    (acc: BookmarkCollection, key: string) => {
       const bookmark = bookmarks[key]
       if (
         (searchTerm && re.test(bookmark.name)) ||
@@ -74,7 +74,7 @@ function filterBySearchTerm(bookmarks: Bookmarks, searchTerm: string) {
         return acc
       }
     },
-    {} as Bookmarks
+    {} as BookmarkCollection
   )
 
   return filteredBookmarks
@@ -83,13 +83,16 @@ function filterBySearchTerm(bookmarks: Bookmarks, searchTerm: string) {
 export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  const [bookmarks, setBookmarks] = useLocalStorage<Bookmarks>(
+  const globalStateContext = useContext(GlobalStateContext)
+
+  const [bookmarks, setBookmarks] = useLocalStorage<BookmarkCollection>(
     BOOKMARK_STORAGE_KEY,
     {}
   )
-  const [filteredBookmarks, setFilteredBookmarks] = useState<Bookmarks>(
-    bookmarks
-  )
+  const [
+    filteredBookmarks,
+    setFilteredBookmarks,
+  ] = useState<BookmarkCollection>(bookmarks)
 
   const [categories, setCategories] = useState<string[]>([])
 
@@ -122,10 +125,12 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
       ...bookmarks,
       [guid]: bookmark,
     })
+    globalStateContext.setUnsavedChanges(true)
   }
   const removeBookmark = (guid: string) => {
     const newState = omitKey(guid, bookmarks)
     setBookmarks(newState)
+    globalStateContext.setUnsavedChanges(true)
   }
 
   const editBookmark = (bookmark: Partial<Bookmark>, guid: string) => {
@@ -137,6 +142,7 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
           ...bookmark,
         },
       })
+      globalStateContext.setUnsavedChanges(true)
     }
   }
 
@@ -160,6 +166,7 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
       alert("Unable to restore backup")
     }
   }
+
   const value: BookmarkContext = {
     bookmarks: filteredBookmarks,
     activeCategories,
