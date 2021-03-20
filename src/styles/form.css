@@ -1,13 +1,13 @@
 .form-container {
+  /* flex flex-col py-2 px-1" */
   @apply flex;
   @apply flex-col;
-  /* @apply max-w-md; */
-  @apply my-4;
-  @apply px-2;
+  @apply py-2;
+  @apply px-1;
 }
 
 .form-label {
-  @apply text-xl;
+  @apply text-sm;
   @apply font-bold;
 }
 
@@ -15,5 +15,6 @@
   @apply border;
   /* @apply shadow; */
   @apply rounded;
-  @apply p-2;
+  @apply px-1;
+  @apply py-2;
 }

@@ -1,14 +1,16 @@
 import React, { ReactNode } from "react"
 import {
   AuthContextProvider,
+  BackupContextProvider,
   EditorStateContextProvider,
   LayoutContextProvider,
+  BookmarkContextProvider,
+  GlobalStateContextProvider,
 } from "~/context"
 
 import "~/styles/tailwind.css"
 import "~/styles/button.css"
 import "~/styles/form.css"
-import { BookmarkContextProvider } from "~/context/BookmarkContext"
 import { Router } from "~/routes"
 
 interface ContextWrapperProps {
@@ -18,13 +20,17 @@ interface ContextWrapperProps {
 // Contexts used by the app
 const ContextWrapper: React.FC<ContextWrapperProps> = ({ children }) => {
   return (
-    <AuthContextProvider>
-      <LayoutContextProvider>
-        <BookmarkContextProvider>
-          <EditorStateContextProvider>{children}</EditorStateContextProvider>
-        </BookmarkContextProvider>
-      </LayoutContextProvider>
-    </AuthContextProvider>
+    <GlobalStateContextProvider>
+      <AuthContextProvider>
+        <LayoutContextProvider>
+          <BookmarkContextProvider>
+            <EditorStateContextProvider>
+              <BackupContextProvider>{children}</BackupContextProvider>
+            </EditorStateContextProvider>
+          </BookmarkContextProvider>
+        </LayoutContextProvider>
+      </AuthContextProvider>
+    </GlobalStateContextProvider>
   )
 }
 
