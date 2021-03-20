@@ -10,6 +10,7 @@ import { validateStatus } from "~/helpers/validateStatus"
 import useLocalStorage from "~/hooks/useLocalStorage"
 import { ContextProviderProps } from "~/model/Context"
 import { createGist } from "~/requests/createGist"
+import { getGist } from "~/requests/getGist"
 import { createInstance } from "~/requests/setup"
 import { updateGist } from "~/requests/updateGist"
 import { AuthContext } from "./AuthContext"
@@ -49,6 +50,7 @@ interface BackupContext {
   actions: {
     createBackup: () => void
     updateBackup: () => void
+    restoreBackup: () => void
   }
 }
 
@@ -156,6 +158,21 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
     }
   }
 
+  const restoreBackup = async () => {
+    if (restoreState.filename && restoreState.gistId) {
+      setBackupField("backupLoading", true)
+      const instance = createInstance()
+
+      const resp = await getGist(instance, restoreState.gistId)
+      if (resp && validateStatus(resp.status)) {
+        const allFiles = resp.data.files
+        const firstFilename = Object.keys(allFiles)[0]
+        const bookmarkContent = allFiles[firstFilename].content
+        bookmarkContext.restoreBookmarks(bookmarkContent)
+      }
+    }
+  }
+
   useEffect(() => {
     if (backupResultsState.gistId) {
       setBackupField("gistId", backupResultsState.gistId)
@@ -179,6 +196,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
     actions: {
       createBackup,
       updateBackup,
+      restoreBackup,
     },
   }
 

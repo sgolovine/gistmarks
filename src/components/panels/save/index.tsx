@@ -33,8 +33,6 @@ export const SavePanel = () => {
     }
   }
 
-  // const handleGistRestore = () => {}
-
   return (
     <div className="min-w-create-panel border p-1">
       <div>
@@ -79,6 +77,7 @@ export const SavePanel = () => {
           onGistIdChange={(newValue: string) =>
             backupContext.gistRestore.setField("gistId", newValue)
           }
+          onSubmit={backupContext.actions.restoreBackup}
         />
 
         {/* LOGOUT BUTTON */}
