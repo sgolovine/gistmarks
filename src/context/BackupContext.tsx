@@ -165,10 +165,14 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
 
       const resp = await getGist(instance, restoreState.gistId)
       if (resp && validateStatus(resp.status)) {
+        setBackupField("backupLoading", false)
         const allFiles = resp.data.files
         const firstFilename = Object.keys(allFiles)[0]
         const bookmarkContent = allFiles[firstFilename].content
         bookmarkContext.restoreBookmarks(bookmarkContent)
+      } else {
+        setBackupField("backupLoading", false)
+        // TODO: Handle Error
       }
     }
   }
