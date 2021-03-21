@@ -24,6 +24,7 @@ module.exports = {
   output: {
     path: dev ? devFolderPath : prodFolderPath,
     filename: "[name].[contenthash].bundle.js",
+    publicPath: "/",
   },
   devServer: {
     contentBase: devFolderPath,
