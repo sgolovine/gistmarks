@@ -1,5 +1,17 @@
-import React from "react"
+import React, { useEffect } from "react"
+import { useParams } from "react-router"
+import { Layout } from "./Layout"
 
 export const ViewRoute = () => {
-  return <p>View Stub</p>
+  const params = useParams()
+
+  useEffect(() => {
+    console.log(params)
+  }, [])
+
+  return (
+    <Layout>
+      <p>View stub</p>
+    </Layout>
+  )
 }
