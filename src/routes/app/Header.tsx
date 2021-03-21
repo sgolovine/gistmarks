@@ -1,4 +1,6 @@
 import React, { useContext } from "react"
+import Media from "react-media"
+
 import Button from "~/components/common/Button"
 import { CogIcon } from "~/components/icons/CogIcon"
 import { Loader } from "~/components/icons/Loader"
@@ -10,6 +12,7 @@ import {
   GlobalStateContext,
   LayoutContext,
 } from "~/context"
+import { GLOBAL_MEDIA_QUERIES } from "~/defines/mediaQueries"
 
 export const Header: React.FC = () => {
   const layoutContext = useContext(LayoutContext)
@@ -26,7 +29,11 @@ export const Header: React.FC = () => {
         >
           <MenuIcon />
         </button>
-        {/* <p className="text-lg font-bold">GistMarks</p> */}
+        <Media
+          query={GLOBAL_MEDIA_QUERIES.lg}
+          render={() => <p className="text-lg font-bold">GistMarks</p>}
+        />
+
         <div>
           <input
             value={bookmarkContext.searchTerm}

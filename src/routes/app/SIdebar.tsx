@@ -6,7 +6,7 @@ export const Sidebar: React.FC = () => {
   const bookmarkContext = useContext(BookmarkContext)
 
   return (
-    <div className="flex flex-col min-w-sidebar p-4 h-full">
+    <div className="flex flex-col lg:min-w-sidebar left-0 right-0 lg:right-auto p-4 h-full absolute bg-white border">
       <div>
         <p className="font-bold pb-2">Active Categories</p>
         <div className="flex flex-row">

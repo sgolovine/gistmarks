@@ -49,7 +49,7 @@ const Editor: React.FC<EditorProps> = ({
   const submitButtonText = editMode ? "Save Changes" : "Create"
 
   return (
-    <div className="min-w-create-panel border">
+    <div className="lg:min-w-create-panel border absolute bg-white h-full shadow left-0 lg:left-auto right-0">
       <div>
         <p className="font-bold text-2xl p-1">{headingText}</p>
         {dev && (
