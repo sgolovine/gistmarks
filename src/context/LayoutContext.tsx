@@ -27,7 +27,7 @@ export const LayoutContextProvider: React.FC<ContextProviderProps> = ({
   const [layoutState, setLayoutState] = useState<LayoutContextState>({
     createPanelOpen: false,
     editPanelOpen: false,
-    sidebarOpen: true,
+    sidebarOpen: false,
     savePanelOpen: false,
   })
 

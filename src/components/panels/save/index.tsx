@@ -34,7 +34,7 @@ export const SavePanel = () => {
   }
 
   return (
-    <div className="min-w-create-panel border p-1">
+    <div className="lg:min-w-create-panel border p-1 absolute bg-white h-full shadow left-0 lg:left-auto right-0">
       <div>
         <p className="font-bold text-2xl">Backup and Sync</p>
         {/* BACKUP TO JSON */}
