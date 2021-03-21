@@ -1,6 +1,6 @@
 [build]
   base = "/"
-  publish = "/out"
+  publish = "/dist"
   functions = "/functions"
   command = "yarn build"
 
