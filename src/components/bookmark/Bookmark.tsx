@@ -15,8 +15,6 @@ interface Props {
   readonly?: boolean
 }
 
-const CARD_SIZE = "72"
-
 export const Bookmark: React.FC<Props> = ({
   guid,
   title,
@@ -79,7 +77,7 @@ export const Bookmark: React.FC<Props> = ({
 
   return (
     <div
-      className={`border lg:h-${CARD_SIZE} lg:w-${CARD_SIZE} m-2 p-2 rounded hover:shadow flex flex-row lg:flex-col justify-between lg:justify-start`}
+      className={`border lg:h-72 lg:w-72 m-2 p-2 rounded hover:shadow flex flex-row lg:flex-col justify-between lg:justify-start`}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
