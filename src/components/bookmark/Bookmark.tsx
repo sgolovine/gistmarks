@@ -12,6 +12,7 @@ interface Props {
   href?: string
   description?: string
   category?: string
+  readonly?: boolean
 }
 
 const CARD_SIZE = "72"
@@ -22,6 +23,7 @@ export const Bookmark: React.FC<Props> = ({
   href,
   description,
   category,
+  readonly,
 }) => {
   const editorStateContext = useContext(EditorStateContext)
   const layoutContext = useContext(LayoutContext)
@@ -121,21 +123,26 @@ export const Bookmark: React.FC<Props> = ({
       )}
 
       {/* Action Buttons */}
-      <div className="flex flex-row items-center">
-        <button className="border shadow rounded p-1 mr-2" onClick={handleEdit}>
-          <div className="h-6 w-6">
-            <EditIcon />
-          </div>
-        </button>
-        <button
-          className="border shadow rounded p-1 ml-2"
-          onClick={handleDelete}
-        >
-          <div className="h-6 w-6">
-            <TrashIcon />
-          </div>
-        </button>
-      </div>
+      {!readonly && (
+        <div className="flex flex-row items-center">
+          <button
+            className="border shadow rounded p-1 mr-2"
+            onClick={handleEdit}
+          >
+            <div className="h-6 w-6">
+              <EditIcon />
+            </div>
+          </button>
+          <button
+            className="border shadow rounded p-1 ml-2"
+            onClick={handleDelete}
+          >
+            <div className="h-6 w-6">
+              <TrashIcon />
+            </div>
+          </button>
+        </div>
+      )}
     </div>
   )
 }

@@ -4,7 +4,7 @@ import { HomepageRoute } from "./homepage"
 import { AddRoute } from "./add"
 import { AppRoute } from "./app"
 import { NotFoundRoute } from "./notfound"
-import { ViewRoute } from "./view"
+import { ViewRoute, ViewRootRoute } from "./view"
 
 export const Router = () => {
   return (
@@ -24,6 +24,12 @@ export const Router = () => {
         </Route>
         <Route path="/v/:id">
           <ViewRoute />
+        </Route>
+        <Route exact path="/view">
+          <ViewRootRoute />
+        </Route>
+        <Route exact path="/v">
+          <ViewRootRoute />
         </Route>
         <Route path="*">
           <NotFoundRoute />
