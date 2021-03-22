@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import Button from "~/components/common/Button"
 import { GithubAuthButton } from "~/components/common/GithubAuthButton"
 import ExternalLinkIcon from "~/components/icons/ExternalLinkIcon"
 import { Loader } from "~/components/icons/Loader"
-import { AuthContext } from "~/context"
+import { AuthContext, LayoutContext } from "~/context"
 
 interface Props {
   filenameValue: string
@@ -45,6 +46,7 @@ export const GistBackup: React.FC<Props> = ({
   backupLoading,
 }) => {
   const authContext = useContext(AuthContext)
+  const layoutContext = useContext(LayoutContext)
 
   const [isUpdating, setIsUpdating] = useState<boolean>(false)
 
@@ -80,7 +82,18 @@ export const GistBackup: React.FC<Props> = ({
             <div className="m-4 p-2 border rounded">
               <p className="text-lg pb-2">Backup Created</p>
               <div className="flex flex-row items-center text-blue-600 hover:underline">
-                <a href={htmlUrlValue}>View on Github</a>
+                <Link
+                  onClick={() => layoutContext.toggleSavePanel()}
+                  to={`/v/${gistIdValue}`}
+                >
+                  View Collection
+                </Link>
+                <div className="h-4 w-4">
+                  <ExternalLinkIcon />
+                </div>
+              </div>
+              <div className="flex flex-row items-center text-blue-600 hover:underline">
+                <a href={htmlUrlValue}>View Source on Github</a>
                 <div className="h-4 w-4">
                   <ExternalLinkIcon />
                 </div>

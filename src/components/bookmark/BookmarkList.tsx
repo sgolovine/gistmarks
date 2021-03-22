@@ -1,10 +1,17 @@
-import React, { useContext } from "react"
-import { BookmarkContext } from "~/context/BookmarkContext"
+import React from "react"
+import { BookmarkCollection } from "~/model/Bookmark"
 import { Bookmark } from "./Bookmark"
 
-export const BookmarkList: React.FC = () => {
-  const bookmarkContext = useContext(BookmarkContext)
-  const bookmarkKeys = Object.keys(bookmarkContext.bookmarks)
+interface Props {
+  bookmarks: BookmarkCollection
+  readonly?: boolean
+}
+
+export const BookmarkList: React.FC<Props> = ({
+  bookmarks,
+  readonly = false,
+}) => {
+  const bookmarkKeys = Object.keys(bookmarks)
 
   if (bookmarkKeys.length === 0) {
     return <p>You don&apos;t have any bookmarks yet!</p>
@@ -13,7 +20,7 @@ export const BookmarkList: React.FC = () => {
   return (
     <div className="flex flex-col lg:flex-row lg:flex-wrap">
       {bookmarkKeys.map((key) => {
-        const bookmarkData = bookmarkContext.bookmarks[key]
+        const bookmarkData = bookmarks[key]
         return (
           <Bookmark
             key={key}
@@ -22,6 +29,7 @@ export const BookmarkList: React.FC = () => {
             href={bookmarkData.href}
             description={bookmarkData.description}
             category={bookmarkData.category}
+            readonly={readonly}
           />
         )
       })}

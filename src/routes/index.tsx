@@ -1,11 +1,10 @@
 import React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
-
 import { HomepageRoute } from "./homepage"
 import { AddRoute } from "./add"
-import { ViewRoute } from "./view"
 import { AppRoute } from "./app"
 import { NotFoundRoute } from "./notfound"
+import { ViewRoute, ViewRootRoute } from "./view"
 
 export const Router = () => {
   return (
@@ -20,8 +19,17 @@ export const Router = () => {
         <Route exact path="/add">
           <AddRoute />
         </Route>
-        <Route exact path="/view">
+        <Route path="/view/:id">
           <ViewRoute />
+        </Route>
+        <Route path="/v/:id">
+          <ViewRoute />
+        </Route>
+        <Route exact path="/view">
+          <ViewRootRoute />
+        </Route>
+        <Route exact path="/v">
+          <ViewRootRoute />
         </Route>
         <Route path="*">
           <NotFoundRoute />

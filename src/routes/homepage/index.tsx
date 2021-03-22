@@ -15,6 +15,12 @@ export const HomepageRoute = () => {
         <Link className="text-lg font-bold hover:text-blue-700" to="/add">
           Link to Add
         </Link>
+        <Link
+          className="text-lg font-bold hover:text-blue-700"
+          to="/v/some-gist-id"
+        >
+          Link to View (sample gist ID)
+        </Link>
       </div>
     </div>
   )

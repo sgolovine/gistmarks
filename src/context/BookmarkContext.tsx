@@ -1,7 +1,7 @@
-import { escapeRegExp } from "lodash"
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { BOOKMARK_STORAGE_KEY } from "~/defines"
 import { omitKey, removeItem, uniq } from "~/helpers"
+import { filterBySearchTerm, filterByCategories } from "~/helpers/filtering"
 import useLocalStorage from "~/hooks/useLocalStorage"
 import { Bookmark, BookmarkCollection } from "~/model/Bookmark"
 import { ContextProviderProps } from "~/model/Context"
@@ -34,51 +34,6 @@ export const BookmarkContext = createContext<BookmarkContext>({
   setSearch: () => null,
   restoreBookmarks: () => null,
 })
-
-function filterByCategories(
-  bookmarks: BookmarkCollection,
-  activeCategories: string[]
-) {
-  const filterBookmarks = Object.keys(bookmarks).reduce(
-    (acc: BookmarkCollection, key: string) => {
-      if (activeCategories.indexOf(bookmarks[key].category) > -1) {
-        return {
-          ...acc,
-          [key]: bookmarks[key],
-        }
-      } else {
-        return acc
-      }
-    },
-    {} as BookmarkCollection
-  )
-  return filterBookmarks
-}
-
-function filterBySearchTerm(bookmarks: BookmarkCollection, searchTerm: string) {
-  const re = new RegExp(escapeRegExp(searchTerm), "i")
-
-  const filteredBookmarks = Object.keys(bookmarks).reduce(
-    (acc: BookmarkCollection, key: string) => {
-      const bookmark = bookmarks[key]
-      if (
-        (searchTerm && re.test(bookmark.name)) ||
-        re.test(bookmark.href) ||
-        re.test(bookmark.category)
-      ) {
-        return {
-          ...acc,
-          [key]: bookmark,
-        }
-      } else {
-        return acc
-      }
-    },
-    {} as BookmarkCollection
-  )
-
-  return filteredBookmarks
-}
 
 export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
   children,

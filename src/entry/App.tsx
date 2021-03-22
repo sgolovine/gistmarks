@@ -6,6 +6,7 @@ import {
   LayoutContextProvider,
   BookmarkContextProvider,
   GlobalStateContextProvider,
+  ViewContextProvider,
 } from "~/context"
 
 import "~/styles/tailwind.css"
@@ -25,7 +26,9 @@ const ContextWrapper: React.FC<ContextWrapperProps> = ({ children }) => {
         <LayoutContextProvider>
           <BookmarkContextProvider>
             <EditorStateContextProvider>
-              <BackupContextProvider>{children}</BackupContextProvider>
+              <BackupContextProvider>
+                <ViewContextProvider>{children}</ViewContextProvider>
+              </BackupContextProvider>
             </EditorStateContextProvider>
           </BookmarkContextProvider>
         </LayoutContextProvider>
