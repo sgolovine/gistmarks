@@ -18,44 +18,82 @@ interface ViewContext {
   activeCategories: string[]
   searchTerm: string
   gistLoading: boolean
+  showError: boolean
+  errorTitle: string
+  errorMessage: string
   setGistId: (gistId: string) => void
   addActiveCategory: (category: string) => void
   removeActiveCategory: (category: string) => void
   setSearch: (newTerm: string) => void
+  setError: ({
+    show,
+    title,
+    msg,
+  }: {
+    show: boolean
+    title: string
+    msg: string
+  }) => void
 }
 
-export const ViewContext = createContext<ViewContext>({
+const initialContextState: ViewContext = {
   gistId: null,
   bookmarks: {},
   categories: [],
   activeCategories: [],
   searchTerm: "",
   gistLoading: false,
+  showError: false,
+  errorTitle: "",
+  errorMessage: "",
   setGistId: () => null,
   addActiveCategory: () => null,
   removeActiveCategory: () => null,
   setSearch: () => null,
-})
+  setError: () => null,
+}
 
-export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
+export const ViewContext = createContext<ViewContext>(initialContextState)
+
+export const ViewContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  const [gistLoading, setGistLoading] = useState<boolean>(false)
+  const [gistLoading, setGistLoading] = useState<boolean>(
+    initialContextState.gistLoading
+  )
 
-  const [gistId, setGistId] = useState<string | null>(null)
+  const [gistId, setGistId] = useState<string | null>(
+    initialContextState.gistId
+  )
 
-  const [bookmarks, setBookmarks] = useState<BookmarkCollection>({})
+  const [bookmarks, setBookmarks] = useState<BookmarkCollection>(
+    initialContextState.bookmarks
+  )
 
   const [
     filteredBookmarks,
     setFilteredBookmarks,
   ] = useState<BookmarkCollection>(bookmarks)
 
-  const [categories, setCategories] = useState<string[]>([])
+  const [categories, setCategories] = useState<string[]>(
+    initialContextState.categories
+  )
 
-  const [searchTerm, setSearchTerm] = useState<string>("")
+  const [searchTerm, setSearchTerm] = useState<string>(
+    initialContextState.searchTerm
+  )
 
-  const [activeCategories, setActiveCategories] = useState<string[]>([])
+  const [activeCategories, setActiveCategories] = useState<string[]>(
+    initialContextState.activeCategories
+  )
+
+  const [errorState, setErrorState] = useState<
+    Pick<ViewContext, "errorMessage" | "errorTitle" | "showError">
+  >({
+    showError: initialContextState.showError,
+    errorTitle: initialContextState.errorTitle,
+    errorMessage: initialContextState.errorMessage,
+  })
 
   useEffect(() => {
     if (gistId) {
@@ -95,12 +133,30 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
     setSearchTerm(newSearchTerm)
   }
 
+  const setError = ({
+    show,
+    title,
+    msg,
+  }: {
+    show: boolean
+    title: string
+    msg: string
+  }) => {
+    setErrorState({
+      showError: show,
+      errorTitle: title,
+      errorMessage: msg,
+    })
+  }
+
   const fetchGist = async (gistId: string) => {
+    console.log("fetch gist function")
     if (gistId) {
+      console.log("fetching gist id", gistId)
       setGistLoading(true)
       const instance = createInstance()
       const resp = await getGist(instance, gistId)
-
+      console.log("we have a resp", resp)
       if (resp && validateStatus(resp.status)) {
         setGistLoading(false)
         const allFiles = resp.data.files
@@ -110,13 +166,22 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
           const parsedBookmarks = JSON.parse(bookmarkContent)
           setBookmarks(parsedBookmarks)
         } catch (e) {
-          // TODO: Handle Error
-          console.error(e)
+          setError({
+            show: true,
+            title: "Unable to fetch Gist",
+            msg: "There was an error parsing the bookmarks",
+          })
         }
       } else {
         setGistLoading(false)
-        // TODO: Handle Error
+        setError({
+          show: true,
+          title: "Unable to fetch Gist",
+          msg: "There was an error fetching the gist from Github",
+        })
       }
+    } else {
+      console.log("gist id not found")
     }
   }
 
@@ -131,6 +196,10 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
     setSearch,
     setGistId,
     gistLoading,
+    showError: errorState.showError,
+    errorTitle: errorState.errorTitle,
+    errorMessage: errorState.errorMessage,
+    setError,
   }
 
   return <ViewContext.Provider value={value}>{children}</ViewContext.Provider>
