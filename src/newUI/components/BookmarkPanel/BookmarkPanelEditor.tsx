@@ -5,8 +5,12 @@ import MenuItem from "@material-ui/core/MenuItem"
 import Select from "@material-ui/core/Select"
 import TextField from "@material-ui/core/TextField"
 import makeStyles from "@material-ui/core/styles/makeStyles"
+import { dev } from "~/helpers"
 
 const useStyles = makeStyles((theme) => ({
+  devButton: {
+    margin: theme.spacing(1),
+  },
   input: {
     margin: theme.spacing(1),
   },
@@ -86,6 +90,18 @@ export const BookmarkPanelEditor: React.FC<Props> = ({
 
   return (
     <>
+      {dev && (
+        <div className={classes.devButton}>
+          <Button
+            // onClick={onSubmit}
+            className={classes.button}
+            color="primary"
+            variant="contained"
+          >
+            Autofill
+          </Button>
+        </div>
+      )}
       <TextField
         className={classes.input}
         value={bookmarkName}
