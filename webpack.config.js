@@ -1,7 +1,5 @@
 const path = require("path")
-// Webpack Plugins
 const HtmlWebpackPlugin = require("html-webpack-plugin")
-const webpack = require("webpack")
 const Dotenv = require("dotenv-webpack")
 const TerserPlugin = require("terser-webpack-plugin")
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
@@ -17,7 +15,7 @@ const prodFolderPath = path.resolve(__dirname, "dist")
 module.exports = {
   mode: dev ? "development" : "production",
   devtool: dev ? "eval-source-map" : false,
-  entry: path.resolve(__dirname, "src", "entry", "index.tsx"),
+  entry: path.resolve(__dirname, "src", "newUI", "index.tsx"),
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx", ".html", ".css"],
   },
@@ -74,6 +72,10 @@ module.exports = {
         test: /.(css)/,
         use: ["style-loader", "css-loader", "postcss-loader"],
         exclude: /node_modules/,
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf|png|jpg|gif)$/,
+        use: ["file-loader"],
       },
     ],
   },
