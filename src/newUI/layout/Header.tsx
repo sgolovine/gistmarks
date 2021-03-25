@@ -103,7 +103,7 @@ export default function Header() {
         </div>
 
         {/* Settings Button */}
-        <IconButton color="inherit" onClick={layoutContext.openSyncPanel}>
+        <IconButton color="inherit" onClick={layoutContext.openSettingsPanel}>
           <SettingsIcon />
         </IconButton>
 

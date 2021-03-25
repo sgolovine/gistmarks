@@ -4,7 +4,7 @@ export const initialState: LayoutState = {
   createPanelOpen: false,
   editPanelOpen: false,
   sidebarOpen: false,
-  syncPanelOpen: false,
+  settingsPanelOpen: false,
 }
 
 export function reducer(
@@ -17,24 +17,24 @@ export function reducer(
         ...state,
         createPanelOpen: action.payload,
         editPanelOpen: false,
-        syncPanelOpen: false,
+        settingsPanelOpen: false,
       }
     case "TOGGLE_EDIT":
       return {
         ...state,
         editPanelOpen: action.payload,
         createPanelOpen: false,
-        syncPanelOpen: false,
+        settingsPanelOpen: false,
       }
     case "TOGGLE_SIDEBAR":
       return {
         ...state,
         sidebarOpen: action.payload,
       }
-    case "TOGGLE_SYNC": {
+    case "TOGGLE_SETTINGS": {
       return {
         ...state,
-        syncPanelOpen: action.payload,
+        settingsPanelOpen: action.payload,
         createPanelOpen: false,
         editPanelOpen: false,
       }

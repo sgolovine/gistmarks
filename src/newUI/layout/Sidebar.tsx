@@ -14,24 +14,29 @@ import ChevronLeft from "@material-ui/icons/ChevronLeft"
 import CheckBox from "@material-ui/icons/CheckBox"
 
 import { LayoutContext } from "../context/LayoutContext"
+import List from "@material-ui/core/List"
 
 const sidebarWidth = 300
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
     width: sidebarWidth,
   },
   header: {
     width: sidebarWidth,
+    justifyContent: "space-between",
     display: "flex",
-    justifyContent: "flex-end",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingLeft: theme.spacing(1),
   },
+
   categoryText: {
     paddingTop: "0.5rem",
     paddingLeft: "0.75rem",
   },
-})
+}))
 
 interface SidebarItemProps {
   label: string
@@ -62,20 +67,18 @@ export default function Sidebar() {
     <Drawer
       anchor={"left"}
       open={layoutContext.sidebarOpen}
-      onClose={() => layoutContext.setSidebarState(false)}
+      onClose={layoutContext.closeSidebar}
       variant="persistent"
       className={classes.container}
     >
       <div className={classes.header}>
-        <IconButton onClick={() => layoutContext.setSidebarState(false)}>
+        <Typography variant="h6">Categories</Typography>
+        <IconButton onClick={layoutContext.closeSidebar}>
           <ChevronLeft />
         </IconButton>
       </div>
       <Divider />
-      <div>
-        <Typography className={classes.categoryText} variant="h5">
-          Categories
-        </Typography>
+      <List>
         <SidebarItem
           onClick={() => console.log("I have been clicked")}
           label="Category Name"
@@ -97,7 +100,7 @@ export default function Sidebar() {
           onClick={() => console.log("I have been clicked")}
           label="Category Name"
         />
-      </div>
+      </List>
     </Drawer>
   )
 }

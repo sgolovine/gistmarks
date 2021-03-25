@@ -8,7 +8,7 @@ import Divider from "@material-ui/core/Divider"
 
 import { ChevronRight } from "@material-ui/icons"
 
-const panelWidth = 500
+export const panelWidth = 500
 
 const useStyles = makeStyles((theme) => ({
   root: {

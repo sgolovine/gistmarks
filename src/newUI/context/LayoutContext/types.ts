@@ -14,19 +14,19 @@ export interface ILayoutContext {
   openEditPanel: () => void
   closeEditPanel: () => void
 
-  // Sync Panel
-  syncPanelOpen: boolean
-  openSyncPanel: () => void
-  closeSyncPanel: () => void
+  // Settings Panel
+  settingsPanelOpen: boolean
+  openSettingsPanel: () => void
+  closeSettingsPanel: () => void
 }
 
 export type ActionTypes =
   | "TOGGLE_SIDEBAR"
   | "TOGGLE_CREATE"
   | "TOGGLE_EDIT"
-  | "TOGGLE_SYNC"
+  | "TOGGLE_SETTINGS"
 
 export type LayoutState = Pick<
   ILayoutContext,
-  "createPanelOpen" | "editPanelOpen" | "sidebarOpen" | "syncPanelOpen"
+  "createPanelOpen" | "editPanelOpen" | "sidebarOpen" | "settingsPanelOpen"
 >

@@ -14,17 +14,19 @@ export const LayoutContextProvider: React.FC<ContextProviderProps> = ({
     sidebarOpen: state.sidebarOpen,
     createPanelOpen: state.createPanelOpen,
     editPanelOpen: state.editPanelOpen,
-    syncPanelOpen: state.syncPanelOpen,
+    settingsPanelOpen: state.settingsPanelOpen,
 
     // Actions
     openSidebar: () => dispatch({ type: "TOGGLE_SIDEBAR", payload: true }),
-    closeSidebar: () => dispatch({ type: "TOGGLE_SIDEBAR", payload: true }),
+    closeSidebar: () => dispatch({ type: "TOGGLE_SIDEBAR", payload: false }),
     openCreatePanel: () => dispatch({ type: "TOGGLE_CREATE", payload: true }),
     closeCreatePanel: () => dispatch({ type: "TOGGLE_CREATE", payload: false }),
     openEditPanel: () => dispatch({ type: "TOGGLE_EDIT", payload: true }),
     closeEditPanel: () => dispatch({ type: "TOGGLE_EDIT", payload: false }),
-    openSyncPanel: () => dispatch({ type: "TOGGLE_SYNC", payload: true }),
-    closeSyncPanel: () => dispatch({ type: "TOGGLE_SYNC", payload: false }),
+    openSettingsPanel: () =>
+      dispatch({ type: "TOGGLE_SETTINGS", payload: true }),
+    closeSettingsPanel: () =>
+      dispatch({ type: "TOGGLE_SETTINGS", payload: false }),
   }
 
   return (
