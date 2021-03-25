@@ -5,6 +5,7 @@ import { SettingsPanel } from "./components/SettingsPanel"
 import { LayoutContextProvider } from "./context/LayoutContext"
 import Header from "./layout/Header"
 import Sidebar from "./layout/Sidebar"
+import { BookmarkList } from "./layout/BookmarkList"
 
 const PanelsAndSidebars = () => (
   <>
@@ -21,9 +22,7 @@ export default function App() {
       <CssBaseline />
       <Header />
       <PanelsAndSidebars />
-      <div>
-        <h1>App</h1>
-      </div>
+      <BookmarkList />
     </LayoutContextProvider>
   )
 }
