@@ -1,16 +1,19 @@
 import React, { useContext } from "react"
-import {
-  Divider,
-  Drawer,
-  IconButton,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  makeStyles,
-  Typography,
-} from "@material-ui/core"
+
+import Divider from "@material-ui/core/Divider"
+import Drawer from "@material-ui/core/Drawer"
+import IconButton from "@material-ui/core/IconButton"
+import ListItem from "@material-ui/core/ListItem"
+import ListItemText from "@material-ui/core/ListItemText"
+import ListItemIcon from "@material-ui/core/ListItemIcon"
+import makeStyles from "@material-ui/core/styles/makeStyles"
+import Typography from "@material-ui/core/Typography"
+
+import CheckBoxOutlineBlank from "@material-ui/icons/CheckBoxOutlineBlank"
+import ChevronLeft from "@material-ui/icons/ChevronLeft"
+import CheckBox from "@material-ui/icons/CheckBox"
+
 import { LayoutContext } from "../context/LayoutContext"
-import { CheckBoxOutlineBlank, ChevronLeft, CheckBox } from "@material-ui/icons"
 
 const sidebarWidth = 300
 

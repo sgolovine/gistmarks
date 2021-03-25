@@ -1,19 +1,19 @@
 import React, { useContext } from "react"
-import {
-  AppBar,
-  IconButton,
-  Toolbar,
-  Typography,
-  makeStyles,
-  fade,
-  InputBase,
-} from "@material-ui/core"
+
+import { fade } from "@material-ui/core"
+
 import MenuIcon from "@material-ui/icons/Menu"
 import CreateIcon from "@material-ui/icons/Create"
 import SearchIcon from "@material-ui/icons/Search"
 import SettingsIcon from "@material-ui/icons/Settings"
-import { LayoutContext } from "../context/LayoutContext"
+import makeStyles from "@material-ui/core/styles/makeStyles"
+import AppBar from "@material-ui/core/AppBar"
+import IconButton from "@material-ui/core/IconButton"
+import Toolbar from "@material-ui/core/Toolbar"
+import Typography from "@material-ui/core/Typography"
+import InputBase from "@material-ui/core/InputBase"
 
+import { LayoutContext } from "../context/LayoutContext"
 const useStyles = makeStyles((theme) => ({
   iconButton: {},
   root: {
@@ -77,7 +77,7 @@ export default function Header() {
           edge="start"
           color="inherit"
           aria-label="menu"
-          onClick={() => layoutContext.setSidebarState(true)}
+          onClick={layoutContext.openSidebar}
         >
           <MenuIcon />
         </IconButton>
@@ -103,18 +103,12 @@ export default function Header() {
         </div>
 
         {/* Settings Button */}
-        <IconButton
-          color="inherit"
-          onClick={() => layoutContext.setPanelState(true)}
-        >
+        <IconButton color="inherit" onClick={layoutContext.openSyncPanel}>
           <SettingsIcon />
         </IconButton>
 
         {/* Create Bookmark Button */}
-        <IconButton
-          color="inherit"
-          onClick={() => layoutContext.setPanelState(true)}
-        >
+        <IconButton color="inherit" onClick={layoutContext.openCreatePanel}>
           <CreateIcon />
         </IconButton>
       </Toolbar>
