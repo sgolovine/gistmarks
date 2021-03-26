@@ -7,6 +7,7 @@ import { SettingsItem } from "./SettingsItem"
 import { LocalBackup, LocalRestore } from "./Local"
 import { GistBackup } from "./GistBackup"
 import { GistRestore } from "./GistRestore"
+import { BackupContext } from "~/context"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const SettingsPanel = () => {
   const layoutContext = useContext(LayoutContext)
+  const backupContext = useContext(BackupContext)
 
   const classes = useStyles()
 
@@ -30,15 +32,19 @@ export const SettingsPanel = () => {
       title="Settings"
       open={layoutContext.settingsPanelOpen}
       onClose={layoutContext.closeSettingsPanel}
+      loading={backupContext.gistBackup.backupLoading}
     >
       <div className={classes.root}>
         {/* Backup Results */}
-        <BackupResults
-          gistId="some-gist-id"
-          onDeleteClick={() => null}
-          onSyncClick={() => null}
-          onGithubClick={() => null}
-        />
+        {backupContext.backupResults.backupCreated &&
+          backupContext.backupResults.gistId && (
+            <BackupResults
+              gistId={backupContext.backupResults.gistId}
+              onDeleteClick={backupContext.actions.deleteBackup}
+              onSyncClick={backupContext.actions.updateBackup}
+              htmlUrl={backupContext.backupResults.htmlUrl}
+            />
+          )}
 
         {/* Local Backup */}
         <SettingsItem title="Local Backup">

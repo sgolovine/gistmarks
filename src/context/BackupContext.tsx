@@ -54,7 +54,22 @@ interface BackupContext {
     createBackup: () => void
     updateBackup: () => void
     restoreBackup: () => void
+    deleteBackup: () => void
   }
+}
+
+const initialBackupState: GistBackup = {
+  backupLoading: false,
+  filename: GH_DEFAULT_FILENAME,
+  description: "",
+  gistId: "",
+}
+
+const initialBackupResultsState: BackupResults = {
+  gistId: "",
+  description: "",
+  htmlUrl: "",
+  backupCreated: false,
 }
 
 export const BackupContext = createContext<BackupContext>({} as BackupContext)
@@ -68,23 +83,16 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
 
   const [backupState, setBackupState] = useLocalStorage<GistBackup>(
     GIST_BACKUP_STATE,
-    {
-      backupLoading: false,
-      filename: GH_DEFAULT_FILENAME,
-      description: "",
-      gistId: "",
-    }
+    initialBackupState
   )
 
   const [
     backupResultsState,
     setBackupResultsState,
-  ] = useLocalStorage<BackupResults>(GIST_BACKUP_RESULT_STATE, {
-    gistId: "",
-    description: "",
-    htmlUrl: "",
-    backupCreated: false,
-  })
+  ] = useLocalStorage<BackupResults>(
+    GIST_BACKUP_RESULT_STATE,
+    initialBackupResultsState
+  )
 
   const [restoreState, setRestoreState] = useLocalStorage<GistRestore>(
     GIST_RESTORE_STATE,
@@ -180,6 +188,11 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
     }
   }
 
+  const deleteBackup = () => {
+    setBackupState(initialBackupState)
+    setBackupResultsState(initialBackupResultsState)
+  }
+
   useEffect(() => {
     if (backupResultsState.gistId) {
       setBackupField("gistId", backupResultsState.gistId)
@@ -204,6 +217,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       createBackup,
       updateBackup,
       restoreBackup,
+      deleteBackup,
     },
   }
 

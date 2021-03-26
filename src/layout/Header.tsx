@@ -12,7 +12,9 @@ import Toolbar from "@material-ui/core/Toolbar"
 import Typography from "@material-ui/core/Typography"
 import InputBase from "@material-ui/core/InputBase"
 import { LayoutContext } from "~/context/LayoutContext"
-import { BookmarkContext } from "~/context"
+import { BackupContext, BookmarkContext, GlobalStateContext } from "~/context"
+import SaveIcon from "@material-ui/icons/Save"
+import CircularProgress from "@material-ui/core/CircularProgress"
 
 const useStyles = makeStyles((theme) => ({
   iconButton: {},
@@ -79,6 +81,8 @@ const Header: React.FC<Props> = ({
   noSearch = false,
 }) => {
   const classes = useStyles()
+  const backupContext = useContext(BackupContext)
+  const globalStateContext = useContext(GlobalStateContext)
   const layoutContext = useContext(LayoutContext)
   const bookmarkContext = useContext(BookmarkContext)
 
@@ -132,6 +136,15 @@ const Header: React.FC<Props> = ({
         {!noEditor && (
           <IconButton color="inherit" onClick={layoutContext.openCreatePanel}>
             <CreateIcon />
+          </IconButton>
+        )}
+
+        {!noEditor && globalStateContext.unsavedChanges && (
+          <IconButton
+            color="inherit"
+            onClick={backupContext.actions.updateBackup}
+          >
+            <SaveIcon />
           </IconButton>
         )}
       </Toolbar>

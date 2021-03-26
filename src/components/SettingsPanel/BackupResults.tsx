@@ -13,7 +13,7 @@ import AssignmentIcon from "@material-ui/icons/Assignment"
 
 interface BackupResultsProps {
   gistId: string
-  onGithubClick: () => void
+  htmlUrl?: string
   onSyncClick: () => void
   onDeleteClick: () => void
 }
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const BackupResults: React.FC<BackupResultsProps> = ({
   gistId,
-  onGithubClick,
+  htmlUrl,
   onSyncClick,
   onDeleteClick,
 }) => {
@@ -63,9 +63,14 @@ export const BackupResults: React.FC<BackupResultsProps> = ({
       </CardContent>
       <CardActions>
         {/* View on Github */}
-        <IconButton color="primary" onClick={onGithubClick}>
-          <GithubIcon />
-        </IconButton>
+        {htmlUrl && (
+          <IconButton
+            color="primary"
+            onClick={() => window.location.assign(htmlUrl)}
+          >
+            <GithubIcon />
+          </IconButton>
+        )}
 
         {/* Sync */}
         <IconButton color="primary" onClick={onSyncClick}>

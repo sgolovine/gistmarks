@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography"
 import Divider from "@material-ui/core/Divider"
 
 import { ChevronRight } from "@material-ui/icons"
+import CircularProgress from "@material-ui/core/CircularProgress"
 
 export const panelWidth = 500
 
@@ -25,6 +26,9 @@ const useStyles = makeStyles((theme) => ({
       width: "100vw",
     },
   },
+  loadingIndicator: {
+    marginLeft: theme.spacing(1),
+  },
 }))
 
 interface Props {
@@ -32,9 +36,16 @@ interface Props {
   open: boolean
   onClose: () => void
   children: ReactNode
+  loading?: boolean
 }
 
-export const Panel: React.FC<Props> = ({ title, open, onClose, children }) => {
+export const Panel: React.FC<Props> = ({
+  title,
+  open,
+  onClose,
+  children,
+  loading,
+}) => {
   const classes = useStyles()
 
   return (
@@ -49,6 +60,9 @@ export const Panel: React.FC<Props> = ({ title, open, onClose, children }) => {
           <ChevronRight />
         </IconButton>
         <Typography variant="h6">{title}</Typography>
+        {loading && (
+          <CircularProgress className={classes.loadingIndicator} size={25} />
+        )}
       </div>
       <Divider />
       {children}
