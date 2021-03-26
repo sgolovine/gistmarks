@@ -15,6 +15,7 @@ import CheckBox from "@material-ui/icons/CheckBox"
 
 import { LayoutContext } from "../context/LayoutContext"
 import List from "@material-ui/core/List"
+import { BookmarkContext } from "~/context"
 
 const sidebarWidth = 300
 
@@ -62,7 +63,37 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
 
 export default function Sidebar() {
   const layoutContext = useContext(LayoutContext)
+  const bookmarkContext = useContext(BookmarkContext)
   const classes = useStyles()
+
+  const renderCategories = () => {
+    const handleCategoryClick = (category: string) => {
+      if (bookmarkContext.activeCategories.includes(category)) {
+        bookmarkContext.removeActiveCategory(category)
+      } else {
+        bookmarkContext.addActiveCategory(category)
+      }
+    }
+
+    return (
+      <>
+        {bookmarkContext.categories.map((item, index) => {
+          const isActive =
+            bookmarkContext.activeCategories &&
+            bookmarkContext.activeCategories.length > 0 &&
+            bookmarkContext.activeCategories.includes(item)
+          return (
+            <SidebarItem
+              key={index}
+              label={item}
+              onClick={() => handleCategoryClick(item)}
+              selected={isActive}
+            />
+          )
+        })}
+      </>
+    )
+  }
 
   return (
     <Drawer
@@ -79,7 +110,7 @@ export default function Sidebar() {
         </IconButton>
       </div>
       <Divider />
-      <List>{/* Sidebar Items Go Here */}</List>
+      <List>{renderCategories()}</List>
     </Drawer>
   )
 }
