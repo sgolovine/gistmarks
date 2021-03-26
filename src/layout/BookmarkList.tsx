@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core"
 import React from "react"
-import { BookmarkCard } from "../components/BookmarkCard"
+import { BookmarkCard } from "~/components/BookmarkCard"
 
 const useStyles = makeStyles({
   root: {

@@ -1,7 +1,6 @@
 import React, { useContext } from "react"
 
 import { fade } from "@material-ui/core"
-
 import MenuIcon from "@material-ui/icons/Menu"
 import CreateIcon from "@material-ui/icons/Create"
 import SearchIcon from "@material-ui/icons/Search"
@@ -12,8 +11,8 @@ import IconButton from "@material-ui/core/IconButton"
 import Toolbar from "@material-ui/core/Toolbar"
 import Typography from "@material-ui/core/Typography"
 import InputBase from "@material-ui/core/InputBase"
+import { LayoutContext } from "~/context/LayoutContext"
 
-import { LayoutContext } from "../context/LayoutContext"
 const useStyles = makeStyles((theme) => ({
   iconButton: {},
   root: {

@@ -1,25 +1,21 @@
 import React, { useContext, useState } from "react"
-import { BookmarkContext } from "~/context"
-import { generateUUID } from "~/helpers"
+import { BookmarkContext, EditorStateContext } from "~/context"
 import { Bookmark } from "~/model/Bookmark"
-import { LayoutContext } from "~/newUI/context/LayoutContext"
-import { Panel } from "~/newUI/layout/Panel"
+import { LayoutContext } from "~/context/LayoutContext"
+import { Panel } from "~/layout/Panel"
 import { BookmarkPanelEditor } from "./BookmarkPanelEditor"
 
-export const CreatePanel = () => {
-  const bookmarkContext = useContext(BookmarkContext)
+export const EditPanel = () => {
   const layoutContext = useContext(LayoutContext)
+  const bookmarkContext = useContext(BookmarkContext)
+  const editorState = useContext(EditorStateContext)
 
-  const [state, setState] = useState<{
-    name: string
-    href: string
-    category: string
-    description: string
-  }>({
-    name: "",
-    href: "",
-    category: "",
-    description: "",
+  const [state, setState] = useState<Bookmark>({
+    guid: editorState.bookmark.guid,
+    name: editorState.bookmark.name,
+    href: editorState.bookmark.href,
+    category: editorState.bookmark.category,
+    description: editorState.bookmark.description,
   })
 
   const handleSave = () => {
@@ -33,16 +29,12 @@ export const CreatePanel = () => {
       return
     }
 
-    const guid = generateUUID()
-    const bookmark: Bookmark = {
-      guid,
-      name: state.name,
-      href: state.href,
-      description: state.description,
-      category: state.category,
+    if (editorState.bookmark.guid) {
+      bookmarkContext.editBookmark(state, editorState.bookmark.guid)
+      layoutContext.closeEditPanel()
+    } else {
+      alert("ERR: Unable to edit, no guid found")
     }
-    bookmarkContext.addBookmark(bookmark, guid)
-    layoutContext.closeCreatePanel()
   }
 
   const handleEditField = (key: keyof Bookmark, value: string) => {
@@ -54,12 +46,12 @@ export const CreatePanel = () => {
 
   return (
     <Panel
-      open={layoutContext.createPanelOpen}
-      title="Create Bookmark"
-      onClose={layoutContext.closeCreatePanel}
+      open={layoutContext.editPanelOpen}
+      title="Edit Bookmark"
+      onClose={layoutContext.closeEditPanel}
     >
       <BookmarkPanelEditor
-        editMode={false}
+        editMode={true}
         bookmarkName={state.name}
         bookmarkHref={state.href}
         bookmarkCategory={state.category}

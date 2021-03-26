@@ -44,6 +44,7 @@ interface SidebarItemProps {
   selected: boolean
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const SidebarItem: React.FC<SidebarItemProps> = ({
   label,
   onClick,

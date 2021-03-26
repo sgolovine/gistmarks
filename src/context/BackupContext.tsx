@@ -1,5 +1,4 @@
 import React, { useEffect, createContext, useContext } from "react"
-import { GistBackupResultState } from "~/components/panels/save/GistBackup"
 import { GH_DEFAULT_FILENAME } from "~/defines"
 import {
   GIST_BACKUP_RESULT_STATE,
@@ -16,6 +15,10 @@ import { updateGist } from "~/requests/updateGist"
 import { AuthContext } from "./AuthContext"
 import { BookmarkContext } from "./BookmarkContext"
 import { GlobalStateContext } from "./GlobalStateContext"
+
+// TODO: Complete Type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GistBackupResultState = any
 
 interface GistRestore {
   filename: string
