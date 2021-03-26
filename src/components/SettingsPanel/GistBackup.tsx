@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react"
 import { Button, Checkbox, makeStyles, TextField } from "@material-ui/core"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
-import { AuthContext } from "~/context"
+import { AuthContext, BackupContext } from "~/context"
 import GitHubIcon from "@material-ui/icons/GitHub"
 
 const useStyles = makeStyles((theme) => ({
@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 export const GistBackup = () => {
   const classes = useStyles()
   const { isLoggedIn, login, logout } = useContext(AuthContext)
+  const { gistBackup, actions } = useContext(BackupContext)
 
   const [editGist, setEditGist] = useState<boolean>(false)
 
@@ -42,12 +43,16 @@ export const GistBackup = () => {
             className={classes.itemInput}
             variant="outlined"
             label="Filename"
+            value={gistBackup.filename}
+            onChange={(e) => gistBackup.setField("filename", e.target.value)}
           />
           {editGist && (
             <TextField
               className={classes.itemInput}
               variant="outlined"
               label="Gist ID (optional)"
+              value={gistBackup.gistId}
+              onChange={(e) => gistBackup.setField("gistId", e.target.value)}
             />
           )}
           <TextField
@@ -56,9 +61,15 @@ export const GistBackup = () => {
             label="Description (optional)"
             rows={4}
             multiline
+            value={gistBackup.description}
+            onChange={(e) => gistBackup.setField("description", e.target.value)}
           />
           <div>
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={editGist ? actions.updateBackup : actions.createBackup}
+            >
               {editGist ? "Update" : "Create"}
             </Button>
           </div>
