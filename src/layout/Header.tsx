@@ -64,7 +64,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function Header() {
+interface Props {
+  noSidebar?: boolean
+  noSettings?: boolean
+  noEditor?: boolean
+  noSearch?: boolean
+}
+
+const Header: React.FC<Props> = ({
+  noSidebar = false,
+  noSettings = false,
+  noEditor = false,
+  noSearch = false,
+}) => {
   const classes = useStyles()
   const layoutContext = useContext(LayoutContext)
 
@@ -72,14 +84,16 @@ export default function Header() {
     <AppBar className={classes.root} position="static">
       <Toolbar>
         {/* Sidebar Button */}
-        <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-          onClick={layoutContext.openSidebar}
-        >
-          <MenuIcon />
-        </IconButton>
+        {!noSidebar && (
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            onClick={layoutContext.openSidebar}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
 
         {/* Header Text */}
         <Typography className={classes.title} variant="h6">
@@ -87,30 +101,38 @@ export default function Header() {
         </Typography>
 
         {/* Search Bar */}
-        <div className={classes.search}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
+        {!noSearch && (
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ "aria-label": "search" }}
+            />
           </div>
-          <InputBase
-            placeholder="Search…"
-            classes={{
-              root: classes.inputRoot,
-              input: classes.inputInput,
-            }}
-            inputProps={{ "aria-label": "search" }}
-          />
-        </div>
+        )}
 
         {/* Settings Button */}
-        <IconButton color="inherit" onClick={layoutContext.openSettingsPanel}>
-          <SettingsIcon />
-        </IconButton>
+        {!noSettings && (
+          <IconButton color="inherit" onClick={layoutContext.openSettingsPanel}>
+            <SettingsIcon />
+          </IconButton>
+        )}
 
         {/* Create Bookmark Button */}
-        <IconButton color="inherit" onClick={layoutContext.openCreatePanel}>
-          <CreateIcon />
-        </IconButton>
+        {!noEditor && (
+          <IconButton color="inherit" onClick={layoutContext.openCreatePanel}>
+            <CreateIcon />
+          </IconButton>
+        )}
       </Toolbar>
     </AppBar>
   )
 }
+
+export default Header
