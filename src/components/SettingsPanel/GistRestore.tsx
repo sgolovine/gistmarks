@@ -1,5 +1,6 @@
+import React, { useContext } from "react"
+import { BackupContext } from "~/context"
 import { Button, makeStyles, TextField } from "@material-ui/core"
-import React from "react"
 
 const useStyles = makeStyles((theme) => ({
   itemContent: {
@@ -14,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const GistRestore = () => {
   const classes = useStyles()
-
+  const { gistRestore, actions } = useContext(BackupContext)
   return (
     <div className={classes.itemContent}>
       <TextField
@@ -22,16 +23,24 @@ export const GistRestore = () => {
         className={classes.itemInput}
         variant="outlined"
         label="Filename"
+        value={gistRestore.filename}
+        onChange={(e) => gistRestore.setField("filename", e.target.value)}
       />
       <TextField
         required
         className={classes.itemInput}
         variant="outlined"
         label="Gist ID"
+        value={gistRestore.gistId}
+        onChange={(e) => gistRestore.setField("gistId", e.target.value)}
       />
 
       <div>
-        <Button variant="contained" color="primary">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={actions.restoreBackup}
+        >
           Restore
         </Button>
       </div>

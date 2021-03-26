@@ -1,8 +1,7 @@
 import { makeStyles } from "@material-ui/core"
 import React, { useContext } from "react"
 import { BookmarkCard } from "~/components/BookmarkCard"
-import { EditorStateContext, LayoutContext } from "~/context"
-import { BookmarkCollection } from "~/model/Bookmark"
+import { BookmarkContext, EditorStateContext, LayoutContext } from "~/context"
 
 const useStyles = makeStyles({
   root: {
@@ -13,18 +12,19 @@ const useStyles = makeStyles({
 })
 
 interface Props {
-  bookmarks: BookmarkCollection
   readonly?: boolean
 }
 
-export const BookmarkList: React.FC<Props> = ({ bookmarks, readonly }) => {
-  const editorStateContext = useContext(EditorStateContext)
-  const layoutContext = useContext(LayoutContext)
+export const BookmarkList: React.FC<Props> = ({ readonly }) => {
   const classes = useStyles()
-  const bookmarkKeys = Object.keys(bookmarks)
+  const editorStateContext = useContext(EditorStateContext)
+  const bookmarkContext = useContext(BookmarkContext)
+  const layoutContext = useContext(LayoutContext)
+
+  const bookmarkKeys = Object.keys(bookmarkContext.bookmarks)
 
   const handleEditBookmark = (bookmarkGuid: string) => {
-    const bookmark = bookmarks[bookmarkGuid]
+    const bookmark = bookmarkContext.bookmarks[bookmarkGuid]
     if (bookmark) {
       editorStateContext.setAllFields({
         guid: bookmarkGuid,
@@ -37,10 +37,14 @@ export const BookmarkList: React.FC<Props> = ({ bookmarks, readonly }) => {
     }
   }
 
+  const handleDeleteBookmark = (guid: string) => {
+    bookmarkContext.removeBookmark(guid)
+  }
+
   return (
     <div className={classes.root}>
       {bookmarkKeys.map((key) => {
-        const bookmarkData = bookmarks[key]
+        const bookmarkData = bookmarkContext.bookmarks[key]
         return (
           <BookmarkCard
             key={key}
@@ -51,6 +55,7 @@ export const BookmarkList: React.FC<Props> = ({ bookmarks, readonly }) => {
             category={bookmarkData.category}
             readonly={readonly}
             onEdit={handleEditBookmark}
+            onDelete={handleDeleteBookmark}
           />
         )
       })}

@@ -10,6 +10,7 @@ import {
 import React from "react"
 import { Bookmark } from "~/model/Bookmark"
 import EditIcon from "@material-ui/icons/Edit"
+import TrashIcon from "@material-ui/icons/Delete"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,6 +65,7 @@ type Props = Pick<
 > & {
   readonly?: boolean
   onEdit?: (bookmarkGuid: string) => void
+  onDelete?: (bookmarkGuid: string) => void
 }
 
 export const BookmarkCard: React.FC<Props> = ({
@@ -74,6 +76,7 @@ export const BookmarkCard: React.FC<Props> = ({
   description,
   readonly,
   onEdit,
+  onDelete,
 }) => {
   const classes = useStyles()
 
@@ -82,6 +85,14 @@ export const BookmarkCard: React.FC<Props> = ({
       return
     } else {
       onEdit(guid)
+    }
+  }
+
+  const handleDelete = () => {
+    if (readonly || !onDelete) {
+      return
+    } else {
+      onDelete(guid)
     }
   }
 
@@ -100,9 +111,14 @@ export const BookmarkCard: React.FC<Props> = ({
       </CardContent>
       <CardActions>
         {!readonly && (
-          <IconButton color="primary" onClick={handleEdit}>
-            <EditIcon />
-          </IconButton>
+          <>
+            <IconButton color="primary" onClick={handleEdit}>
+              <EditIcon />
+            </IconButton>
+            <IconButton color="secondary" onClick={handleDelete}>
+              <TrashIcon />
+            </IconButton>
+          </>
         )}
         <Chip
           color="primary"

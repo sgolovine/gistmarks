@@ -14,7 +14,6 @@ import InputBase from "@material-ui/core/InputBase"
 import { LayoutContext } from "~/context/LayoutContext"
 import { BackupContext, BookmarkContext, GlobalStateContext } from "~/context"
 import SaveIcon from "@material-ui/icons/Save"
-import CircularProgress from "@material-ui/core/CircularProgress"
 
 const useStyles = makeStyles((theme) => ({
   iconButton: {},
@@ -139,14 +138,16 @@ const Header: React.FC<Props> = ({
           </IconButton>
         )}
 
-        {!noEditor && globalStateContext.unsavedChanges && (
-          <IconButton
-            color="inherit"
-            onClick={backupContext.actions.updateBackup}
-          >
-            <SaveIcon />
-          </IconButton>
-        )}
+        {!noEditor &&
+          globalStateContext.unsavedChanges &&
+          backupContext.backupResults.backupCreated && (
+            <IconButton
+              color="inherit"
+              onClick={backupContext.actions.updateBackup}
+            >
+              <SaveIcon />
+            </IconButton>
+          )}
       </Toolbar>
     </AppBar>
   )
