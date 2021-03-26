@@ -12,6 +12,7 @@ import Toolbar from "@material-ui/core/Toolbar"
 import Typography from "@material-ui/core/Typography"
 import InputBase from "@material-ui/core/InputBase"
 import { LayoutContext } from "~/context/LayoutContext"
+import { BookmarkContext } from "~/context"
 
 const useStyles = makeStyles((theme) => ({
   iconButton: {},
@@ -79,6 +80,7 @@ const Header: React.FC<Props> = ({
 }) => {
   const classes = useStyles()
   const layoutContext = useContext(LayoutContext)
+  const bookmarkContext = useContext(BookmarkContext)
 
   return (
     <AppBar className={classes.root} position="static">
@@ -113,6 +115,8 @@ const Header: React.FC<Props> = ({
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
+              value={bookmarkContext.searchTerm}
+              onChange={(e) => bookmarkContext.setSearch(e.target.value)}
             />
           </div>
         )}
