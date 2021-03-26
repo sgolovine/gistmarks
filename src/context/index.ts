@@ -1,5 +1,5 @@
 export * from "./AuthContext"
-export * from "./LegacyLayoutContext"
+export * from "./LayoutContext"
 export * from "./EditorStateContext"
 export * from "./BookmarkContext"
 export * from "./BackupContext"

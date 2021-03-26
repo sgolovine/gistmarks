@@ -56,6 +56,7 @@ interface Props {
   onBookmarkDescriptionChange: (newCategory: string) => void
   onCancel: () => void
   onSubmit: () => void
+  onAutofill?: () => void
 }
 
 export const BookmarkPanelEditor: React.FC<Props> = ({
@@ -71,6 +72,7 @@ export const BookmarkPanelEditor: React.FC<Props> = ({
   onBookmarkDescriptionChange,
   onCancel,
   onSubmit,
+  onAutofill,
 }) => {
   const [internalSelectValue, setInternalSelectValue] = useState<
     string | undefined
@@ -90,10 +92,10 @@ export const BookmarkPanelEditor: React.FC<Props> = ({
 
   return (
     <>
-      {dev && (
+      {dev && onAutofill && (
         <div className={classes.devButton}>
           <Button
-            // onClick={onSubmit}
+            onClick={onAutofill}
             className={classes.button}
             color="primary"
             variant="contained"

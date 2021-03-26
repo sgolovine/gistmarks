@@ -5,6 +5,7 @@ import { Bookmark } from "~/model/Bookmark"
 import { LayoutContext } from "~/context/LayoutContext"
 import { Panel } from "~/layout/Panel"
 import { BookmarkPanelEditor } from "./BookmarkPanelEditor"
+import { createFakeBookmark } from "~/helpers/createFakeBookmark"
 
 export const CreatePanel = () => {
   const bookmarkContext = useContext(BookmarkContext)
@@ -21,6 +22,16 @@ export const CreatePanel = () => {
     category: "",
     description: "",
   })
+
+  const handleAutofill = () => {
+    const { name, href, category, description } = createFakeBookmark()
+    setState({
+      name,
+      href,
+      category,
+      description,
+    })
+  }
 
   const handleSave = () => {
     if (!state.name) {
@@ -77,6 +88,7 @@ export const CreatePanel = () => {
         }}
         onCancel={layoutContext.closeCreatePanel}
         onSubmit={handleSave}
+        onAutofill={handleAutofill}
       />
     </Panel>
   )

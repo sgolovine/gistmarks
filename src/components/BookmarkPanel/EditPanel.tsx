@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext } from "react"
 import { BookmarkContext, EditorStateContext } from "~/context"
 import { Bookmark } from "~/model/Bookmark"
 import { LayoutContext } from "~/context/LayoutContext"
@@ -10,38 +10,30 @@ export const EditPanel = () => {
   const bookmarkContext = useContext(BookmarkContext)
   const editorState = useContext(EditorStateContext)
 
-  const [state, setState] = useState<Bookmark>({
-    guid: editorState.bookmark.guid,
-    name: editorState.bookmark.name,
-    href: editorState.bookmark.href,
-    category: editorState.bookmark.category,
-    description: editorState.bookmark.description,
-  })
-
   const handleSave = () => {
-    if (!state.name) {
+    if (!editorState.name) {
       alert("Please enter a name!")
       return
     }
 
-    if (!state.href) {
+    if (!editorState.href) {
       alert("Please enter a URL")
       return
     }
 
-    if (editorState.bookmark.guid) {
-      bookmarkContext.editBookmark(state, editorState.bookmark.guid)
+    if (editorState.guid) {
+      const bookmark: Bookmark = {
+        guid: editorState.guid,
+        name: editorState.name,
+        href: editorState.href,
+        category: editorState.category,
+        description: editorState.description,
+      }
+      bookmarkContext.editBookmark(bookmark, bookmark.guid)
       layoutContext.closeEditPanel()
     } else {
       alert("ERR: Unable to edit, no guid found")
     }
-  }
-
-  const handleEditField = (key: keyof Bookmark, value: string) => {
-    setState({
-      ...state,
-      [key]: value,
-    })
   }
 
   return (
@@ -52,20 +44,20 @@ export const EditPanel = () => {
     >
       <BookmarkPanelEditor
         editMode={true}
-        bookmarkName={state.name}
-        bookmarkHref={state.href}
-        bookmarkCategory={state.category}
+        bookmarkName={editorState.name}
+        bookmarkHref={editorState.href}
+        bookmarkCategory={editorState.category}
         otherCategories={bookmarkContext.categories}
-        bookmarkDescription={state.description}
-        onBookmarkNameChange={(newValue) => handleEditField("name", newValue)}
+        bookmarkDescription={editorState.description}
+        onBookmarkNameChange={(newValue) => editorState.setName(newValue)}
         onBookmarkHrefChange={(newValue) => {
-          handleEditField("href", newValue)
+          editorState.setHref(newValue)
         }}
         onBookmarkCategoryChange={(newValue) => {
-          handleEditField("category", newValue)
+          editorState.setCategory(newValue)
         }}
         onBookmarkDescriptionChange={(newValue) => {
-          handleEditField("description", newValue)
+          editorState.setDescription(newValue)
         }}
         onCancel={layoutContext.closeCreatePanel}
         onSubmit={handleSave}

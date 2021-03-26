@@ -58,10 +58,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const BookmarkCard: React.FC<
-  Pick<Bookmark, "name" | "href" | "category" | "description">
-> = ({ name, href, category, description }) => {
+type Props = Pick<
+  Bookmark,
+  "guid" | "name" | "href" | "category" | "description"
+> & {
+  readonly?: boolean
+  onEdit?: (bookmarkGuid: string) => void
+}
+
+export const BookmarkCard: React.FC<Props> = ({
+  guid,
+  name,
+  href,
+  category,
+  description,
+  readonly,
+  onEdit,
+}) => {
   const classes = useStyles()
+
+  const handleEdit = () => {
+    if (readonly || !onEdit) {
+      return
+    } else {
+      onEdit(guid)
+    }
+  }
 
   return (
     <Card className={classes.root}>
@@ -72,17 +94,16 @@ export const BookmarkCard: React.FC<
         <Typography className={classes.hrefText} variant="body2">
           {href}
         </Typography>
-        {/* <Typography className={classes.categoryText} variant="body2">
-          {category}
-        </Typography> */}
         <Typography className={classes.descriptionText} variant="body1">
           {description}
         </Typography>
       </CardContent>
       <CardActions>
-        <IconButton color="primary">
-          <EditIcon />
-        </IconButton>
+        {!readonly && (
+          <IconButton color="primary" onClick={handleEdit}>
+            <EditIcon />
+          </IconButton>
+        )}
         <Chip
           color="primary"
           className={classes.categoryChip}

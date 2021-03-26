@@ -1,6 +1,8 @@
 import { makeStyles } from "@material-ui/core"
-import React from "react"
+import React, { useContext } from "react"
 import { BookmarkCard } from "~/components/BookmarkCard"
+import { EditorStateContext, LayoutContext } from "~/context"
+import { BookmarkCollection } from "~/model/Bookmark"
 
 const useStyles = makeStyles({
   root: {
@@ -10,95 +12,48 @@ const useStyles = makeStyles({
   },
 })
 
-export const BookmarkList = () => {
+interface Props {
+  bookmarks: BookmarkCollection
+  readonly?: boolean
+}
+
+export const BookmarkList: React.FC<Props> = ({ bookmarks, readonly }) => {
+  const editorStateContext = useContext(EditorStateContext)
+  const layoutContext = useContext(LayoutContext)
   const classes = useStyles()
+  const bookmarkKeys = Object.keys(bookmarks)
+
+  const handleEditBookmark = (bookmarkGuid: string) => {
+    const bookmark = bookmarks[bookmarkGuid]
+    if (bookmark) {
+      editorStateContext.setAllFields({
+        guid: bookmarkGuid,
+        name: bookmark.name,
+        href: bookmark.href,
+        description: bookmark.description,
+        category: bookmark.category,
+      })
+      layoutContext.openEditPanel()
+    }
+  }
 
   return (
     <div className={classes.root}>
-      <BookmarkCard
-        name="Sample Bookmark"
-        href="https://gistmarks.io"
-        category="Default super massive epic category"
-        description=""
-      />
-      <BookmarkCard
-        name="Sample Bookmark"
-        href="https://gistmarks.io"
-        category="Default"
-        description="This is a description of the bookmark this is a much much much longer descriotion. description of the bookmark this is a much much much longer descriotion. description of the bookmark this is a much much much longer descriotion "
-      />
-      <BookmarkCard
-        name="Sample Bookmark Sample Bookmark Sample Bookmark Sample Bookmark Sample Bookmark Sample Bookmark Sample Bookmark Sample Bookmark"
-        href="https://gistmarks.io?foo=bar&foo=bar&foo=bar&foo=bar&foo=bar&foo=bar&foo=bar&foo=bar&foo=bar&foo=bar&foo=bar"
-        category="Default"
-        description="This is a description of the bookmark"
-      />
-      <BookmarkCard
-        name="Sample Bookmark"
-        href="https://gistmarks.io"
-        category="Default"
-        description="This is a description of the bookmark"
-      />
-      <BookmarkCard
-        name="Sample Bookmark"
-        href="https://gistmarks.io"
-        category="Default"
-        description="This is a description of the bookmark"
-      />
-      <BookmarkCard
-        name="Sample Bookmark"
-        href="https://gistmarks.io"
-        category="Default"
-        description="This is a description of the bookmark"
-      />
-      <BookmarkCard
-        name="Sample Bookmark"
-        href="https://gistmarks.io"
-        category="Default"
-        description="This is a description of the bookmark"
-      />
-      <BookmarkCard
-        name="Sample Bookmark"
-        href="https://gistmarks.io"
-        category="Default"
-        description="This is a description of the bookmark"
-      />
-      <BookmarkCard
-        name="Sample Bookmark"
-        href="https://gistmarks.io"
-        category="Default"
-        description="This is a description of the bookmark"
-      />
-      <BookmarkCard
-        name="Sample Bookmark"
-        href="https://gistmarks.io"
-        category="Default"
-        description="This is a description of the bookmark"
-      />
-      <BookmarkCard
-        name="Sample Bookmark"
-        href="https://gistmarks.io"
-        category="Default"
-        description="This is a description of the bookmark"
-      />
-      <BookmarkCard
-        name="Sample Bookmark"
-        href="https://gistmarks.io"
-        category="Default"
-        description="This is a description of the bookmark"
-      />
-      <BookmarkCard
-        name="Sample Bookmark"
-        href="https://gistmarks.io"
-        category="Default"
-        description="This is a description of the bookmark"
-      />
-      <BookmarkCard
-        name="Sample Bookmark"
-        href="https://gistmarks.io"
-        category="Default"
-        description="This is a description of the bookmark"
-      />
+      {bookmarkKeys.map((key) => {
+        const bookmarkData = bookmarks[key]
+        return (
+          <BookmarkCard
+            key={key}
+            guid={key}
+            name={bookmarkData.name}
+            href={bookmarkData.href}
+            description={bookmarkData.description}
+            category={bookmarkData.category}
+            readonly={readonly}
+            onEdit={handleEditBookmark}
+          />
+        )
+      })}
     </div>
   )
 }
