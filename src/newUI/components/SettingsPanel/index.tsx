@@ -9,9 +9,8 @@ import { Panel, panelWidth } from "~/newUI/layout/Panel"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 import makeStyles from "@material-ui/core/styles/makeStyles"
 import Button from "@material-ui/core/Button"
-import { TextField } from "@material-ui/core"
+import { Checkbox, TextField } from "@material-ui/core"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
-import Switch from "@material-ui/core/Switch"
 import Card from "@material-ui/core/Card"
 import CardContent from "@material-ui/core/CardContent"
 import CardActions from "@material-ui/core/CardActions"
@@ -156,9 +155,9 @@ const GistBackup = () => {
     <div className={classes.itemContent}>
       <FormControlLabel
         control={
-          <Switch value={editGist} onChange={() => setEditGist(!editGist)} />
+          <Checkbox value={editGist} onChange={() => setEditGist(!editGist)} />
         }
-        label={editGist ? "Update Existing Gist" : "Create New Gist"}
+        label="Update Existing Collection"
       />
       <TextField
         required

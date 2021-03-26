@@ -78,29 +78,7 @@ export default function Sidebar() {
         </IconButton>
       </div>
       <Divider />
-      <List>
-        <SidebarItem
-          onClick={() => console.log("I have been clicked")}
-          label="Category Name"
-          selected
-        />
-        <SidebarItem
-          onClick={() => console.log("I have been clicked")}
-          label="Category Name"
-        />
-        <SidebarItem
-          onClick={() => console.log("I have been clicked")}
-          label="Category Name"
-        />
-        <SidebarItem
-          onClick={() => console.log("I have been clicked")}
-          label="Category Name"
-        />
-        <SidebarItem
-          onClick={() => console.log("I have been clicked")}
-          label="Category Name"
-        />
-      </List>
+      <List>{/* Sidebar Items Go Here */}</List>
     </Drawer>
   )
 }

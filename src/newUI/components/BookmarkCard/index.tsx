@@ -10,7 +10,6 @@ import {
 import React from "react"
 import { Bookmark } from "~/model/Bookmark"
 import EditIcon from "@material-ui/icons/Edit"
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -83,9 +82,6 @@ export const BookmarkCard: React.FC<
       <CardActions>
         <IconButton color="primary">
           <EditIcon />
-        </IconButton>
-        <IconButton color="secondary">
-          <DeleteForeverIcon />
         </IconButton>
         <Chip
           color="primary"
