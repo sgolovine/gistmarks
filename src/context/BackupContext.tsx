@@ -28,13 +28,13 @@ interface GistRestore {
 interface GistBackup {
   backupLoading: boolean
   filename: string
-  description: string
+  collectionName: string
   gistId: string
 }
 
 interface BackupResults {
   gistId: string
-  description: string
+  collectionName: string
   htmlUrl: string
   backupCreated: boolean
 }
@@ -61,13 +61,13 @@ interface BackupContext {
 const initialBackupState: GistBackup = {
   backupLoading: false,
   filename: GH_DEFAULT_FILENAME,
-  description: "",
+  collectionName: "",
   gistId: "",
 }
 
 const initialBackupResultsState: BackupResults = {
   gistId: "",
-  description: "",
+  collectionName: "",
   htmlUrl: "",
   backupCreated: false,
 }
@@ -120,7 +120,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       const resp = await createGist(
         instance,
         backupState.filename,
-        backupState.description,
+        backupState.collectionName,
         bookmarkContext.bookmarks
       )
       if (resp && validateStatus(resp.status)) {
@@ -130,7 +130,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
         setBackupResultsState({
           gistId: id,
           htmlUrl: html_url,
-          description,
+          collectionName: description,
           backupCreated: true,
         })
       } else {
@@ -149,7 +149,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
         instance,
         gistId: backupState.gistId,
         filename: backupState.filename,
-        description: backupState.description,
+        description: backupState.collectionName,
         bookmarks: bookmarkContext.bookmarks,
       })
       if (resp && validateStatus(resp.status)) {
@@ -159,7 +159,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
         setBackupResultsState({
           gistId: id,
           htmlUrl: html_url,
-          description,
+          collectionName: description,
           backupCreated: true,
         })
       } else {
@@ -178,6 +178,9 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       if (resp && validateStatus(resp.status)) {
         setBackupField("backupLoading", false)
         const allFiles = resp.data.files
+        if (resp.data.description) {
+          setBackupField("collectionName", resp.data.description)
+        }
         const firstFilename = Object.keys(allFiles)[0]
         const bookmarkContent = allFiles[firstFilename].content
         bookmarkContext.restoreBookmarks(bookmarkContent)

@@ -46,6 +46,15 @@ export const GistBackup = () => {
             value={gistBackup.filename}
             onChange={(e) => gistBackup.setField("filename", e.target.value)}
           />
+          <TextField
+            className={classes.itemInput}
+            variant="outlined"
+            label="Collection Name (optional)"
+            value={gistBackup.collectionName}
+            onChange={(e) =>
+              gistBackup.setField("collectionName", e.target.value)
+            }
+          />
           {editGist && (
             <TextField
               className={classes.itemInput}
@@ -55,15 +64,6 @@ export const GistBackup = () => {
               onChange={(e) => gistBackup.setField("gistId", e.target.value)}
             />
           )}
-          <TextField
-            className={classes.itemInput}
-            variant="outlined"
-            label="Description (optional)"
-            rows={4}
-            multiline
-            value={gistBackup.description}
-            onChange={(e) => gistBackup.setField("description", e.target.value)}
-          />
           <div>
             <Button
               variant="contained"

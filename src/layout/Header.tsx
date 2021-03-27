@@ -97,6 +97,11 @@ const Header: React.FC<Props> = ({
     ? viewContext.searchTerm
     : bookmarkContext.searchTerm
 
+  const headerText = view
+    ? viewContext.collectionName
+    : backupContext?.backupResults?.collectionName ||
+      backupContext?.gistBackup?.collectionName
+
   const handleInputChange = (newValue: string) => {
     if (view) {
       viewContext.setSearch(newValue)
@@ -122,7 +127,7 @@ const Header: React.FC<Props> = ({
 
         {/* Header Text */}
         <Typography className={classes.title} variant="h6">
-          Gistmarks
+          {headerText ?? "Gistmarks"}
         </Typography>
 
         {/* Search Bar */}

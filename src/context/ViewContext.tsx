@@ -12,6 +12,7 @@ import { getGist } from "~/requests/getGist"
 import { createInstance } from "~/requests/setup"
 
 interface ViewContext {
+  collectionName: string | null
   gistId: string | null
   bookmarks: BookmarkCollection
   categories: string[]
@@ -37,6 +38,7 @@ interface ViewContext {
 }
 
 const initialContextState: ViewContext = {
+  collectionName: null,
   gistId: null,
   bookmarks: {},
   categories: [],
@@ -58,6 +60,10 @@ export const ViewContext = createContext<ViewContext>(initialContextState)
 export const ViewContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
+  const [collectionName, setCollectionName] = useState<string | null>(
+    initialContextState.collectionName
+  )
+
   const [gistLoading, setGistLoading] = useState<boolean>(
     initialContextState.gistLoading
   )
@@ -150,21 +156,23 @@ export const ViewContextProvider: React.FC<ContextProviderProps> = ({
   }
 
   const fetchGist = async (gistId: string) => {
-    console.log("fetch gist function")
     if (gistId) {
-      console.log("fetching gist id", gistId)
       setGistLoading(true)
       const instance = createInstance()
       const resp = await getGist(instance, gistId)
-      console.log("we have a resp", resp)
       if (resp && validateStatus(resp.status)) {
         setGistLoading(false)
         const allFiles = resp.data.files
+        if (resp.data.description) {
+          setCollectionName(resp.data.description)
+        }
         const firstFilename = Object.keys(allFiles)[0]
-        const bookmarkContent = allFiles[firstFilename].content
+        const gistContent = allFiles[firstFilename]
+        const bookmarkContent = gistContent.content
         try {
           const parsedBookmarks = JSON.parse(bookmarkContent)
           setBookmarks(parsedBookmarks)
+          // setCollectionName(gistContent.description)
         } catch (e) {
           setError({
             show: true,
@@ -186,6 +194,7 @@ export const ViewContextProvider: React.FC<ContextProviderProps> = ({
   }
 
   const value: ViewContext = {
+    collectionName,
     gistId,
     bookmarks: filteredBookmarks,
     activeCategories,
