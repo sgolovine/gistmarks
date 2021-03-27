@@ -1,5 +1,4 @@
 import React, { useEffect, createContext, useContext } from "react"
-import { GistBackupResultState } from "~/components/panels/save/GistBackup"
 import { GH_DEFAULT_FILENAME } from "~/defines"
 import {
   GIST_BACKUP_RESULT_STATE,
@@ -17,6 +16,10 @@ import { AuthContext } from "./AuthContext"
 import { BookmarkContext } from "./BookmarkContext"
 import { GlobalStateContext } from "./GlobalStateContext"
 
+// TODO: Complete Type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GistBackupResultState = any
+
 interface GistRestore {
   filename: string
   gistId: string
@@ -25,13 +28,13 @@ interface GistRestore {
 interface GistBackup {
   backupLoading: boolean
   filename: string
-  description: string
+  collectionName: string
   gistId: string
 }
 
 interface BackupResults {
   gistId: string
-  description: string
+  collectionName: string
   htmlUrl: string
   backupCreated: boolean
 }
@@ -51,7 +54,22 @@ interface BackupContext {
     createBackup: () => void
     updateBackup: () => void
     restoreBackup: () => void
+    deleteBackup: () => void
   }
+}
+
+const initialBackupState: GistBackup = {
+  backupLoading: false,
+  filename: GH_DEFAULT_FILENAME,
+  collectionName: "",
+  gistId: "",
+}
+
+const initialBackupResultsState: BackupResults = {
+  gistId: "",
+  collectionName: "",
+  htmlUrl: "",
+  backupCreated: false,
 }
 
 export const BackupContext = createContext<BackupContext>({} as BackupContext)
@@ -65,23 +83,16 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
 
   const [backupState, setBackupState] = useLocalStorage<GistBackup>(
     GIST_BACKUP_STATE,
-    {
-      backupLoading: false,
-      filename: GH_DEFAULT_FILENAME,
-      description: "",
-      gistId: "",
-    }
+    initialBackupState
   )
 
   const [
     backupResultsState,
     setBackupResultsState,
-  ] = useLocalStorage<BackupResults>(GIST_BACKUP_RESULT_STATE, {
-    gistId: "",
-    description: "",
-    htmlUrl: "",
-    backupCreated: false,
-  })
+  ] = useLocalStorage<BackupResults>(
+    GIST_BACKUP_RESULT_STATE,
+    initialBackupResultsState
+  )
 
   const [restoreState, setRestoreState] = useLocalStorage<GistRestore>(
     GIST_RESTORE_STATE,
@@ -109,7 +120,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       const resp = await createGist(
         instance,
         backupState.filename,
-        backupState.description,
+        backupState.collectionName,
         bookmarkContext.bookmarks
       )
       if (resp && validateStatus(resp.status)) {
@@ -119,7 +130,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
         setBackupResultsState({
           gistId: id,
           htmlUrl: html_url,
-          description,
+          collectionName: description,
           backupCreated: true,
         })
       } else {
@@ -138,7 +149,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
         instance,
         gistId: backupState.gistId,
         filename: backupState.filename,
-        description: backupState.description,
+        description: backupState.collectionName,
         bookmarks: bookmarkContext.bookmarks,
       })
       if (resp && validateStatus(resp.status)) {
@@ -148,7 +159,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
         setBackupResultsState({
           gistId: id,
           htmlUrl: html_url,
-          description,
+          collectionName: description,
           backupCreated: true,
         })
       } else {
@@ -167,6 +178,9 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       if (resp && validateStatus(resp.status)) {
         setBackupField("backupLoading", false)
         const allFiles = resp.data.files
+        if (resp.data.description) {
+          setBackupField("collectionName", resp.data.description)
+        }
         const firstFilename = Object.keys(allFiles)[0]
         const bookmarkContent = allFiles[firstFilename].content
         bookmarkContext.restoreBookmarks(bookmarkContent)
@@ -175,6 +189,11 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
         // TODO: Handle Error
       }
     }
+  }
+
+  const deleteBackup = () => {
+    setBackupState(initialBackupState)
+    setBackupResultsState(initialBackupResultsState)
   }
 
   useEffect(() => {
@@ -201,6 +220,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       createBackup,
       updateBackup,
       restoreBackup,
+      deleteBackup,
     },
   }
 

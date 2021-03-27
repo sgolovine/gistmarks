@@ -1,7 +1,5 @@
 const path = require("path")
-// Webpack Plugins
 const HtmlWebpackPlugin = require("html-webpack-plugin")
-const webpack = require("webpack")
 const Dotenv = require("dotenv-webpack")
 const TerserPlugin = require("terser-webpack-plugin")
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
@@ -74,6 +72,10 @@ module.exports = {
         test: /.(css)/,
         use: ["style-loader", "css-loader", "postcss-loader"],
         exclude: /node_modules/,
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf|png|jpg|gif)$/,
+        use: ["file-loader"],
       },
     ],
   },

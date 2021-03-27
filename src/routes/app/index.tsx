@@ -1,14 +1,28 @@
-import React, { useContext } from "react"
-import { BookmarkList } from "~/components/bookmark"
-import { BookmarkContext } from "~/context"
-import { Layout } from "./Layout"
+import React from "react"
+import { CreatePanel, EditPanel } from "~/components/BookmarkPanel"
+import { SettingsPanel } from "~/components/SettingsPanel"
+import { MainList } from "~/components/BookmarkList/MainList"
+import Header from "~/layout/Header"
+import Sidebar from "~/layout/Sidebar"
 
-export const AppRoute: React.FC = () => {
-  const bookmarkContext = useContext(BookmarkContext)
-
+export const AppRoute = () => {
   return (
-    <Layout>
-      <BookmarkList bookmarks={bookmarkContext.bookmarks} />
-    </Layout>
+    <>
+      {/* App Header */}
+      <Header />
+
+      {/* App Sidebar */}
+      <Sidebar />
+
+      {/* Create / Edit Bookmark Panel */}
+      <CreatePanel />
+      <EditPanel />
+
+      {/* Settings Panel */}
+      <SettingsPanel />
+
+      {/* Bookmark List */}
+      <MainList />
+    </>
   )
 }

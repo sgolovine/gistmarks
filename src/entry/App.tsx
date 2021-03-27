@@ -1,18 +1,15 @@
+import CssBaseline from "@material-ui/core/CssBaseline/CssBaseline"
 import React, { ReactNode } from "react"
+import { LayoutContextProvider } from "~/context/LayoutContext"
 import {
   AuthContextProvider,
   BackupContextProvider,
   EditorStateContextProvider,
-  LayoutContextProvider,
   BookmarkContextProvider,
   GlobalStateContextProvider,
   ViewContextProvider,
 } from "~/context"
-
-import "~/styles/tailwind.css"
-import "~/styles/button.css"
-import "~/styles/form.css"
-import { Router } from "~/routes"
+import { AppRouter } from "~/routes/router"
 
 interface ContextWrapperProps {
   children: ReactNode
@@ -37,12 +34,14 @@ const ContextWrapper: React.FC<ContextWrapperProps> = ({ children }) => {
   )
 }
 
-const App = () => {
+export default function App() {
   return (
     <ContextWrapper>
-      <Router />
+      {/* CSS Reset */}
+      <CssBaseline />
+
+      {/* Router */}
+      <AppRouter />
     </ContextWrapper>
   )
 }
-
-export default App

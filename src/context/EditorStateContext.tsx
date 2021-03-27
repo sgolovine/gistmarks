@@ -1,156 +1,146 @@
-import React, { useState, createContext } from "react"
-import { ContextDevTool } from "react-context-devtool"
-import { dev } from "~/helpers/isDev"
+import React, { useReducer, createContext } from "react"
 import { ContextProviderProps } from "~/model/Context"
 
-type BookmarkArgs = {
+type ActionTypes =
+  | "SET_ALL_FIELDS"
+  | "SET_GUID"
+  | "SET_NAME"
+  | "SET_HREF"
+  | "SET_DESCRIPTION"
+  | "SET_CATEGORY"
+  | "RESET"
+
+interface IEditorState {
   guid: string
   name: string
   href: string
-  category: string
   description: string
-}
-
-type CollectionArgs = {
-  guid: string
-  name: string
-  description: string | null
-  gistId: string | null
-  filename: string | null
-}
-
-interface EditorBookmarkState {
-  guid: string
-  name: string
-  href: string
   category: string
-  description: string
-  setFields: ({ guid, name, href, category, description }: BookmarkArgs) => void
 }
 
-interface EditorCollectionState {
-  guid: string
-  name: string
-  description: string | null
-  gistId: string | null
-  filename: string | null
-  setFields: ({
-    guid,
-    name,
-    description,
-    gistId,
-    filename,
-  }: CollectionArgs) => void
+interface IEditorActions {
+  setAllFields: (state: IEditorState) => void
+  setGuid: (guid: string) => void
+  setName: (name: string) => void
+  setHref: (href: string) => void
+  setDescription: (description: string) => void
+  setCategory: (category: string) => void
+  resetFields: () => void
 }
 
-interface EditorStateContext {
-  bookmark: EditorBookmarkState
-  collection: EditorCollectionState
+type EditorContext = IEditorState & IEditorActions
+
+type Action = {
+  type: ActionTypes
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  payload?: any
 }
 
-const bookmarkInitialState: EditorBookmarkState = {
+const initialState: IEditorState = {
   guid: "",
   name: "",
   href: "",
-  category: "",
   description: "",
-  setFields: () => null,
+  category: "",
 }
 
-const collectionInitialState: EditorCollectionState = {
-  guid: "",
-  name: "",
-  description: null,
-  gistId: null,
-  filename: null,
-  setFields: () => null,
+export function reducer(
+  state: IEditorState = initialState,
+  action: Action
+): IEditorState {
+  switch (action.type) {
+    case "SET_ALL_FIELDS":
+      return {
+        ...state,
+        guid: action.payload.guid,
+        name: action.payload.name,
+        href: action.payload.href,
+        description: action.payload.description,
+        category: action.payload.category,
+      }
+    case "SET_CATEGORY":
+      return {
+        ...state,
+        category: action.payload,
+      }
+    case "SET_DESCRIPTION":
+      return {
+        ...state,
+        description: action.payload,
+      }
+    case "SET_GUID":
+      return {
+        ...state,
+        guid: action.payload,
+      }
+    case "SET_HREF":
+      return {
+        ...state,
+        href: action.payload,
+      }
+    case "SET_NAME":
+      return {
+        ...state,
+        name: action.payload,
+      }
+    case "RESET":
+      return initialState
+    default:
+      return state
+  }
 }
 
-export const EditorStateContext = createContext<EditorStateContext>({
-  bookmark: bookmarkInitialState,
-  collection: collectionInitialState,
-})
+export const EditorStateContext = createContext<EditorContext>(
+  {} as EditorContext
+)
 
 export const EditorStateContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  const [bookmarkState, setBookmarkState] = useState<BookmarkArgs>({
-    guid: "",
-    name: "",
-    href: "",
-    category: "",
-    description: "",
-  })
+  const [state, dispatch] = useReducer(reducer, initialState)
 
-  const [collectionState, setCollectionState] = useState<CollectionArgs>({
-    guid: "",
-    name: "",
-    description: null,
-    gistId: null,
-    filename: null,
-  })
-
-  const setBookmarkFields = ({
-    guid,
-    name,
-    href,
-    category,
-    description,
-  }: BookmarkArgs) => {
-    setBookmarkState({
-      guid,
-      name,
-      href,
-      category,
-      description,
-    })
+  const setAllFields = (state: IEditorState) => {
+    dispatch({ type: "SET_ALL_FIELDS", payload: state })
   }
 
-  const setCollectionFields = ({
-    guid,
-    name,
-    description,
-    gistId,
-    filename,
-  }: CollectionArgs) => {
-    setCollectionState({
-      guid,
-      name,
-      description,
-      gistId,
-      filename,
-    })
+  const setGuid = (guid: string) => {
+    dispatch({ type: "SET_GUID", payload: guid })
   }
 
-  const contextValue: EditorStateContext = {
-    bookmark: {
-      guid: bookmarkState.guid,
-      name: bookmarkState.name,
-      href: bookmarkState.href,
-      category: bookmarkState.category,
-      description: bookmarkState.description,
-      setFields: setBookmarkFields,
-    },
-    collection: {
-      guid: collectionState.guid,
-      name: collectionState.name,
-      description: collectionState.description,
-      gistId: collectionState.gistId,
-      filename: collectionState.filename,
-      setFields: setCollectionFields,
-    },
+  const setName = (name: string) => {
+    dispatch({ type: "SET_NAME", payload: name })
+  }
+
+  const setHref = (href: string) => {
+    dispatch({ type: "SET_HREF", payload: href })
+  }
+
+  const setDescription = (description: string) => {
+    dispatch({ type: "SET_DESCRIPTION", payload: description })
+  }
+
+  const setCategory = (category: string) => {
+    dispatch({ type: "SET_CATEGORY", payload: category })
+  }
+
+  const resetFields = () => {
+    dispatch({ type: "RESET", payload: null })
+  }
+
+  const value: EditorContext = {
+    ...state,
+    resetFields,
+    setAllFields,
+    setGuid,
+    setName,
+    setHref,
+    setDescription,
+    setCategory,
   }
 
   return (
-    <EditorStateContext.Provider value={contextValue}>
+    <EditorStateContext.Provider value={value}>
       {children}
-      {dev && (
-        <ContextDevTool
-          context={EditorStateContext}
-          id="editorStateContext"
-          displayName="Editor State Context"
-        />
-      )}
     </EditorStateContext.Provider>
   )
 }
