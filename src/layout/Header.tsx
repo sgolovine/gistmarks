@@ -140,7 +140,7 @@ const Header: React.FC<Props> = ({
 
         {!noEditor &&
           globalStateContext.unsavedChanges &&
-          backupContext.backupResults.backupCreated && (
+          backupContext?.backupResults?.backupCreated && (
             <IconButton
               color="inherit"
               onClick={backupContext.actions.updateBackup}

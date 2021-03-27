@@ -76,7 +76,7 @@ export const BookmarkPanelEditor: React.FC<Props> = ({
 }) => {
   const [internalSelectValue, setInternalSelectValue] = useState<
     string | undefined
-  >(undefined)
+  >("")
 
   useEffect(() => {
     if (internalSelectValue) {
@@ -135,6 +135,9 @@ export const BookmarkPanelEditor: React.FC<Props> = ({
             value={internalSelectValue}
             onChange={(e) => setInternalSelectValue(e.target.value as string)}
           >
+            <MenuItem value="" disabled>
+              Select Category
+            </MenuItem>
             {otherCategories.map((item, index) => (
               <MenuItem key={index} value={item}>
                 {item}
