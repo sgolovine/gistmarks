@@ -6,7 +6,7 @@
 
 ;(function () {
   var url =
-    "https://gistmarks.io/add?name" +
+    "https://app.gistmarks.io/add?name" +
     document.title +
     "&href=" +
     window.location.href

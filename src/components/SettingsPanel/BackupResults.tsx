@@ -43,7 +43,7 @@ export const BackupResults: React.FC<BackupResultsProps> = ({
 
   const [hasCopied, setHasCopied] = useState(false)
 
-  const url = `https://gistmarks.io/v/${gistId}`
+  const url = `https://app.gistmarks.io/v/${gistId}`
 
   return (
     <Card className={classes.root}>
