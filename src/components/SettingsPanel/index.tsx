@@ -9,10 +9,7 @@ import { GistBackup } from "./GistBackup"
 import { GistRestore } from "./GistRestore"
 import { BackupContext } from "~/context"
 import { Typography } from "@material-ui/core"
-import { DEV_BOOKMARKLET, PROD_BOOKMARKLET } from "~/defines/bookmarklet"
-import { dev } from "~/helpers"
-
-const bookmarkletHref = dev ? DEV_BOOKMARKLET : PROD_BOOKMARKLET
+import { Bookmarklet } from "../common/Bookmarklet"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,24 +23,6 @@ const useStyles = makeStyles((theme) => ({
   },
   bookmarkletContainer: {
     marginTop: theme.spacing(2),
-  },
-  bookmarkletLinkContainer: {
-    marginTop: theme.spacing(4),
-    marginLeft: theme.spacing(2),
-    marginBottom: theme.spacing(4),
-  },
-  bookmarkletLink: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(4),
-    marginTop: theme.spacing(6),
-    border: "1px dashed",
-    textDecoration: "none",
-    fontSize: "16px",
-    fontWeight: "bold",
-    color: theme.palette.primary.main,
-    borderColor: theme.palette.grey[400],
   },
 }))
 
@@ -95,11 +74,7 @@ export const SettingsPanel = () => {
         <div className={classes.bookmarkletContainer}>
           <Typography variant="h6">Quick Add Bookmarklet</Typography>
           <Typography>Drag the link to your bookmarks bar.</Typography>
-          <div className={classes.bookmarkletLinkContainer}>
-            <a className={classes.bookmarkletLink} href={bookmarkletHref}>
-              Add Bookmark
-            </a>
-          </div>
+          <Bookmarklet />
         </div>
       </div>
     </Panel>

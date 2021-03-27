@@ -31,6 +31,7 @@ export const EditPanel = () => {
       }
       bookmarkContext.editBookmark(bookmark, bookmark.guid)
       layoutContext.closeEditPanel()
+      editorState.resetFields()
     } else {
       alert("ERR: Unable to edit, no guid found")
     }

@@ -8,6 +8,7 @@ type ActionTypes =
   | "SET_HREF"
   | "SET_DESCRIPTION"
   | "SET_CATEGORY"
+  | "RESET"
 
 interface IEditorState {
   guid: string
@@ -24,6 +25,7 @@ interface IEditorActions {
   setHref: (href: string) => void
   setDescription: (description: string) => void
   setCategory: (category: string) => void
+  resetFields: () => void
 }
 
 type EditorContext = IEditorState & IEditorActions
@@ -31,7 +33,7 @@ type EditorContext = IEditorState & IEditorActions
 type Action = {
   type: ActionTypes
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload: any
+  payload?: any
 }
 
 const initialState: IEditorState = {
@@ -81,6 +83,8 @@ export function reducer(
         ...state,
         name: action.payload,
       }
+    case "RESET":
+      return initialState
     default:
       return state
   }
@@ -119,8 +123,13 @@ export const EditorStateContextProvider: React.FC<ContextProviderProps> = ({
     dispatch({ type: "SET_CATEGORY", payload: category })
   }
 
+  const resetFields = () => {
+    dispatch({ type: "RESET", payload: null })
+  }
+
   const value: EditorContext = {
     ...state,
+    resetFields,
     setAllFields,
     setGuid,
     setName,

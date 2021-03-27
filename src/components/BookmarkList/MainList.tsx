@@ -1,52 +1,14 @@
 import React, { useContext } from "react"
-import { makeStyles } from "@material-ui/core"
+import { EditorStateContext, BookmarkContext, LayoutContext } from "~/context"
 import { BookmarkCard } from "~/components/BookmarkCard"
-import {
-  BookmarkContext,
-  EditorStateContext,
-  LayoutContext,
-  ViewContext,
-} from "~/context"
-
-const useStyles = makeStyles({
-  root: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-})
+import { useStyles } from "./styles"
+import { ListEmpty } from "./ListEmpty"
 
 interface Props {
   readonly?: boolean
 }
 
-export const BookmarkListViewOnly: React.FC = () => {
-  const viewContext = useContext(ViewContext)
-  const classes = useStyles()
-
-  const bookmarkKeys = Object.keys(viewContext.bookmarks)
-
-  return (
-    <div className={classes.root}>
-      {bookmarkKeys.map((key) => {
-        const bookmarkData = viewContext.bookmarks[key]
-        return (
-          <BookmarkCard
-            key={key}
-            guid={key}
-            name={bookmarkData.name}
-            href={bookmarkData.href}
-            description={bookmarkData.description}
-            category={bookmarkData.category}
-            readonly={true}
-          />
-        )
-      })}
-    </div>
-  )
-}
-
-export const BookmarkList: React.FC<Props> = ({ readonly }) => {
+export const MainList: React.FC<Props> = ({ readonly }) => {
   const classes = useStyles()
   const editorStateContext = useContext(EditorStateContext)
   const bookmarkContext = useContext(BookmarkContext)
@@ -70,6 +32,14 @@ export const BookmarkList: React.FC<Props> = ({ readonly }) => {
 
   const handleDeleteBookmark = (guid: string) => {
     bookmarkContext.removeBookmark(guid)
+  }
+
+  if (bookmarkKeys.length === 0) {
+    return (
+      <div className={classes.root}>
+        <ListEmpty />
+      </div>
+    )
   }
 
   return (

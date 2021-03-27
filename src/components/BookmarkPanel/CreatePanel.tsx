@@ -7,21 +7,25 @@ import { Panel } from "~/layout/Panel"
 import { BookmarkPanelEditor } from "./BookmarkPanelEditor"
 import { createFakeBookmark } from "~/helpers/createFakeBookmark"
 
+interface State {
+  name: string
+  href: string
+  category: string
+  description: string
+}
+
+const initialState: State = {
+  name: "",
+  href: "",
+  category: "",
+  description: "",
+}
+
 export const CreatePanel = () => {
   const bookmarkContext = useContext(BookmarkContext)
   const layoutContext = useContext(LayoutContext)
 
-  const [state, setState] = useState<{
-    name: string
-    href: string
-    category: string
-    description: string
-  }>({
-    name: "",
-    href: "",
-    category: "",
-    description: "",
-  })
+  const [state, setState] = useState<State>(initialState)
 
   const handleAutofill = () => {
     const { name, href, category, description } = createFakeBookmark()
@@ -54,6 +58,7 @@ export const CreatePanel = () => {
     }
     bookmarkContext.addBookmark(bookmark, guid)
     layoutContext.closeCreatePanel()
+    setState(initialState)
   }
 
   const handleEditField = (key: keyof Bookmark, value: string) => {

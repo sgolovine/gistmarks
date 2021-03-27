@@ -1,7 +1,7 @@
 import React from "react"
 import { CreatePanel, EditPanel } from "~/components/BookmarkPanel"
 import { SettingsPanel } from "~/components/SettingsPanel"
-import { BookmarkList } from "~/layout/BookmarkList"
+import { MainList } from "~/components/BookmarkList/MainList"
 import Header from "~/layout/Header"
 import Sidebar from "~/layout/Sidebar"
 
@@ -22,7 +22,7 @@ export const AppRoute = () => {
       <SettingsPanel />
 
       {/* Bookmark List */}
-      <BookmarkList readonly={false} />
+      <MainList />
     </>
   )
 }
