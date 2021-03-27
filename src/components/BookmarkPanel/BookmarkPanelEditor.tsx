@@ -17,7 +17,12 @@ const useStyles = makeStyles((theme) => ({
   categoryContainer: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
+    [theme.breakpoints.up("sm")]: {
+      alignItems: "center",
+    },
   },
   inputCategory: {
     flexGrow: 1,
@@ -28,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
+    [theme.breakpoints.down("sm")]: {
+      marginTop: theme.spacing(1),
+    },
   },
   buttonContainer: {
     display: "flex",

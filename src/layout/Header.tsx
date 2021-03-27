@@ -76,7 +76,8 @@ interface Props {
   noSettings?: boolean
   noEditor?: boolean
   noSearch?: boolean
-  view?: true
+  view?: boolean
+  add?: boolean
 }
 
 const Header: React.FC<Props> = ({
@@ -85,6 +86,7 @@ const Header: React.FC<Props> = ({
   noEditor = false,
   noSearch = false,
   view = false,
+  add = false,
 }) => {
   const classes = useStyles()
   const backupContext = useContext(BackupContext)
@@ -97,7 +99,9 @@ const Header: React.FC<Props> = ({
     ? viewContext.searchTerm
     : bookmarkContext.searchTerm
 
-  const headerText = view
+  const headerText = add
+    ? "Add Bookmark"
+    : view
     ? viewContext.collectionName
     : backupContext?.backupResults?.collectionName ||
       backupContext?.gistBackup?.collectionName

@@ -1,5 +1,6 @@
 import React from "react"
 import { BrowserRouter, Route, Switch } from "react-router-dom"
+import { AddRoute } from "./add"
 import { AppRoute } from "./app"
 import { ViewRootRoute, ViewGistRoute } from "./view"
 
@@ -12,6 +13,9 @@ export const AppRouter = () => {
         </Route>
         <Route exact path="/view">
           <ViewRootRoute />
+        </Route>
+        <Route exact path="/add">
+          <AddRoute />
         </Route>
         <Route exact path="/v">
           <ViewRootRoute />
