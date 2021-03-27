@@ -5,6 +5,8 @@ import { BookmarkPanelEditor } from "~/components/BookmarkPanel/BookmarkPanelEdi
 import { BookmarkContext } from "~/context"
 import Header from "~/layout/Header"
 import qs from "query-string"
+import { generateUUID } from "~/helpers"
+import { Bookmark } from "~/model/Bookmark"
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -46,6 +48,33 @@ export const AddRoute: React.FC = () => {
     }
   }, [])
 
+  const handleCancel = () => {
+    window.close()
+  }
+
+  const handleSave = () => {
+    if (!bookmarkName) {
+      alert("Please enter a name!")
+      return
+    }
+
+    if (!bookmarkHref) {
+      alert("Please enter a URL")
+      return
+    }
+
+    const guid = generateUUID()
+    const bookmark: Bookmark = {
+      guid,
+      name: bookmarkName,
+      href: bookmarkHref,
+      description: bookmarkDescription,
+      category: bookmarkCategory,
+    }
+    bookmarkContext.addBookmark(bookmark, guid)
+    window.close()
+  }
+
   return (
     <div>
       <Header add noSidebar noSettings noEditor noSearch />
@@ -66,8 +95,8 @@ export const AddRoute: React.FC = () => {
             onBookmarkCategoryChange={(newValue) =>
               setBookmarkCategory(newValue)
             }
-            onCancel={() => null}
-            onSubmit={() => null}
+            onCancel={handleCancel}
+            onSubmit={handleSave}
           />
         </CardContent>
       </Card>

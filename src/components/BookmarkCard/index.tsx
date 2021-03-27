@@ -120,11 +120,13 @@ export const BookmarkCard: React.FC<Props> = ({
             </IconButton>
           </>
         )}
-        <Chip
-          color="primary"
-          className={classes.categoryChip}
-          label={category}
-        />
+        {category && (
+          <Chip
+            color="primary"
+            className={classes.categoryChip}
+            label={category}
+          />
+        )}
       </CardActions>
     </Card>
   )

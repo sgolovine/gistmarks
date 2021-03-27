@@ -1,3 +1,9 @@
+// Bookmarklet
+// A few things to note:
+// * The file must be minified to work
+// * `javascript:` has to be attached to the front
+// * Not yet tested with Firefox, and Safari
+
 ;(function () {
   var url =
     "https://gistmarks.io/add?name" +
