@@ -108,7 +108,8 @@ const Header: React.FC<Props> = ({
     : view
     ? viewContext.collectionName
     : backupContext?.backupResults?.collectionName ||
-      backupContext?.gistBackup?.collectionName
+      backupContext?.gistBackup?.collectionName ||
+      "Gistmarks"
 
   const handleInputChange = (newValue: string) => {
     if (view) {
@@ -139,7 +140,7 @@ const Header: React.FC<Props> = ({
 
         {/* Header Text */}
         <Typography className={classes.title} variant="h6">
-          {headerText ?? "Gistmarks"}
+          {headerText}
         </Typography>
 
         {/* Search Bar */}
