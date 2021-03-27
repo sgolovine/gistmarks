@@ -15,7 +15,7 @@ import CheckBox from "@material-ui/icons/CheckBox"
 
 import { LayoutContext } from "../context/LayoutContext"
 import List from "@material-ui/core/List"
-import { BookmarkContext } from "~/context"
+import { BookmarkContext, ViewContext } from "~/context"
 
 const sidebarWidth = 300
 
@@ -39,6 +39,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+interface SidebarProps {
+  view?: boolean
+}
+
 interface SidebarItemProps {
   label: string
   onClick: () => void
@@ -61,18 +65,48 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   )
 }
 
-export default function Sidebar() {
+const Sidebar: React.FC<SidebarProps> = ({ view = false }) => {
   const layoutContext = useContext(LayoutContext)
   const bookmarkContext = useContext(BookmarkContext)
+  const viewContext = useContext(ViewContext)
   const classes = useStyles()
 
   const renderCategories = () => {
     const handleCategoryClick = (category: string) => {
-      if (bookmarkContext.activeCategories.includes(category)) {
-        bookmarkContext.removeActiveCategory(category)
+      if (view) {
+        if (viewContext.activeCategories.includes(category)) {
+          viewContext.removeActiveCategory(category)
+        } else {
+          viewContext.addActiveCategory(category)
+        }
       } else {
-        bookmarkContext.addActiveCategory(category)
+        if (bookmarkContext.activeCategories.includes(category)) {
+          bookmarkContext.removeActiveCategory(category)
+        } else {
+          bookmarkContext.addActiveCategory(category)
+        }
       }
+    }
+
+    if (view) {
+      return (
+        <>
+          {viewContext.categories.map((item, index) => {
+            const isActive =
+              viewContext.activeCategories &&
+              viewContext.activeCategories.length > 0 &&
+              viewContext.activeCategories.includes(item)
+            return (
+              <SidebarItem
+                key={index}
+                label={item}
+                onClick={() => handleCategoryClick(item)}
+                selected={isActive}
+              />
+            )
+          })}
+        </>
+      )
     }
 
     return (
@@ -114,3 +148,5 @@ export default function Sidebar() {
     </Drawer>
   )
 }
+
+export default Sidebar

@@ -1,7 +1,12 @@
-import { makeStyles } from "@material-ui/core"
 import React, { useContext } from "react"
+import { makeStyles } from "@material-ui/core"
 import { BookmarkCard } from "~/components/BookmarkCard"
-import { BookmarkContext, EditorStateContext, LayoutContext } from "~/context"
+import {
+  BookmarkContext,
+  EditorStateContext,
+  LayoutContext,
+  ViewContext,
+} from "~/context"
 
 const useStyles = makeStyles({
   root: {
@@ -13,6 +18,32 @@ const useStyles = makeStyles({
 
 interface Props {
   readonly?: boolean
+}
+
+export const BookmarkListViewOnly: React.FC = () => {
+  const viewContext = useContext(ViewContext)
+  const classes = useStyles()
+
+  const bookmarkKeys = Object.keys(viewContext.bookmarks)
+
+  return (
+    <div className={classes.root}>
+      {bookmarkKeys.map((key) => {
+        const bookmarkData = viewContext.bookmarks[key]
+        return (
+          <BookmarkCard
+            key={key}
+            guid={key}
+            name={bookmarkData.name}
+            href={bookmarkData.href}
+            description={bookmarkData.description}
+            category={bookmarkData.category}
+            readonly={true}
+          />
+        )
+      })}
+    </div>
+  )
 }
 
 export const BookmarkList: React.FC<Props> = ({ readonly }) => {

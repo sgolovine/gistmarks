@@ -12,7 +12,12 @@ import Toolbar from "@material-ui/core/Toolbar"
 import Typography from "@material-ui/core/Typography"
 import InputBase from "@material-ui/core/InputBase"
 import { LayoutContext } from "~/context/LayoutContext"
-import { BackupContext, BookmarkContext, GlobalStateContext } from "~/context"
+import {
+  BackupContext,
+  BookmarkContext,
+  GlobalStateContext,
+  ViewContext,
+} from "~/context"
 import SaveIcon from "@material-ui/icons/Save"
 
 const useStyles = makeStyles((theme) => ({
@@ -71,6 +76,7 @@ interface Props {
   noSettings?: boolean
   noEditor?: boolean
   noSearch?: boolean
+  view?: true
 }
 
 const Header: React.FC<Props> = ({
@@ -78,12 +84,26 @@ const Header: React.FC<Props> = ({
   noSettings = false,
   noEditor = false,
   noSearch = false,
+  view = false,
 }) => {
   const classes = useStyles()
   const backupContext = useContext(BackupContext)
   const globalStateContext = useContext(GlobalStateContext)
   const layoutContext = useContext(LayoutContext)
   const bookmarkContext = useContext(BookmarkContext)
+  const viewContext = useContext(ViewContext)
+
+  const searchInputValue = view
+    ? viewContext.searchTerm
+    : bookmarkContext.searchTerm
+
+  const handleInputChange = (newValue: string) => {
+    if (view) {
+      viewContext.setSearch(newValue)
+    } else {
+      bookmarkContext.setSearch(newValue)
+    }
+  }
 
   return (
     <AppBar className={classes.root} position="static">
@@ -118,8 +138,8 @@ const Header: React.FC<Props> = ({
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
-              value={bookmarkContext.searchTerm}
-              onChange={(e) => bookmarkContext.setSearch(e.target.value)}
+              value={searchInputValue}
+              onChange={(e) => handleInputChange(e.target.value)}
             />
           </div>
         )}
