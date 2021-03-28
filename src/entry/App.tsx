@@ -1,6 +1,5 @@
 import CssBaseline from "@material-ui/core/CssBaseline/CssBaseline"
 import React, { ReactNode } from "react"
-import { LayoutContextProvider } from "~/context/LayoutContext"
 import {
   AuthContextProvider,
   BackupContextProvider,
@@ -8,6 +7,7 @@ import {
   BookmarkContextProvider,
   GlobalStateContextProvider,
   ViewContextProvider,
+  LayoutContextProvider,
 } from "~/context"
 import { AppRouter } from "~/routes/router"
 

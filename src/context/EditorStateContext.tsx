@@ -44,7 +44,7 @@ const initialState: IEditorState = {
   category: "",
 }
 
-export function reducer(
+function reducer(
   state: IEditorState = initialState,
   action: Action
 ): IEditorState {

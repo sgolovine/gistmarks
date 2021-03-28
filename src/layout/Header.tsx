@@ -20,7 +20,7 @@ import {
   ViewContext,
 } from "~/context"
 import SaveIcon from "@material-ui/icons/Save"
-import { useHistory } from "react-router"
+import { useHistory } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
   iconButton: {},
