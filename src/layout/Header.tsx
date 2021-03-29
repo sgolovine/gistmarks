@@ -187,11 +187,11 @@ const Header: React.FC<Props> = ({
             </IconButton>
           )}
 
-        {!isLoggedIn && view && (
+        {/* {!isLoggedIn && view && (
           <Button color="inherit" onClick={handleCTA}>
             CREATE YOUR OWN COLLECTION
           </Button>
-        )}
+        )} */}
       </Toolbar>
     </AppBar>
   )
