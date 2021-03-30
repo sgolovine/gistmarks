@@ -1,6 +1,5 @@
 import React, { useContext } from "react"
-
-import { Button, fade } from "@material-ui/core"
+import { fade } from "@material-ui/core"
 import MenuIcon from "@material-ui/icons/Menu"
 import CreateIcon from "@material-ui/icons/Create"
 import SearchIcon from "@material-ui/icons/Search"
@@ -13,14 +12,12 @@ import Typography from "@material-ui/core/Typography"
 import InputBase from "@material-ui/core/InputBase"
 import { LayoutContext } from "~/context/LayoutContext"
 import {
-  AuthContext,
   BackupContext,
   BookmarkContext,
   GlobalStateContext,
   ViewContext,
 } from "~/context"
 import SaveIcon from "@material-ui/icons/Save"
-import { useHistory } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
   iconButton: {},
@@ -90,14 +87,12 @@ const Header: React.FC<Props> = ({
   view = false,
   add = false,
 }) => {
-  const history = useHistory()
   const classes = useStyles()
   const backupContext = useContext(BackupContext)
   const globalStateContext = useContext(GlobalStateContext)
   const layoutContext = useContext(LayoutContext)
   const bookmarkContext = useContext(BookmarkContext)
   const viewContext = useContext(ViewContext)
-  const { isLoggedIn } = useContext(AuthContext)
 
   const searchInputValue = view
     ? viewContext.searchTerm
@@ -117,10 +112,6 @@ const Header: React.FC<Props> = ({
     } else {
       bookmarkContext.setSearch(newValue)
     }
-  }
-
-  const handleCTA = () => {
-    history.push("/")
   }
 
   return (
