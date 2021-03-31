@@ -31,17 +31,34 @@ const useStyles = makeStyles((theme) => ({
     display: "box",
     lineClamp: 1,
     boxOrient: "vertical",
+    fontSize: "1.25rem",
+    fontWeight: 500,
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    textDecoration: "none",
+    color: "#333",
+    "&:hover": {
+      textDecoration: "underline",
+      color: theme.palette.primary.main,
+    },
   },
   hrefText: {
     [theme.breakpoints.up("sm")]: {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1),
     },
+    color: theme.palette.primary.main,
     overflow: "hidden",
     textOverflow: "ellipsis",
     display: "box",
     lineClamp: 1,
     boxOrient: "vertical",
+    textDecoration: "none",
+    "&:hover": {
+      textDecoration: "underline",
+    },
+    "&:visited": {
+      color: theme.palette.primary.main,
+    },
   },
   descriptionText: {
     [theme.breakpoints.up("sm")]: {
@@ -99,12 +116,24 @@ export const BookmarkCard: React.FC<Props> = ({
   return (
     <Card className={classes.root}>
       <CardContent className={classes.cardContent}>
-        <Typography className={classes.titleText} variant="h6">
-          {name}
-        </Typography>
-        <Typography className={classes.hrefText} variant="body2">
+        <div>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            className={classes.titleText}
+            href={href}
+          >
+            {name}
+          </a>
+        </div>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          className={classes.hrefText}
+          href={href}
+        >
           {href}
-        </Typography>
+        </a>
         <Typography className={classes.descriptionText} variant="body1">
           {description}
         </Typography>
