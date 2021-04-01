@@ -69,7 +69,7 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   useEffect(() => {
     if (authState.authCode && authState.authCode !== null) {
       axios
-        .post("/api/authWithGithub", {
+        .post("https://api.gistmarks.io/auth", {
           code: authState.authCode,
         })
         .then((resp) => {
