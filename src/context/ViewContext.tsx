@@ -4,6 +4,7 @@
 // for adding and editing bookmarks
 import React, { createContext, useEffect, useState } from "react"
 import { removeItem, uniq } from "~/helpers"
+import { extractCategories } from "~/helpers/extractCategories"
 import { filterByCategories, filterBySearchTerm } from "~/helpers/filtering"
 import { validateStatus } from "~/helpers/validateStatus"
 import { BookmarkCollection } from "~/model/Bookmark"
@@ -108,11 +109,7 @@ export const ViewContextProvider: React.FC<ContextProviderProps> = ({
   }, [gistId])
 
   useEffect(() => {
-    const bookmarkKeys = Object.keys(bookmarks)
-    const categories = bookmarkKeys.reduce((acc: string[], key: string) => {
-      return [...acc, bookmarks[key].category]
-    }, [])
-    setCategories(uniq(categories))
+    setCategories(extractCategories(bookmarks))
   }, [bookmarks])
 
   useEffect(() => {

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { BOOKMARK_STORAGE_KEY } from "~/defines"
 import { omitKey, removeItem, uniq } from "~/helpers"
+import { extractCategories } from "~/helpers/extractCategories"
 import { filterBySearchTerm, filterByCategories } from "~/helpers/filtering"
 import useLocalStorage from "~/hooks/useLocalStorage"
 import { Bookmark, BookmarkCollection } from "~/model/Bookmark"
@@ -56,11 +57,7 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
   const [activeCategories, setActiveCategories] = useState<string[]>([])
 
   useEffect(() => {
-    const bookmarkKeys = Object.keys(bookmarks)
-    const categories = bookmarkKeys.reduce((acc: string[], key: string) => {
-      return [...acc, bookmarks[key].category]
-    }, [])
-    setCategories(uniq(categories))
+    setCategories(extractCategories(bookmarks))
   }, [bookmarks])
 
   useEffect(() => {
