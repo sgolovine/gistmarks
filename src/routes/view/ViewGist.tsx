@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { ViewContext } from "~/context"
-import { ViewList } from "~/components/BookmarkList/ViewList"
+import { BookmarkList } from "~/components/BookmarkList"
 import Header from "~/layout/Header"
 import Sidebar from "~/layout/Sidebar"
 
@@ -36,7 +36,7 @@ export const ViewGistRoute = () => {
       <Sidebar view={true} />
 
       {/* Bookmark List */}
-      <ViewList />
+      <BookmarkList view={true} />
     </>
   )
 }
