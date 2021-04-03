@@ -14,7 +14,11 @@ export const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
-    // flexWrap: "wrap",
+  },
+  unsortedRoot: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
   sectionContainer: {
     paddingLeft: theme.spacing(1),
@@ -44,9 +48,14 @@ export const List: React.FC<Props> = ({
 }) => {
   const classes = useStyles()
 
+  const showSortedList = false
+
   const [data, setData] = useState<BookmarkList>({
     Uncategorized: {},
   })
+
+  const [bookmarkKeys, setBookmarkKeys] = useState<string[]>([])
+  const [categoryKeys, setCategoryKeys] = useState<string[]>([])
 
   useEffect(() => {
     const bookmarkKeys = Object.keys(bookmarks)
@@ -94,11 +103,19 @@ export const List: React.FC<Props> = ({
     setData(allBookmarks)
   }, [bookmarks])
 
+  useEffect(() => {
+    const keys = Object.keys(bookmarks)
+    setBookmarkKeys(keys)
+  }, [bookmarks])
+
+  useEffect(() => {
+    const keys = Object.keys(data).sort()
+    setCategoryKeys(keys)
+  }, [data])
+
   const handleEdit = (guid: string) => !!onEdit && onEdit(guid)
 
   const handleDelete = (guid: string) => !!onDelete && onDelete(guid)
-
-  const categoryKeys = Object.keys(data).sort()
 
   if (Object.keys(bookmarks).length === 0) {
     return (
@@ -108,37 +125,60 @@ export const List: React.FC<Props> = ({
     )
   }
 
-  return (
-    <div className={classes.root}>
-      {categoryKeys.map((category, index) => {
-        const categoryData = data[category]
-        const bookmarkKeysForCategory = Object.keys(categoryData)
-        if (bookmarkKeysForCategory.length > 0) {
-          return (
-            <div key={index} className={classes.sectionContainer}>
-              <Typography variant="h4">{category}</Typography>
-              <div className={classes.sectionContent}>
-                {bookmarkKeysForCategory.map((key) => {
-                  const bookmarkData = categoryData[key]
-                  return (
-                    <BookmarkCard
-                      key={key}
-                      guid={key}
-                      name={bookmarkData.name}
-                      href={bookmarkData.href}
-                      description={bookmarkData.description}
-                      category={bookmarkData.category}
-                      readonly={view}
-                      onEdit={() => handleEdit(key)}
-                      onDelete={() => handleDelete(key)}
-                    />
-                  )
-                })}
+  if (showSortedList) {
+    return (
+      <div className={classes.root}>
+        {categoryKeys.map((category, index) => {
+          const categoryData = data[category]
+          const bookmarkKeysForCategory = Object.keys(categoryData)
+          if (bookmarkKeysForCategory.length > 0) {
+            return (
+              <div key={index} className={classes.sectionContainer}>
+                <Typography variant="h4">{category}</Typography>
+                <div className={classes.sectionContent}>
+                  {bookmarkKeysForCategory.map((key) => {
+                    const bookmarkData = categoryData[key]
+                    return (
+                      <BookmarkCard
+                        key={key}
+                        guid={key}
+                        name={bookmarkData.name}
+                        href={bookmarkData.href}
+                        description={bookmarkData.description}
+                        category={bookmarkData.category}
+                        readonly={view}
+                        onEdit={() => handleEdit(key)}
+                        onDelete={() => handleDelete(key)}
+                      />
+                    )
+                  })}
+                </div>
               </div>
-            </div>
+            )
+          }
+        })}
+      </div>
+    )
+  } else {
+    return (
+      <div className={classes.unsortedRoot}>
+        {bookmarkKeys.map((key) => {
+          const bookmarkData = bookmarks[key]
+          return (
+            <BookmarkCard
+              key={key}
+              guid={key}
+              name={bookmarkData.name}
+              href={bookmarkData.href}
+              description={bookmarkData.description}
+              category={bookmarkData.category}
+              readonly={view}
+              onEdit={() => handleEdit(key)}
+              onDelete={() => handleDelete(key)}
+            />
           )
-        }
-      })}
-    </div>
-  )
+        })}
+      </div>
+    )
+  }
 }
