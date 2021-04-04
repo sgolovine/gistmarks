@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { BookmarkCollection } from "~/model/Bookmark"
 import { BookmarkCard } from "../BookmarkCard"
 import { ListEmpty } from "./ListEmpty"
 import { makeStyles, Typography } from "@material-ui/core"
 import { extractCategories } from "~/helpers/extractCategories"
+import { ViewSettings } from "../SettingsPanel/ViewSettings"
+import { SettingsContext } from "~/context"
 
 type BookmarkList = {
   [Category: string]: BookmarkCollection
@@ -48,7 +50,7 @@ export const List: React.FC<Props> = ({
 }) => {
   const classes = useStyles()
 
-  const showSortedList = false
+  const settingsContext = useContext(SettingsContext)
 
   const [data, setData] = useState<BookmarkList>({
     Uncategorized: {},
@@ -125,7 +127,7 @@ export const List: React.FC<Props> = ({
     )
   }
 
-  if (showSortedList) {
+  if (settingsContext.showSortedList) {
     return (
       <div className={classes.root}>
         {categoryKeys.map((category, index) => {
