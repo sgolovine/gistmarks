@@ -18,6 +18,7 @@ import {
   ViewContext,
 } from "~/context"
 import SaveIcon from "@material-ui/icons/Save"
+import { Routes } from "~/model/Routes"
 
 const useStyles = makeStyles((theme) => ({
   iconButton: {},
@@ -30,6 +31,12 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("sm")]: {
       display: "block",
     },
+  },
+  // So the header will show in
+  // the bookmarklet
+  addTitle: {
+    display: "block",
+    flexGrow: 1,
   },
   search: {
     position: "relative",
@@ -69,8 +76,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }))
-
-type Routes = "view" | "add" | "app" | "view-root"
 
 interface Props {
   route: Routes
@@ -152,6 +157,25 @@ const Header: React.FC<Props> = ({ route }) => {
           >
             <MenuIcon />
           </IconButton>
+        )
+      }
+    }
+  }
+
+  const renderTitle = (route: Routes) => {
+    switch (route) {
+      case "add": {
+        return (
+          <Typography className={classes.addTitle} variant="h6">
+            {headerText}
+          </Typography>
+        )
+      }
+      default: {
+        return (
+          <Typography className={classes.title} variant="h6">
+            {headerText}
+          </Typography>
         )
       }
     }
@@ -257,9 +281,7 @@ const Header: React.FC<Props> = ({ route }) => {
       <Toolbar>
         {renderSidebarButton(route)}
 
-        <Typography className={classes.title} variant="h6">
-          {headerText}
-        </Typography>
+        {renderTitle(route)}
 
         {renderSearchBar(route)}
 

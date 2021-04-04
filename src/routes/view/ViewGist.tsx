@@ -4,6 +4,7 @@ import { ViewContext } from "~/context"
 import { BookmarkList } from "~/components/BookmarkList"
 import Header from "~/layout/Header"
 import Sidebar from "~/layout/Sidebar"
+import { SettingsPanel } from "~/components/SettingsPanel"
 
 interface RouteParams {
   id: string
@@ -37,6 +38,9 @@ export const ViewGistRoute = () => {
 
       {/* Bookmark List */}
       <BookmarkList view={true} />
+
+      {/* Settings Panel */}
+      <SettingsPanel route="view" />
     </>
   )
 }

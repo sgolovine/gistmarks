@@ -19,7 +19,7 @@ export const AppRoute = () => {
       <EditPanel />
 
       {/* Settings Panel */}
-      <SettingsPanel />
+      <SettingsPanel route="app" />
 
       {/* Bookmark List */}
       <BookmarkList view={false} />
