@@ -10,6 +10,7 @@ import { GistRestore } from "./GistRestore"
 import { BackupContext } from "~/context"
 import { Typography } from "@material-ui/core"
 import { Bookmarklet } from "../common/Bookmarklet"
+import { ViewSettings } from "./ViewSettings"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,6 +70,11 @@ export const SettingsPanel = () => {
         {/* Gist Restore */}
         <SettingsItem title="Restore from Gist">
           <GistRestore />
+        </SettingsItem>
+
+        {/* View Settings */}
+        <SettingsItem title="View Settings">
+          <ViewSettings />
         </SettingsItem>
 
         <div className={classes.bookmarkletContainer}>

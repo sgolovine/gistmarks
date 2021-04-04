@@ -1,4 +1,6 @@
-import React, { createContext, useState } from "react"
+import React, { createContext } from "react"
+import { VIEW_SETTINGS_STORAGE_KEY } from "~/defines"
+import useLocalStorage from "~/hooks/useLocalStorage"
 import { ContextProviderProps } from "~/model/Context"
 
 interface SettingsState {
@@ -13,7 +15,7 @@ const initialState: SettingsState = {
   showSortedList: true,
 }
 
-const SettingsContext = createContext<SettingsContext>({
+export const SettingsContext = createContext<SettingsContext>({
   ...initialState,
   setField: () => null,
 })
@@ -21,7 +23,10 @@ const SettingsContext = createContext<SettingsContext>({
 export const SettingsContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  const [state, setState] = useState<SettingsState>(initialState)
+  const [state, setState] = useLocalStorage<SettingsState>(
+    VIEW_SETTINGS_STORAGE_KEY,
+    initialState
+  )
 
   const setField = (field: keyof SettingsState, value: boolean) => {
     setState({

@@ -12,6 +12,7 @@ export const DevRoute = () => {
       return
     }
     const resp = await axios.get(url)
+    console.log(resp)
   }
 
   return (
