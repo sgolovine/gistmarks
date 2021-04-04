@@ -43,6 +43,7 @@ export const BookmarkList: React.FC<Props> = ({ view }) => {
       onEdit={handleEditBookmark}
       onDelete={handleDeleteBookmark}
       view={view}
+      totalBookmarkCount={Object.keys(bookmarkContext.allBookmarks).length}
     />
   )
 }

@@ -4,8 +4,8 @@ import { BookmarkCard } from "../BookmarkCard"
 import { ListEmpty } from "./ListEmpty"
 import { makeStyles, Typography } from "@material-ui/core"
 import { extractCategories } from "~/helpers/extractCategories"
-import { ViewSettings } from "../SettingsPanel/ViewSettings"
 import { SettingsContext } from "~/context"
+import { NoSearchResults } from "./NoSearchResults"
 
 type BookmarkList = {
   [Category: string]: BookmarkCollection
@@ -40,6 +40,7 @@ interface Props {
   view?: boolean
   onEdit?: (bookmarkGuid: string) => void
   onDelete?: (bookmarkGuid: string) => void
+  totalBookmarkCount?: number
 }
 
 export const List: React.FC<Props> = ({
@@ -47,6 +48,7 @@ export const List: React.FC<Props> = ({
   view = false,
   onEdit,
   onDelete,
+  totalBookmarkCount,
 }) => {
   const classes = useStyles()
 
@@ -56,11 +58,10 @@ export const List: React.FC<Props> = ({
     Uncategorized: {},
   })
 
-  const [bookmarkKeys, setBookmarkKeys] = useState<string[]>([])
+  const bookmarkKeys = Object.keys(bookmarks)
   const [categoryKeys, setCategoryKeys] = useState<string[]>([])
 
   useEffect(() => {
-    const bookmarkKeys = Object.keys(bookmarks)
     const bookmarksAsArray = bookmarkKeys.map((key) => bookmarks[key])
     const categories = extractCategories(bookmarks)
 
@@ -106,23 +107,28 @@ export const List: React.FC<Props> = ({
   }, [bookmarks])
 
   useEffect(() => {
-    const keys = Object.keys(bookmarks)
-    setBookmarkKeys(keys)
-  }, [bookmarks])
-
-  useEffect(() => {
-    const keys = Object.keys(data).sort()
-    setCategoryKeys(keys)
+    if (data) {
+      const keys = Object.keys(data).sort()
+      setCategoryKeys(keys)
+    }
   }, [data])
 
   const handleEdit = (guid: string) => !!onEdit && onEdit(guid)
 
   const handleDelete = (guid: string) => !!onDelete && onDelete(guid)
 
-  if (Object.keys(bookmarks).length === 0) {
+  if (totalBookmarkCount === 0) {
     return (
       <div className={classes.root}>
         <ListEmpty />
+      </div>
+    )
+  }
+
+  if (Object.keys(bookmarks).length === 0) {
+    return (
+      <div className={classes.root}>
+        <NoSearchResults />
       </div>
     )
   }
@@ -132,13 +138,12 @@ export const List: React.FC<Props> = ({
       <div className={classes.root}>
         {categoryKeys.map((category, index) => {
           const categoryData = data[category]
-          const bookmarkKeysForCategory = Object.keys(categoryData)
-          if (bookmarkKeysForCategory.length > 0) {
+          if (categoryData && Object.keys(categoryData).length > 0) {
             return (
               <div key={index} className={classes.sectionContainer}>
                 <Typography variant="h4">{category}</Typography>
                 <div className={classes.sectionContent}>
-                  {bookmarkKeysForCategory.map((key) => {
+                  {Object.keys(categoryData).map((key) => {
                     const bookmarkData = categoryData[key]
                     return (
                       <BookmarkCard

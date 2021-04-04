@@ -9,6 +9,7 @@ import { ContextProviderProps } from "~/model/Context"
 import { GlobalStateContext } from "./GlobalStateContext"
 
 interface BookmarkContext {
+  allBookmarks: BookmarkCollection
   bookmarks: BookmarkCollection
   categories: string[]
   activeCategories: string[]
@@ -23,6 +24,7 @@ interface BookmarkContext {
 }
 
 export const BookmarkContext = createContext<BookmarkContext>({
+  allBookmarks: {},
   bookmarks: {},
   categories: [],
   activeCategories: [],
@@ -120,6 +122,7 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
   }
 
   const value: BookmarkContext = {
+    allBookmarks: bookmarks,
     bookmarks: filteredBookmarks,
     activeCategories,
     categories,
