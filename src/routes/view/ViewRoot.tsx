@@ -62,7 +62,7 @@ export const ViewRootRoute = () => {
   return (
     <>
       {/* App Header */}
-      <Header noSidebar noSettings noEditor noSearch />
+      <Header route="view-root" />
       <Card className={classes.cardRoot}>
         <CardContent className={classes.cardContent}>
           <Typography className={classes.header} variant="h6">

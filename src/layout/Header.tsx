@@ -70,23 +70,45 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+type Routes = "view" | "add" | "app" | "view-root"
+
 interface Props {
-  noSidebar?: boolean
-  noSettings?: boolean
-  noEditor?: boolean
-  noSearch?: boolean
-  view?: boolean
-  add?: boolean
+  route: Routes
 }
 
-const Header: React.FC<Props> = ({
-  noSidebar = false,
-  noSettings = false,
-  noEditor = false,
-  noSearch = false,
-  view = false,
-  add = false,
-}) => {
+const getTitle = (
+  route: Routes,
+  viewContextName?: string | null,
+  backupContextName?: string | null,
+  gistBackupName?: string | null
+) => {
+  switch (route) {
+    case "add": {
+      return "Add Bookmark"
+    }
+    case "app": {
+      if (backupContextName) {
+        return backupContextName
+      } else if (gistBackupName) {
+        return gistBackupName
+      } else {
+        return "Gistmarks"
+      }
+    }
+    case "view": {
+      if (viewContextName) {
+        return viewContextName
+      } else {
+        return "View Collection"
+      }
+    }
+    default: {
+      return "Gistmarks"
+    }
+  }
+}
+
+const Header: React.FC<Props> = ({ route }) => {
   const classes = useStyles()
   const backupContext = useContext(BackupContext)
   const globalStateContext = useContext(GlobalStateContext)
@@ -94,31 +116,34 @@ const Header: React.FC<Props> = ({
   const bookmarkContext = useContext(BookmarkContext)
   const viewContext = useContext(ViewContext)
 
-  const searchInputValue = view
-    ? viewContext.searchTerm
-    : bookmarkContext.searchTerm
+  const searchInputValue =
+    route === "view" ? viewContext.searchTerm : bookmarkContext.searchTerm
 
-  const headerText = add
-    ? "Add Bookmark"
-    : view
-    ? viewContext.collectionName
-    : backupContext?.backupResults?.collectionName ||
-      backupContext?.gistBackup?.collectionName ||
-      "Gistmarks"
+  const headerText = getTitle(
+    route,
+    viewContext?.collectionName,
+    backupContext?.backupResults?.collectionName,
+    backupContext?.gistBackup?.collectionName
+  )
 
   const handleInputChange = (newValue: string) => {
-    if (view) {
+    if (route === "view") {
       viewContext.setSearch(newValue)
     } else {
       bookmarkContext.setSearch(newValue)
     }
   }
 
-  return (
-    <AppBar className={classes.root} position="static">
-      <Toolbar>
-        {/* Sidebar Button */}
-        {!noSidebar && (
+  const renderSidebarButton = (route: Routes) => {
+    switch (route) {
+      case "view-root":
+      case "add": {
+        return null
+      }
+      case "app":
+      case "view":
+      default: {
+        return (
           <IconButton
             edge="start"
             color="inherit"
@@ -127,15 +152,21 @@ const Header: React.FC<Props> = ({
           >
             <MenuIcon />
           </IconButton>
-        )}
+        )
+      }
+    }
+  }
 
-        {/* Header Text */}
-        <Typography className={classes.title} variant="h6">
-          {headerText}
-        </Typography>
-
-        {/* Search Bar */}
-        {!noSearch && (
+  const renderSearchBar = (route: Routes) => {
+    switch (route) {
+      case "view-root":
+      case "add": {
+        return null
+      }
+      case "app":
+      case "view":
+      default: {
+        return (
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -151,38 +182,96 @@ const Header: React.FC<Props> = ({
               onChange={(e) => handleInputChange(e.target.value)}
             />
           </div>
-        )}
+        )
+      }
+    }
+  }
 
-        {/* Settings Button */}
-        {!noSettings && (
+  const renderSettingsButton = (route: Routes) => {
+    switch (route) {
+      case "view":
+      case "app": {
+        return (
           <IconButton color="inherit" onClick={layoutContext.openSettingsPanel}>
             <SettingsIcon />
           </IconButton>
-        )}
+        )
+      }
+      case "add":
+      case "view-root":
+      default: {
+        return null
+      }
+    }
+  }
 
-        {/* Create Bookmark Button */}
-        {!noEditor && (
+  const renderCreateBookmarkButton = (route: Routes) => {
+    switch (route) {
+      case "app": {
+        return (
           <IconButton color="inherit" onClick={layoutContext.openCreatePanel}>
             <CreateIcon />
           </IconButton>
-        )}
+        )
+      }
+      case "add":
+      case "view":
+      case "view-root":
+      default: {
+        return null
+      }
+    }
+  }
 
-        {!noEditor &&
-          globalStateContext.unsavedChanges &&
-          backupContext?.backupResults?.backupCreated && (
+  const renderSaveButton = (
+    route: Routes,
+    hasUnsavedChanges?: boolean,
+    backupCreated?: boolean
+  ) => {
+    switch (route) {
+      case "app": {
+        if (hasUnsavedChanges && backupCreated) {
+          return (
             <IconButton
               color="inherit"
               onClick={backupContext.actions.updateBackup}
             >
               <SaveIcon />
             </IconButton>
-          )}
+          )
+        } else {
+          return null
+        }
+      }
+      case "add":
+      case "view":
+      case "view-root":
+      default: {
+        return null
+      }
+    }
+  }
 
-        {/* {!isLoggedIn && view && (
-          <Button color="inherit" onClick={handleCTA}>
-            CREATE YOUR OWN COLLECTION
-          </Button>
-        )} */}
+  return (
+    <AppBar className={classes.root} position="static">
+      <Toolbar>
+        {renderSidebarButton(route)}
+
+        <Typography className={classes.title} variant="h6">
+          {headerText}
+        </Typography>
+
+        {renderSearchBar(route)}
+
+        {renderSettingsButton(route)}
+
+        {renderCreateBookmarkButton(route)}
+
+        {renderSaveButton(
+          route,
+          globalStateContext?.unsavedChanges,
+          backupContext?.backupResults?.backupCreated
+        )}
       </Toolbar>
     </AppBar>
   )

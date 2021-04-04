@@ -9,7 +9,7 @@ export const AppRoute = () => {
   return (
     <>
       {/* App Header */}
-      <Header />
+      <Header route="app" />
 
       {/* App Sidebar */}
       <Sidebar />

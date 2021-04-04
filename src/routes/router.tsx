@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Switch } from "react-router-dom"
 import { AddRoute } from "./add"
 import { AppRoute } from "./app"
 import { ViewRootRoute, ViewGistRoute } from "./view"
-import { DevRoute } from "./dev"
 
 export const AppRouter = () => {
   return (
@@ -26,9 +25,6 @@ export const AppRouter = () => {
         </Route>
         <Route path="/v/:id">
           <ViewGistRoute />
-        </Route>
-        <Route path="/dev">
-          <DevRoute />
         </Route>
       </Switch>
     </BrowserRouter>

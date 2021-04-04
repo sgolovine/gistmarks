@@ -30,7 +30,7 @@ export const ViewGistRoute = () => {
   return (
     <>
       {/* App Header */}
-      <Header view={true} noSettings noEditor />
+      <Header route="view" />
 
       {/* App Sidebar */}
       <Sidebar view={true} />
