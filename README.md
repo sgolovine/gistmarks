@@ -6,11 +6,9 @@ Gistmarks.io is a bookmark manager that uses Github Gist to save and share bookm
 
 [![APP Deploy Status](https://api.netlify.com/api/v1/badges/203e38fd-2db3-4c6f-ba9f-131dc129a76c/deploy-status)](https://app.netlify.com/sites/gistmarks-io/deploys)
 
-[![API Deploy Status](https://api.netlify.com/api/v1/badges/18290c89-829d-4f1a-b96d-ef578fd788b0/deploy-status)](https://app.netlify.com/sites/gistmarks-api/deploys)
 
 [Go to Site](https://gistmarks.io)
 [Go to App](https://app.gistmarks.io)
-[Go to API](https://api.gistmarks.io)
 
 ## Development
 
