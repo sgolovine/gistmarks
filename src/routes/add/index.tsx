@@ -77,7 +77,7 @@ export const AddRoute: React.FC = () => {
 
   return (
     <div>
-      <Header add noSidebar noSettings noEditor noSearch />
+      <Header route="add" />
       <Card className={classes.formContainer}>
         <CardContent className={classes.innerContainer}>
           <BookmarkPanelEditor

@@ -8,6 +8,7 @@ import {
   GlobalStateContextProvider,
   ViewContextProvider,
   LayoutContextProvider,
+  SettingsContextProvider,
 } from "~/context"
 import { AppRouter } from "~/routes/router"
 
@@ -19,17 +20,19 @@ interface ContextWrapperProps {
 const ContextWrapper: React.FC<ContextWrapperProps> = ({ children }) => {
   return (
     <GlobalStateContextProvider>
-      <AuthContextProvider>
-        <LayoutContextProvider>
-          <BookmarkContextProvider>
-            <EditorStateContextProvider>
-              <BackupContextProvider>
-                <ViewContextProvider>{children}</ViewContextProvider>
-              </BackupContextProvider>
-            </EditorStateContextProvider>
-          </BookmarkContextProvider>
-        </LayoutContextProvider>
-      </AuthContextProvider>
+      <SettingsContextProvider>
+        <AuthContextProvider>
+          <LayoutContextProvider>
+            <BookmarkContextProvider>
+              <EditorStateContextProvider>
+                <BackupContextProvider>
+                  <ViewContextProvider>{children}</ViewContextProvider>
+                </BackupContextProvider>
+              </EditorStateContextProvider>
+            </BookmarkContextProvider>
+          </LayoutContextProvider>
+        </AuthContextProvider>
+      </SettingsContextProvider>
     </GlobalStateContextProvider>
   )
 }
