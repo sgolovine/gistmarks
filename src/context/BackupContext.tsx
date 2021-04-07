@@ -9,7 +9,7 @@ import { createInstance } from "~/requests/setup"
 import { updateGist } from "~/requests/updateGist"
 import { AuthContext } from "./AuthContext"
 import { BookmarkContext } from "./BookmarkContext"
-import { GlobalStateContext } from "./GlobalStateContext"
+import { SettingsContext } from "./SettingsContext"
 
 type ActionTypes =
   | "SET_FILENAME"
@@ -114,7 +114,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
 }) => {
   const authContext = useContext(AuthContext)
   const bookmarkContext = useContext(BookmarkContext)
-  const globalStateContext = useContext(GlobalStateContext)
+  const settingsContext = useContext(SettingsContext)
 
   const { state, dispatch } = usePersistedReducer(
     reducer,
@@ -156,7 +156,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       )
       if (resp && validateStatus(resp.status)) {
         setLoading(false)
-        globalStateContext.setUnsavedChanges(false)
+        settingsContext.actions.setUnsavedChanges(false)
         const { html_url, id, description } = resp.data
         dispatch({
           type: "SET_RESULTS",
@@ -188,7 +188,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       })
       if (resp && validateStatus(resp.status)) {
         setLoading(false)
-        globalStateContext.setUnsavedChanges(false)
+        settingsContext.actions.setUnsavedChanges(false)
         const { html_url, id, description } = resp.data
         dispatch({
           type: "SET_RESULTS",

@@ -133,7 +133,7 @@ export const List: React.FC<Props> = ({
     )
   }
 
-  if (settingsContext.showSortedList) {
+  if (settingsContext.state.showSortedList) {
     return (
       <div className={classes.root}>
         {categoryKeys.map((category, index) => {

@@ -5,7 +5,6 @@ import {
   BackupContextProvider,
   EditorStateContextProvider,
   BookmarkContextProvider,
-  GlobalStateContextProvider,
   ViewContextProvider,
   LayoutContextProvider,
   SettingsContextProvider,
@@ -19,21 +18,19 @@ interface ContextWrapperProps {
 // Contexts used by the app
 const ContextWrapper: React.FC<ContextWrapperProps> = ({ children }) => {
   return (
-    <GlobalStateContextProvider>
-      <SettingsContextProvider>
-        <AuthContextProvider>
-          <LayoutContextProvider>
-            <BookmarkContextProvider>
-              <EditorStateContextProvider>
-                <BackupContextProvider>
-                  <ViewContextProvider>{children}</ViewContextProvider>
-                </BackupContextProvider>
-              </EditorStateContextProvider>
-            </BookmarkContextProvider>
-          </LayoutContextProvider>
-        </AuthContextProvider>
-      </SettingsContextProvider>
-    </GlobalStateContextProvider>
+    <SettingsContextProvider>
+      <AuthContextProvider>
+        <LayoutContextProvider>
+          <BookmarkContextProvider>
+            <EditorStateContextProvider>
+              <BackupContextProvider>
+                <ViewContextProvider>{children}</ViewContextProvider>
+              </BackupContextProvider>
+            </EditorStateContextProvider>
+          </BookmarkContextProvider>
+        </LayoutContextProvider>
+      </AuthContextProvider>
+    </SettingsContextProvider>
   )
 }
 

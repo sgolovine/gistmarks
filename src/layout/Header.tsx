@@ -14,7 +14,7 @@ import { LayoutContext } from "~/context/LayoutContext"
 import {
   BackupContext,
   BookmarkContext,
-  GlobalStateContext,
+  SettingsContext,
   ViewContext,
 } from "~/context"
 import SaveIcon from "@material-ui/icons/Save"
@@ -115,7 +115,7 @@ const Header: React.FC<Props> = ({ route }) => {
   const { state: backupState, actions: backupAction } = useContext(
     BackupContext
   )
-  const globalStateContext = useContext(GlobalStateContext)
+  const settingsContext = useContext(SettingsContext)
   const layoutContext = useContext(LayoutContext)
   const bookmarkContext = useContext(BookmarkContext)
   const viewContext = useContext(ViewContext)
@@ -286,7 +286,7 @@ const Header: React.FC<Props> = ({ route }) => {
 
         {renderSaveButton(
           route,
-          globalStateContext?.unsavedChanges,
+          settingsContext.state.unsavedChanges,
           backupState.backupCreated
         )}
       </Toolbar>

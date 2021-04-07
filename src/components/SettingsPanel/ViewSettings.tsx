@@ -8,11 +8,10 @@ export const ViewSettings = () => {
     <>
       <SwitchItem
         label="Sort by Category"
-        value={settingsContext.showSortedList}
+        value={settingsContext.state.showSortedList}
         onToggle={() =>
-          settingsContext.setField(
-            "showSortedList",
-            !settingsContext.showSortedList
+          settingsContext.actions.setSortedList(
+            !settingsContext.state.showSortedList
           )
         }
       />

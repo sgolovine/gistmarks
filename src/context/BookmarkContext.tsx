@@ -11,7 +11,7 @@ import {
 import useLocalStorage from "~/hooks/useLocalStorage"
 import { Bookmark, BookmarkCollection } from "~/model/Bookmark"
 import { ContextProviderProps } from "~/model/Context"
-import { GlobalStateContext } from "./GlobalStateContext"
+import { SettingsContext } from "./SettingsContext"
 
 interface BookmarkContext {
   allBookmarks: BookmarkCollection
@@ -46,7 +46,7 @@ export const BookmarkContext = createContext<BookmarkContext>({
 export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  const globalStateContext = useContext(GlobalStateContext)
+  const settingsContext = useContext(SettingsContext)
 
   const [bookmarks, setBookmarks] = useLocalStorage<BookmarkCollection>(
     BOOKMARK_STORAGE_KEY,
@@ -84,12 +84,12 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
       ...bookmarks,
       [guid]: bookmark,
     })
-    globalStateContext.setUnsavedChanges(true)
+    settingsContext.actions.setUnsavedChanges(true)
   }
   const removeBookmark = (guid: string) => {
     const newState = omitKey(guid, bookmarks)
     setBookmarks(newState)
-    globalStateContext.setUnsavedChanges(true)
+    settingsContext.actions.setUnsavedChanges(true)
   }
 
   const editBookmark = (bookmark: Partial<Bookmark>, guid: string) => {
@@ -101,7 +101,7 @@ export const BookmarkContextProvider: React.FC<ContextProviderProps> = ({
           ...bookmark,
         },
       })
-      globalStateContext.setUnsavedChanges(true)
+      settingsContext.actions.setUnsavedChanges(true)
     }
   }
 
