@@ -1,4 +1,5 @@
 import React, { createContext, useContext } from "react"
+import { BACKUP_STORAGE_KEY } from "~/defines"
 import { validateStatus } from "~/helpers/validateStatus"
 import { usePersistedReducer } from "~/hooks/usePersistedReducer"
 import { AppAction, ContextProviderProps } from "~/model/Context"
@@ -118,7 +119,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
   const { state, dispatch } = usePersistedReducer(
     reducer,
     initialState,
-    "NEW_BACKUP_STORAGE_KEY"
+    BACKUP_STORAGE_KEY
   )
 
   const setLoading = (payload: boolean) => {

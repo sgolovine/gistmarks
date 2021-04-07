@@ -9,10 +9,9 @@
     "build": "NODE_OPTIONS=--max_old_space_size=3072 NODE_ENV=production webpack --config webpack.config.js",
     "serve": "node_modules/serve/bin/serve.js -s dist",
     "format": "prettier --write ./src/**/*.{ts,tsx}",
+    "clean": "ts-prune && depcheck --config ./.depcheckrc",
     "lint": "eslint 'src/**/*'",
-    "ci": "yarn format && tsc && yarn lint",
-    "find-deadcode": "ts-prune",
-    "deps": "depcheck --config ./.depcheckrc"
+    "ci": "yarn format && tsc && yarn lint"
   },
   "repository": {
     "type": "git",
