@@ -13,7 +13,7 @@ import AssignmentIcon from "@material-ui/icons/Assignment"
 
 interface BackupResultsProps {
   gistId: string
-  htmlUrl?: string
+  htmlUrl: string | null
   onSyncClick: () => void
   onDeleteClick: () => void
 }

@@ -84,8 +84,7 @@ interface Props {
 const getTitle = (
   route: Routes,
   viewContextName?: string | null,
-  backupContextName?: string | null,
-  gistBackupName?: string | null
+  backupContextName?: string | null
 ) => {
   switch (route) {
     case "add": {
@@ -94,8 +93,6 @@ const getTitle = (
     case "app": {
       if (backupContextName) {
         return backupContextName
-      } else if (gistBackupName) {
-        return gistBackupName
       } else {
         return "Gistmarks"
       }
@@ -115,7 +112,9 @@ const getTitle = (
 
 const Header: React.FC<Props> = ({ route }) => {
   const classes = useStyles()
-  const backupContext = useContext(BackupContext)
+  const { state: backupState, actions: backupAction } = useContext(
+    BackupContext
+  )
   const globalStateContext = useContext(GlobalStateContext)
   const layoutContext = useContext(LayoutContext)
   const bookmarkContext = useContext(BookmarkContext)
@@ -127,8 +126,7 @@ const Header: React.FC<Props> = ({ route }) => {
   const headerText = getTitle(
     route,
     viewContext?.collectionName,
-    backupContext?.backupResults?.collectionName,
-    backupContext?.gistBackup?.collectionName
+    backupState.gistName
   )
 
   const handleInputChange = (newValue: string) => {
@@ -256,10 +254,7 @@ const Header: React.FC<Props> = ({ route }) => {
       case "app": {
         if (hasUnsavedChanges && backupCreated) {
           return (
-            <IconButton
-              color="inherit"
-              onClick={backupContext.actions.updateBackup}
-            >
+            <IconButton color="inherit" onClick={backupAction.updateBackup}>
               <SaveIcon />
             </IconButton>
           )
@@ -292,7 +287,7 @@ const Header: React.FC<Props> = ({ route }) => {
         {renderSaveButton(
           route,
           globalStateContext?.unsavedChanges,
-          backupContext?.backupResults?.backupCreated
+          backupState.backupCreated
         )}
       </Toolbar>
     </AppBar>

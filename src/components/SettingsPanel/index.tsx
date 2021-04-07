@@ -34,7 +34,7 @@ interface Props {
 
 export const SettingsPanel: React.FC<Props> = ({ route }) => {
   const layoutContext = useContext(LayoutContext)
-  const backupContext = useContext(BackupContext)
+  const { state, actions } = useContext(BackupContext)
 
   const classes = useStyles()
 
@@ -45,20 +45,18 @@ export const SettingsPanel: React.FC<Props> = ({ route }) => {
       title="Settings"
       open={layoutContext.settingsPanelOpen}
       onClose={layoutContext.closeSettingsPanel}
-      loading={backupContext.gistBackup.backupLoading}
+      loading={state.isLoading}
     >
       <div className={classes.root}>
         {/* Backup Results */}
-        {isAppRoute &&
-          backupContext.backupResults.backupCreated &&
-          backupContext.backupResults.gistId && (
-            <BackupResults
-              gistId={backupContext.backupResults.gistId}
-              onDeleteClick={backupContext.actions.deleteBackup}
-              onSyncClick={backupContext.actions.updateBackup}
-              htmlUrl={backupContext.backupResults.htmlUrl}
-            />
-          )}
+        {isAppRoute && state.backupCreated && state.gistId && (
+          <BackupResults
+            gistId={state.gistId}
+            onDeleteClick={actions.deleteBackup}
+            onSyncClick={actions.updateBackup}
+            htmlUrl={state.remoteUrl}
+          />
+        )}
 
         {/* Local Backup */}
         {isAppRoute && (

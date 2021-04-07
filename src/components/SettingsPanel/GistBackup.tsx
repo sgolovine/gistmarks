@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 export const GistBackup = () => {
   const classes = useStyles()
   const { isLoggedIn, login, logout } = useContext(AuthContext)
-  const { gistBackup, actions } = useContext(BackupContext)
+  const { state, actions } = useContext(BackupContext)
 
   const [editGist, setEditGist] = useState<boolean>(false)
 
@@ -43,25 +43,23 @@ export const GistBackup = () => {
             className={classes.itemInput}
             variant="outlined"
             label="Filename"
-            value={gistBackup.filename}
-            onChange={(e) => gistBackup.setField("filename", e.target.value)}
+            value={state.gistFilename}
+            onChange={(e) => actions.setFilename(e.target.value)}
           />
           <TextField
             className={classes.itemInput}
             variant="outlined"
             label="Collection Name (optional)"
-            value={gistBackup.collectionName}
-            onChange={(e) =>
-              gistBackup.setField("collectionName", e.target.value)
-            }
+            value={state.gistName}
+            onChange={(e) => actions.setName(e.target.value)}
           />
           {editGist && (
             <TextField
               className={classes.itemInput}
               variant="outlined"
               label="Gist ID (optional)"
-              value={gistBackup.gistId}
-              onChange={(e) => gistBackup.setField("gistId", e.target.value)}
+              value={state.gistId}
+              onChange={(e) => actions.setGistId(e.target.value)}
             />
           )}
           <div>

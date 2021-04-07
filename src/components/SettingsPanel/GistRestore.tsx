@@ -15,24 +15,16 @@ const useStyles = makeStyles((theme) => ({
 
 export const GistRestore = () => {
   const classes = useStyles()
-  const { gistRestore, actions } = useContext(BackupContext)
+  const { state, actions } = useContext(BackupContext)
   return (
     <div className={classes.itemContent}>
       <TextField
         required
         className={classes.itemInput}
         variant="outlined"
-        label="Filename"
-        value={gistRestore.filename}
-        onChange={(e) => gistRestore.setField("filename", e.target.value)}
-      />
-      <TextField
-        required
-        className={classes.itemInput}
-        variant="outlined"
         label="Gist ID"
-        value={gistRestore.gistId}
-        onChange={(e) => gistRestore.setField("gistId", e.target.value)}
+        value={state.gistId}
+        onChange={(e) => actions.setGistId(e.target.value)}
       />
 
       <div>
