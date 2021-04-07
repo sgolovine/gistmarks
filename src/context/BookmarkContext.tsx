@@ -1,8 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { BOOKMARK_STORAGE_KEY } from "~/defines"
-import { omitKey, removeItem, uniq } from "~/helpers"
-import { extractCategories } from "~/helpers/extractCategories"
-import { filterBySearchTerm, filterByCategories } from "~/helpers/filtering"
+import {
+  omitKey,
+  removeItem,
+  uniq,
+  extractCategories,
+  filterBySearchTerm,
+  filterByCategories,
+} from "~/helpers"
 import useLocalStorage from "~/hooks/useLocalStorage"
 import { Bookmark, BookmarkCollection } from "~/model/Bookmark"
 import { ContextProviderProps } from "~/model/Context"

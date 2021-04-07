@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from "react"
 import { BACKUP_STORAGE_KEY } from "~/defines"
-import { validateStatus } from "~/helpers/validateStatus"
+import { validateStatus } from "~/helpers"
 import { usePersistedReducer } from "~/hooks/usePersistedReducer"
 import { AppAction, ContextProviderProps } from "~/model/Context"
 import { createGist } from "~/requests/createGist"

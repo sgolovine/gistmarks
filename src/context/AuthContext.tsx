@@ -3,13 +3,13 @@ import { ContextProviderProps } from "~/model/Context"
 import axios from "axios"
 import { AUTH_STORAGE_KEY } from "~/defines/localStorage"
 import { ContextDevTool } from "react-context-devtool"
-import { dev } from "~/helpers/isDev"
 import useLocalStorage from "~/hooks/useLocalStorage"
 import {
   buildAuthUrl,
   getCodeFromUrl,
   navigate,
   removeCodeInUrl,
+  dev,
 } from "~/helpers"
 
 interface AuthContext {
