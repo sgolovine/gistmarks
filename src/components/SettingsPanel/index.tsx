@@ -7,11 +7,12 @@ import { SettingsItem } from "./SettingsItem"
 import { LocalBackup, LocalRestore } from "./Local"
 import { GistBackup } from "./GistBackup"
 import { GistRestore } from "./GistRestore"
-import { BackupContext } from "~/context"
-import { Typography } from "@material-ui/core"
+import { AuthContext, BackupContext } from "~/context"
+import { Button, Typography } from "@material-ui/core"
 import { Bookmarklet } from "../common/Bookmarklet"
 import { ViewSettings } from "./ViewSettings"
 import { Routes } from "~/model/Routes"
+import GitHubIcon from "@material-ui/icons/GitHub"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
   bookmarkletContainer: {
     marginTop: theme.spacing(2),
   },
+  logoutButtonContainer: {
+    marginTop: theme.spacing(1),
+  },
 }))
 
 interface Props {
@@ -35,6 +39,7 @@ interface Props {
 export const SettingsPanel: React.FC<Props> = ({ route }) => {
   const layoutContext = useContext(LayoutContext)
   const { state, actions } = useContext(BackupContext)
+  const { isLoggedIn, login, logout } = useContext(AuthContext)
 
   const classes = useStyles()
 
@@ -57,39 +62,26 @@ export const SettingsPanel: React.FC<Props> = ({ route }) => {
             htmlUrl={state.remoteUrl}
           />
         )}
+        {/* View Settings */}
+        <SettingsItem title="General">
+          <ViewSettings />
+        </SettingsItem>
 
         {/* Local Backup */}
         {isAppRoute && (
-          <SettingsItem title="Local Backup">
+          <SettingsItem title="Local">
             <LocalBackup />
-          </SettingsItem>
-        )}
-
-        {/* Local Restore */}
-        {isAppRoute && (
-          <SettingsItem title="Local Restore">
             <LocalRestore />
           </SettingsItem>
         )}
 
         {/* Gist Backup */}
         {isAppRoute && (
-          <SettingsItem title="Backup to Gist">
+          <SettingsItem title="Github Gist">
             <GistBackup />
-          </SettingsItem>
-        )}
-
-        {/* Gist Restore */}
-        {isAppRoute && (
-          <SettingsItem title="Restore from Gist">
             <GistRestore />
           </SettingsItem>
         )}
-
-        {/* View Settings */}
-        <SettingsItem title="View Settings">
-          <ViewSettings />
-        </SettingsItem>
 
         {isAppRoute && (
           <div className={classes.bookmarkletContainer}>
@@ -98,6 +90,17 @@ export const SettingsPanel: React.FC<Props> = ({ route }) => {
             <Bookmarklet />
           </div>
         )}
+        <div className={classes.logoutButtonContainer}>
+          {isLoggedIn ? (
+            <Button startIcon={<GitHubIcon />} onClick={logout}>
+              LOGOUT
+            </Button>
+          ) : (
+            <Button startIcon={<GitHubIcon />} onClick={login}>
+              LOGIN WITH GITHUB
+            </Button>
+          )}
+        </div>
       </div>
     </Panel>
   )
