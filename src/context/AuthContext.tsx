@@ -11,8 +11,10 @@ import {
   removeCodeInUrl,
   dev,
 } from "~/helpers"
+import { ejectInterceptor, injectInterceptor } from "~/requests/setup"
 
 interface AuthContext {
+  interceptorID?: number
   authCode: string | null
   accessToken: string | null
   scope: string | null
@@ -24,10 +26,11 @@ interface AuthContext {
 
 type AuthState = Pick<
   AuthContext,
-  "authCode" | "accessToken" | "scope" | "tokenType"
+  "authCode" | "accessToken" | "scope" | "tokenType" | "interceptorID"
 >
 
 export const AuthContext = createContext<AuthContext>({
+  interceptorID: undefined,
   authCode: null,
   accessToken: null,
   scope: null,
@@ -43,6 +46,7 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   const [authState, setAuthState] = useLocalStorage<AuthState>(
     AUTH_STORAGE_KEY,
     {
+      interceptorID: undefined,
       authCode: null,
       accessToken: null,
       scope: null,
@@ -74,11 +78,13 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
         })
         .then((resp) => {
           const { accessToken, tokenType, scope } = resp.data
+          const interceptorID = injectInterceptor(false, accessToken)
           setAuthState({
             ...authState,
             // Set the auth code to null
             // upon success to prevent
             // caching issues
+            interceptorID,
             authCode: null,
             accessToken,
             tokenType,
@@ -100,6 +106,9 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
       tokenType: null,
     })
     localStorage.removeItem(AUTH_STORAGE_KEY)
+    if (authState.interceptorID) {
+      ejectInterceptor(authState.interceptorID)
+    }
   }
 
   const login = () => {

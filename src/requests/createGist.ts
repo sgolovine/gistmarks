@@ -1,15 +1,16 @@
-import { AxiosInstance } from "axios"
+import axios from "axios"
 import { BookmarkCollection } from "~/model/Bookmark"
 
-export function createGist(
-  instance: AxiosInstance,
-  filename: string,
-  description: string,
+interface Args {
+  filename: string
+  name: string
   bookmarks: BookmarkCollection
-) {
-  return instance.post("/gists", {
+}
+
+export function createGist({ filename, name, bookmarks }: Args) {
+  return axios.post("/gists", {
     public: false,
-    description,
+    description: name,
     files: {
       [filename]: {
         content: JSON.stringify(bookmarks, null, 2),
