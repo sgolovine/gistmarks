@@ -106,7 +106,7 @@ export const BookmarkPanelEditor: React.FC<Props> = ({
             onClick={onAutofill}
             className={classes.button}
             color="primary"
-            variant="contained"
+            variant="outlined"
           >
             Autofill
           </Button>
@@ -168,7 +168,7 @@ export const BookmarkPanelEditor: React.FC<Props> = ({
         <Button
           className={classes.button}
           color="secondary"
-          variant="contained"
+          variant="outlined"
           onClick={onCancel}
         >
           Cancel
@@ -177,7 +177,7 @@ export const BookmarkPanelEditor: React.FC<Props> = ({
           onClick={onSubmit}
           className={classes.button}
           color="primary"
-          variant="contained"
+          variant="outlined"
         >
           {editMode ? "Save Bookmark" : "Create Bookmark"}
         </Button>

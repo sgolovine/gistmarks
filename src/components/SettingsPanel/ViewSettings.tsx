@@ -15,6 +15,13 @@ export const ViewSettings = () => {
           )
         }
       />
+      <SwitchItem
+        label="Dark Theme"
+        value={settingsContext.state.isDark}
+        onToggle={() =>
+          settingsContext.actions.setIsDark(!settingsContext.state.isDark)
+        }
+      />
     </>
   )
 }
