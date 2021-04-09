@@ -5,7 +5,6 @@ import { usePersistedReducer } from "~/hooks/usePersistedReducer"
 import { AppAction, ContextProviderProps } from "~/model/Context"
 import { createGist } from "~/requests/createGist"
 import { getGist } from "~/requests/getGist"
-import { createInstance } from "~/requests/setup"
 import { updateGist } from "~/requests/updateGist"
 import { AuthContext } from "./AuthContext"
 import { BookmarkContext } from "./BookmarkContext"
@@ -145,15 +144,13 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
   const createBackup = async () => {
     if (authContext.accessToken) {
       setLoading(true)
-      const instance = createInstance(authContext.accessToken)
       const filename = state.gistFilename ?? "bookmarks.json"
       const name = state.gistName ?? "Gistmarks"
-      const resp = await createGist(
-        instance,
+      const resp = await createGist({
         filename,
         name,
-        bookmarkContext.bookmarks
-      )
+        bookmarks: bookmarkContext.bookmarks,
+      })
       if (resp && validateStatus(resp.status)) {
         setLoading(false)
         settingsContext.actions.setUnsavedChanges(false)
@@ -176,11 +173,9 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
   const updateBackup = async () => {
     if (authContext.accessToken && state.gistId) {
       setLoading(true)
-      const instance = createInstance(authContext.accessToken)
       const filename = state.gistFilename ?? "bookmarks.json"
       const name = state.gistName ?? "Gistmarks"
       const resp = await updateGist({
-        instance,
         gistId: state.gistId,
         filename,
         description: name,
@@ -207,9 +202,8 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
   const restoreBackup = async () => {
     if (state.gistId && authContext.accessToken) {
       setLoading(true)
-      const instance = createInstance()
 
-      const resp = await getGist(instance, state.gistId)
+      const resp = await getGist(state.gistId)
       if (resp && validateStatus(resp.status)) {
         setLoading(false)
         const allFiles = resp.data.files

@@ -1,22 +1,15 @@
-import { AxiosInstance } from "axios"
+import axios from "axios"
 import { BookmarkCollection } from "~/model/Bookmark"
 
 interface Args {
-  instance: AxiosInstance
   gistId: string
   filename: string
   description: string
   bookmarks: BookmarkCollection
 }
 
-export function updateGist({
-  instance,
-  gistId,
-  filename,
-  description,
-  bookmarks,
-}: Args) {
-  return instance.patch(`/gists/${gistId}`, {
+export function updateGist({ gistId, filename, description, bookmarks }: Args) {
+  return axios.patch(`/gists/${gistId}`, {
     public: false,
     description,
     files: {

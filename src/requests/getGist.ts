@@ -1,5 +1,5 @@
-import { AxiosInstance } from "axios"
+import axios from "axios"
 
-export function getGist(instance: AxiosInstance, gistId: string) {
-  return instance.get(`/gists/${gistId}`)
+export function getGist(gistId: string) {
+  return axios.get(`/gists/${gistId}`)
 }

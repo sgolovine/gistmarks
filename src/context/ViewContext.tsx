@@ -14,7 +14,6 @@ import {
 import { BookmarkCollection } from "~/model/Bookmark"
 import { ContextProviderProps } from "~/model/Context"
 import { getGist } from "~/requests/getGist"
-import { createInstance } from "~/requests/setup"
 
 interface ViewContext {
   collectionName: string | null
@@ -159,8 +158,7 @@ export const ViewContextProvider: React.FC<ContextProviderProps> = ({
   const fetchGist = async (gistId: string) => {
     if (gistId) {
       setGistLoading(true)
-      const instance = createInstance()
-      const resp = await getGist(instance, gistId)
+      const resp = await getGist(gistId)
       if (resp && validateStatus(resp.status)) {
         setGistLoading(false)
         const allFiles = resp.data.files

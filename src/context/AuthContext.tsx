@@ -1,4 +1,4 @@
-import React, { useEffect, createContext } from "react"
+import React, { useEffect, createContext, useState } from "react"
 import { ContextProviderProps } from "~/model/Context"
 import axios from "axios"
 import { AUTH_STORAGE_KEY } from "~/defines/localStorage"
@@ -11,8 +11,10 @@ import {
   removeCodeInUrl,
   dev,
 } from "~/helpers"
+import { ejectInterceptor, injectInterceptor } from "~/requests/setup"
 
 interface AuthContext {
+  interceptorID?: number
   authCode: string | null
   accessToken: string | null
   scope: string | null
@@ -20,6 +22,7 @@ interface AuthContext {
   isLoggedIn: boolean
   logout: () => void
   login: () => void
+  loginWithPat: (token: string) => void
 }
 
 type AuthState = Pick<
@@ -28,6 +31,7 @@ type AuthState = Pick<
 >
 
 export const AuthContext = createContext<AuthContext>({
+  interceptorID: undefined,
   authCode: null,
   accessToken: null,
   scope: null,
@@ -35,11 +39,14 @@ export const AuthContext = createContext<AuthContext>({
   isLoggedIn: false,
   logout: () => null,
   login: () => null,
+  loginWithPat: () => null,
 })
 
 export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
+  const [interceptorID, setInterceptorID] = useState<number | null>(null)
+
   const [authState, setAuthState] = useLocalStorage<AuthState>(
     AUTH_STORAGE_KEY,
     {
@@ -49,6 +56,14 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
       tokenType: null,
     }
   )
+
+  useEffect(() => {
+    // Check for existing intercptors
+    if (!interceptorID && authState.accessToken) {
+      const interceptorID = injectInterceptor(authState.accessToken)
+      setInterceptorID(interceptorID)
+    }
+  }, [authState.accessToken, interceptorID])
 
   // Once we are redirected back from github, look at the URL
   // and grab the code
@@ -74,6 +89,8 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
         })
         .then((resp) => {
           const { accessToken, tokenType, scope } = resp.data
+          const interceptorID = injectInterceptor(accessToken)
+          setInterceptorID(interceptorID)
           setAuthState({
             ...authState,
             // Set the auth code to null
@@ -100,6 +117,9 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
       tokenType: null,
     })
     localStorage.removeItem(AUTH_STORAGE_KEY)
+    if (interceptorID) {
+      ejectInterceptor(interceptorID)
+    }
   }
 
   const login = () => {
@@ -107,15 +127,24 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
     navigate(authUrl)
   }
 
+  const loginWithPat = (token: string) => {
+    setAuthState({
+      authCode: null,
+      accessToken: token,
+      scope: null,
+      tokenType: null,
+    })
+  }
+
   const providerValue: AuthContext = {
     authCode: authState.authCode,
     accessToken: authState.accessToken,
     scope: authState.scope,
     tokenType: authState.tokenType,
-    isLoggedIn:
-      !!authState.accessToken && !!authState.scope && !!authState.tokenType,
+    isLoggedIn: !!authState.accessToken,
     logout,
     login,
+    loginWithPat,
   }
 
   return (
