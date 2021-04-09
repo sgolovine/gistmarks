@@ -25,19 +25,13 @@ exports.handler = async function (event, _context, callback) {
       redirect_uri: GITHUB_REDIRECT_URI,
     })
 
-    console.log("your query", query)
-
     const url = `https://github.com/login/oauth/access_token?${query}`
-
-    console.log("authenticating with url", url)
 
     const resp = await axios({
       method: "POST",
       url,
     })
     const parsedResp = qs.parse(resp.data)
-
-    console.log("parsed response", parsedResp)
 
     callback(null, {
       statusCode: 200,

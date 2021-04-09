@@ -22,5 +22,5 @@ export function navigate(url: string) {
 }
 
 export function removeCodeInUrl() {
-  window.history.replaceState(null, document.title, "/app")
+  window.history.replaceState(null, document.title, "/")
 }
