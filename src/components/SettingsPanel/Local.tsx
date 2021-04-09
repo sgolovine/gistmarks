@@ -28,11 +28,7 @@ export const LocalBackup = () => {
     <div className={classes.itemContent}>
       <Typography variant="h6">Restore from JSON File</Typography>
       <div className={classes.buttonContainer}>
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={handleBackupToJSON}
-        >
+        <Button color="primary" variant="outlined" onClick={handleBackupToJSON}>
           Save to JSON File
         </Button>
       </div>

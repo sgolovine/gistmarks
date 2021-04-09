@@ -1,5 +1,5 @@
 import CssBaseline from "@material-ui/core/CssBaseline/CssBaseline"
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles"
+import { ThemeProvider } from "@material-ui/core/styles"
 import React, { ReactNode, useContext } from "react"
 import {
   AuthContextProvider,
@@ -11,27 +11,8 @@ import {
   SettingsContextProvider,
   SettingsContext,
 } from "~/context"
+import { darkTheme, lightTheme } from "~/defines/theme"
 import { AppRouter } from "~/routes/router"
-import indigo from "@material-ui/core/colors/indigo"
-import red from "@material-ui/core/colors/red"
-
-const lightTheme = createMuiTheme({
-  palette: {
-    type: "light",
-  },
-})
-
-const darkTheme = createMuiTheme({
-  palette: {
-    type: "dark",
-    primary: {
-      main: indigo[500],
-    },
-    secondary: {
-      main: red[400],
-    },
-  },
-})
 
 interface WrapperProps {
   children: ReactNode

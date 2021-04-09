@@ -297,7 +297,11 @@ const Header: React.FC<Props> = ({ route }) => {
   }
 
   return (
-    <AppBar color="default" className={classes.root} position="static">
+    <AppBar
+      color={settingsContext.state.isDark ? "default" : "primary"}
+      className={classes.root}
+      position="static"
+    >
       <Toolbar>
         {renderSidebarButton(route)}
 
@@ -316,13 +320,13 @@ const Header: React.FC<Props> = ({ route }) => {
         )}
 
         {renderEditButton(route)}
-        <Button
+        {/* <Button
           onClick={() =>
             settingsContext.actions.setIsDark(!settingsContext.state.isDark)
           }
         >
           Dark Theme
-        </Button>
+        </Button> */}
       </Toolbar>
     </AppBar>
   )
