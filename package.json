@@ -9,10 +9,9 @@
     "build": "NODE_OPTIONS=--max_old_space_size=3072 NODE_ENV=production webpack --config webpack.config.js",
     "serve": "node_modules/serve/bin/serve.js -s dist",
     "format": "prettier --write ./src/**/*.{ts,tsx}",
+    "clean": "ts-prune && depcheck --config ./.depcheckrc",
     "lint": "eslint 'src/**/*'",
-    "ci": "yarn format && tsc && yarn lint",
-    "find-deadcode": "ts-prune",
-    "deps": "depcheck --config ./.depcheckrc"
+    "ci": "yarn format && tsc && yarn lint"
   },
   "repository": {
     "type": "git",
@@ -30,6 +29,7 @@
     "@material-ui/icons": "^4.11.2",
     "axios": "^0.21.1",
     "faker": "^5.5.0",
+    "fast-deep-equal": "^3.1.3",
     "lodash.escaperegexp": "^4.1.2",
     "query-string": "^6.14.1",
     "react": "^17.0.1",

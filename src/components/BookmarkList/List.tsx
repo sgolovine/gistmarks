@@ -3,7 +3,7 @@ import { BookmarkCollection } from "~/model/Bookmark"
 import { BookmarkCard } from "../BookmarkCard"
 import { ListEmpty } from "./ListEmpty"
 import { makeStyles, Typography } from "@material-ui/core"
-import { extractCategories } from "~/helpers/extractCategories"
+import { extractCategories } from "~/helpers"
 import { SettingsContext } from "~/context"
 import { NoSearchResults } from "./NoSearchResults"
 
@@ -133,7 +133,7 @@ export const List: React.FC<Props> = ({
     )
   }
 
-  if (settingsContext.showSortedList) {
+  if (settingsContext.state.showSortedList) {
     return (
       <div className={classes.root}>
         {categoryKeys.map((category, index) => {

@@ -1,11 +1,10 @@
 import React, { useContext, useState } from "react"
 import { BookmarkContext } from "~/context"
-import { generateUUID } from "~/helpers"
+import { generateUUID, createFakeBookmark } from "~/helpers"
 import { Bookmark } from "~/model/Bookmark"
 import { LayoutContext } from "~/context/LayoutContext"
 import { Panel } from "~/layout/Panel"
 import { BookmarkPanelEditor } from "./BookmarkPanelEditor"
-import { createFakeBookmark } from "~/helpers/createFakeBookmark"
 
 interface State {
   name: string

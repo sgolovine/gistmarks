@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import Card from "@material-ui/core/Card"
 import CardContent from "@material-ui/core/CardContent"
 import Typography from "@material-ui/core/Typography"
@@ -8,12 +8,11 @@ import IconButton from "@material-ui/core/IconButton"
 import SyncIcon from "@material-ui/icons/Sync"
 import GithubIcon from "@material-ui/icons/GitHub"
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever"
-import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn"
-import AssignmentIcon from "@material-ui/icons/Assignment"
+import { dev } from "~/helpers"
 
 interface BackupResultsProps {
   gistId: string
-  htmlUrl?: string
+  htmlUrl: string | null
   onSyncClick: () => void
   onDeleteClick: () => void
 }
@@ -41,9 +40,9 @@ export const BackupResults: React.FC<BackupResultsProps> = ({
 }) => {
   const classes = useStyles()
 
-  const [hasCopied, setHasCopied] = useState(false)
-
-  const url = `https://app.gistmarks.io/v/${gistId}`
+  const url = dev
+    ? `http://localhost:3000/v/${gistId}`
+    : `https://app.gistmarks.io/v/${gistId}`
 
   return (
     <Card className={classes.root}>
@@ -56,9 +55,6 @@ export const BackupResults: React.FC<BackupResultsProps> = ({
             label="Share URL"
             value={url}
           />
-          <IconButton onClick={() => setHasCopied(true)}>
-            {hasCopied ? <AssignmentTurnedInIcon /> : <AssignmentIcon />}
-          </IconButton>
         </div>
       </CardContent>
       <CardActions>

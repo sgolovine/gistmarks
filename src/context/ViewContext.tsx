@@ -3,10 +3,14 @@
 // Except with functionality removed
 // for adding and editing bookmarks
 import React, { createContext, useEffect, useState } from "react"
-import { removeItem, uniq } from "~/helpers"
-import { extractCategories } from "~/helpers/extractCategories"
-import { filterByCategories, filterBySearchTerm } from "~/helpers/filtering"
-import { validateStatus } from "~/helpers/validateStatus"
+import {
+  removeItem,
+  uniq,
+  extractCategories,
+  filterByCategories,
+  filterBySearchTerm,
+  validateStatus,
+} from "~/helpers"
 import { BookmarkCollection } from "~/model/Bookmark"
 import { ContextProviderProps } from "~/model/Context"
 import { getGist } from "~/requests/getGist"

@@ -1,18 +1,23 @@
-import { Button, makeStyles } from "@material-ui/core"
+import { Button, makeStyles, Typography } from "@material-ui/core"
 import React, { useContext } from "react"
 import { BookmarkContext } from "~/context"
 import { downloadFile } from "~/helpers"
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   itemContent: {
     display: "flex",
     flexDirection: "column",
-    width: "100%",
+    // width: "100%",
+    paddingBottom: theme.spacing(4),
   },
-})
+  buttonContainer: {
+    paddingTop: theme.spacing(2),
+  },
+}))
 
 export const LocalBackup = () => {
   const bookmarkContext = useContext(BookmarkContext)
+  const classes = useStyles()
 
   const handleBackupToJSON = () => {
     const bookmarksJsonData = JSON.stringify(bookmarkContext.bookmarks, null, 2)
@@ -20,9 +25,18 @@ export const LocalBackup = () => {
   }
 
   return (
-    <Button color="primary" variant="contained" onClick={handleBackupToJSON}>
-      Save to JSON File
-    </Button>
+    <div className={classes.itemContent}>
+      <Typography variant="h6">Restore from JSON File</Typography>
+      <div className={classes.buttonContainer}>
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={handleBackupToJSON}
+        >
+          Save to JSON File
+        </Button>
+      </div>
+    </div>
   )
 }
 
@@ -48,6 +62,7 @@ export const LocalRestore = () => {
 
   return (
     <div className={classes.itemContent}>
+      <Typography variant="h6">Restore from JSON File</Typography>
       <p>
         Note: if you have unsaved bookmarks, they will be overwritten when
         restoring from a JSON file

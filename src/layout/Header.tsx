@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import { fade } from "@material-ui/core"
+import { Button, fade } from "@material-ui/core"
 import MenuIcon from "@material-ui/icons/Menu"
 import CreateIcon from "@material-ui/icons/Create"
 import SearchIcon from "@material-ui/icons/Search"
@@ -12,13 +12,15 @@ import Typography from "@material-ui/core/Typography"
 import InputBase from "@material-ui/core/InputBase"
 import { LayoutContext } from "~/context/LayoutContext"
 import {
+  AuthContext,
   BackupContext,
   BookmarkContext,
-  GlobalStateContext,
+  SettingsContext,
   ViewContext,
 } from "~/context"
 import SaveIcon from "@material-ui/icons/Save"
 import { Routes } from "~/model/Routes"
+import { useHistory } from "react-router"
 
 const useStyles = makeStyles((theme) => ({
   iconButton: {},
@@ -32,8 +34,6 @@ const useStyles = makeStyles((theme) => ({
       display: "block",
     },
   },
-  // So the header will show in
-  // the bookmarklet
   addTitle: {
     display: "block",
     flexGrow: 1,
@@ -84,8 +84,7 @@ interface Props {
 const getTitle = (
   route: Routes,
   viewContextName?: string | null,
-  backupContextName?: string | null,
-  gistBackupName?: string | null
+  backupContextName?: string | null
 ) => {
   switch (route) {
     case "add": {
@@ -94,8 +93,6 @@ const getTitle = (
     case "app": {
       if (backupContextName) {
         return backupContextName
-      } else if (gistBackupName) {
-        return gistBackupName
       } else {
         return "Gistmarks"
       }
@@ -115,11 +112,24 @@ const getTitle = (
 
 const Header: React.FC<Props> = ({ route }) => {
   const classes = useStyles()
-  const backupContext = useContext(BackupContext)
-  const globalStateContext = useContext(GlobalStateContext)
+  const history = useHistory()
+  const { state: backupState, actions: backupAction } = useContext(
+    BackupContext
+  )
+  const settingsContext = useContext(SettingsContext)
   const layoutContext = useContext(LayoutContext)
   const bookmarkContext = useContext(BookmarkContext)
   const viewContext = useContext(ViewContext)
+  const authContext = useContext(AuthContext)
+  const backupContext = useContext(BackupContext)
+
+  // If a user is viewing their own collection
+  // Show a link to edit the collection
+  // This just takes the user to the app
+  const showEditCollectionButton =
+    authContext.isLoggedIn &&
+    backupContext.state.backupCreated &&
+    backupContext.state.gistId
 
   const searchInputValue =
     route === "view" ? viewContext.searchTerm : bookmarkContext.searchTerm
@@ -127,8 +137,7 @@ const Header: React.FC<Props> = ({ route }) => {
   const headerText = getTitle(
     route,
     viewContext?.collectionName,
-    backupContext?.backupResults?.collectionName,
-    backupContext?.gistBackup?.collectionName
+    backupState.gistName
   )
 
   const handleInputChange = (newValue: string) => {
@@ -136,6 +145,19 @@ const Header: React.FC<Props> = ({ route }) => {
       viewContext.setSearch(newValue)
     } else {
       bookmarkContext.setSearch(newValue)
+    }
+  }
+
+  const renderEditButton = (route: Routes) => {
+    switch (route) {
+      case "view":
+        return showEditCollectionButton ? (
+          <Button color="inherit" onClick={() => history.push("/")}>
+            Edit Collection
+          </Button>
+        ) : null
+      default:
+        return null
     }
   }
 
@@ -256,10 +278,7 @@ const Header: React.FC<Props> = ({ route }) => {
       case "app": {
         if (hasUnsavedChanges && backupCreated) {
           return (
-            <IconButton
-              color="inherit"
-              onClick={backupContext.actions.updateBackup}
-            >
+            <IconButton color="inherit" onClick={backupAction.updateBackup}>
               <SaveIcon />
             </IconButton>
           )
@@ -291,9 +310,11 @@ const Header: React.FC<Props> = ({ route }) => {
 
         {renderSaveButton(
           route,
-          globalStateContext?.unsavedChanges,
-          backupContext?.backupResults?.backupCreated
+          settingsContext.state.unsavedChanges,
+          backupState.backupCreated
         )}
+
+        {renderEditButton(route)}
       </Toolbar>
     </AppBar>
   )

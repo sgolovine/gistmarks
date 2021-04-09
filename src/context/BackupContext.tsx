@@ -1,75 +1,110 @@
-import React, { useEffect, createContext, useContext } from "react"
-import { GH_DEFAULT_FILENAME } from "~/defines"
-import {
-  GIST_BACKUP_RESULT_STATE,
-  GIST_BACKUP_STATE,
-  GIST_RESTORE_STATE,
-} from "~/defines/localStorage"
-import { validateStatus } from "~/helpers/validateStatus"
-import useLocalStorage from "~/hooks/useLocalStorage"
-import { ContextProviderProps } from "~/model/Context"
+import React, { createContext, useContext } from "react"
+import { BACKUP_STORAGE_KEY } from "~/defines"
+import { validateStatus } from "~/helpers"
+import { usePersistedReducer } from "~/hooks/usePersistedReducer"
+import { AppAction, ContextProviderProps } from "~/model/Context"
 import { createGist } from "~/requests/createGist"
 import { getGist } from "~/requests/getGist"
 import { createInstance } from "~/requests/setup"
 import { updateGist } from "~/requests/updateGist"
 import { AuthContext } from "./AuthContext"
 import { BookmarkContext } from "./BookmarkContext"
-import { GlobalStateContext } from "./GlobalStateContext"
+import { SettingsContext } from "./SettingsContext"
 
-// TODO: Complete Type
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type GistBackupResultState = any
+type ActionTypes =
+  | "SET_FILENAME"
+  | "SET_NAME"
+  | "SET_LOADING"
+  | "SET_GIST_ID"
+  | "SET_URL"
+  | "SET_BACKUP_CREATED"
+  | "DELETE_BACKUP"
+  | "SET_RESULTS"
 
-interface GistRestore {
-  filename: string
-  gistId: string
-}
-
-interface GistBackup {
-  backupLoading: boolean
-  filename: string
-  collectionName: string
-  gistId: string
-}
-
-interface BackupResults {
-  gistId: string
-  collectionName: string
-  htmlUrl: string
+type BackupState = {
+  isLoading: boolean
   backupCreated: boolean
+  gistFilename: string | null
+  gistName: string | null
+  gistId: string | null
+  remoteUrl: string | null
+}
+
+const initialState: BackupState = {
+  isLoading: false,
+  backupCreated: false,
+  gistFilename: null,
+  gistName: null,
+  gistId: null,
+  remoteUrl: null,
+}
+
+function reducer(
+  state: BackupState,
+  action: AppAction<ActionTypes>
+): BackupState {
+  switch (action.type) {
+    case "SET_FILENAME":
+      return {
+        ...state,
+        gistFilename: action.payload,
+      }
+    case "SET_NAME":
+      return {
+        ...state,
+        gistName: action.payload,
+      }
+    case "SET_LOADING":
+      return {
+        ...state,
+        isLoading: action.payload,
+      }
+    case "SET_GIST_ID":
+      return {
+        ...state,
+        gistId: action.payload,
+      }
+    case "SET_URL":
+      return {
+        ...state,
+        remoteUrl: action.payload,
+      }
+    case "SET_BACKUP_CREATED":
+      return {
+        ...state,
+        backupCreated: action.payload,
+      }
+    case "SET_RESULTS": {
+      return {
+        ...state,
+        gistId: action.payload.gistId,
+        remoteUrl: action.payload.htmlUrl,
+        gistName: action.payload.collectionName,
+        backupCreated: true,
+      }
+    }
+    case "DELETE_BACKUP":
+      return initialState
+    default:
+      return state
+  }
 }
 
 interface BackupContext {
-  gistRestore: GistRestore & {
-    setField: (field: keyof GistRestore, value: string) => void
-  }
-  gistBackup: GistBackup & {
-    setField: (field: keyof GistBackup, value: string | boolean) => void
-  }
-  backupResults: BackupResults & {
-    setField: (field: keyof BackupResults, value: string) => void
-    setState: (results: BackupResults) => void
-  }
+  state: BackupState
   actions: {
+    // Field Setters
+    setLoading: (newValue: boolean) => void
+    setFilename: (newValue: string) => void
+    setName: (newValue: string) => void
+    setGistId: (newValue: string) => void
+    setRemoteUrl: (newValue: string) => void
+    // Other actions
     createBackup: () => void
     updateBackup: () => void
     restoreBackup: () => void
     deleteBackup: () => void
   }
-}
-
-const initialBackupState: GistBackup = {
-  backupLoading: false,
-  filename: GH_DEFAULT_FILENAME,
-  collectionName: "",
-  gistId: "",
-}
-
-const initialBackupResultsState: BackupResults = {
-  gistId: "",
-  collectionName: "",
-  htmlUrl: "",
-  backupCreated: false,
 }
 
 export const BackupContext = createContext<BackupContext>({} as BackupContext)
@@ -79,144 +114,140 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
 }) => {
   const authContext = useContext(AuthContext)
   const bookmarkContext = useContext(BookmarkContext)
-  const globalStateContext = useContext(GlobalStateContext)
+  const settingsContext = useContext(SettingsContext)
 
-  const [backupState, setBackupState] = useLocalStorage<GistBackup>(
-    GIST_BACKUP_STATE,
-    initialBackupState
+  const { state, dispatch } = usePersistedReducer(
+    reducer,
+    initialState,
+    BACKUP_STORAGE_KEY
   )
 
-  const [
-    backupResultsState,
-    setBackupResultsState,
-  ] = useLocalStorage<BackupResults>(
-    GIST_BACKUP_RESULT_STATE,
-    initialBackupResultsState
-  )
+  const setLoading = (payload: boolean) => {
+    dispatch({ type: "SET_LOADING", payload })
+  }
 
-  const [restoreState, setRestoreState] = useLocalStorage<GistRestore>(
-    GIST_RESTORE_STATE,
-    {
-      filename: GH_DEFAULT_FILENAME,
-      gistId: "",
-    }
-  )
+  const setFilename = (payload: string) => {
+    dispatch({ type: "SET_FILENAME", payload })
+  }
 
-  const setBackupField = (field: keyof GistBackup, value: string | boolean) =>
-    setBackupState({ ...backupState, [field]: value })
+  const setName = (payload: string) => {
+    dispatch({ type: "SET_NAME", payload })
+  }
 
-  const setRestoreField = (field: keyof GistRestore, value: string) =>
-    setRestoreState({ ...restoreState, [field]: value })
+  const setGistId = (payload: string) => {
+    dispatch({ type: "SET_GIST_ID", payload })
+  }
 
-  const setBackupResultsField = (
-    field: keyof GistBackupResultState,
-    value: string
-  ) => setBackupResultsState({ ...backupResultsState, [field]: value })
+  const setRemoteUrl = (payload: string) => {
+    dispatch({ type: "SET_URL", payload })
+  }
 
   const createBackup = async () => {
     if (authContext.accessToken) {
-      setBackupField("backupLoading", true)
+      setLoading(true)
       const instance = createInstance(authContext.accessToken)
+      const filename = state.gistFilename ?? "bookmarks.json"
+      const name = state.gistName ?? "Gistmarks"
       const resp = await createGist(
         instance,
-        backupState.filename,
-        backupState.collectionName,
+        filename,
+        name,
         bookmarkContext.bookmarks
       )
       if (resp && validateStatus(resp.status)) {
-        setBackupField("backupLoading", false)
-        globalStateContext.setUnsavedChanges(false)
+        setLoading(false)
+        settingsContext.actions.setUnsavedChanges(false)
         const { html_url, id, description } = resp.data
-        setBackupResultsState({
-          gistId: id,
-          htmlUrl: html_url,
-          collectionName: description,
-          backupCreated: true,
+        dispatch({
+          type: "SET_RESULTS",
+          payload: {
+            gistId: id,
+            htmlUrl: html_url,
+            collectionName: description,
+          },
         })
       } else {
-        setBackupField("backupLoading", false)
+        setLoading(false)
         // TODO: Handle Error Here
       }
     }
   }
 
   const updateBackup = async () => {
-    if (authContext.accessToken && backupState.gistId) {
-      setBackupField("backupLoading", true)
+    if (authContext.accessToken && state.gistId) {
+      setLoading(true)
       const instance = createInstance(authContext.accessToken)
-
+      const filename = state.gistFilename ?? "bookmarks.json"
+      const name = state.gistName ?? "Gistmarks"
       const resp = await updateGist({
         instance,
-        gistId: backupState.gistId,
-        filename: backupState.filename,
-        description: backupState.collectionName,
+        gistId: state.gistId,
+        filename,
+        description: name,
         bookmarks: bookmarkContext.bookmarks,
       })
       if (resp && validateStatus(resp.status)) {
-        setBackupField("backupLoading", false)
-        globalStateContext.setUnsavedChanges(false)
+        setLoading(false)
+        settingsContext.actions.setUnsavedChanges(false)
         const { html_url, id, description } = resp.data
-        setBackupResultsState({
-          gistId: id,
-          htmlUrl: html_url,
-          collectionName: description,
-          backupCreated: true,
+        dispatch({
+          type: "SET_RESULTS",
+          payload: {
+            gistId: id,
+            htmlUrl: html_url,
+            collectionName: description,
+          },
         })
       } else {
-        setBackupField("backupLoading", false)
-        // TODO: Handle Error Here
+        setLoading(false)
       }
     }
   }
 
   const restoreBackup = async () => {
-    if (restoreState.filename && restoreState.gistId) {
-      setBackupField("backupLoading", true)
+    if (state.gistId && authContext.accessToken) {
+      setLoading(true)
       const instance = createInstance()
 
-      const resp = await getGist(instance, restoreState.gistId)
+      const resp = await getGist(instance, state.gistId)
       if (resp && validateStatus(resp.status)) {
-        setBackupField("backupLoading", false)
+        setLoading(false)
         const allFiles = resp.data.files
+
         if (resp.data.description) {
-          setBackupField("collectionName", resp.data.description)
+          dispatch({ type: "SET_NAME", payload: resp.data.description })
         }
+
+        if (resp.data.html_url) {
+          dispatch({ type: "SET_URL", payload: resp.data.html_url })
+        }
+
         const firstFilename = Object.keys(allFiles)[0]
+
+        if (firstFilename) {
+          dispatch({ type: "SET_FILENAME", payload: firstFilename })
+        }
+        dispatch({ type: "SET_BACKUP_CREATED", payload: true })
         const bookmarkContent = allFiles[firstFilename].content
         bookmarkContext.restoreBookmarks(bookmarkContent)
       } else {
-        setBackupField("backupLoading", false)
+        setLoading(false)
         // TODO: Handle Error
       }
     }
   }
 
-  const deleteBackup = () => {
-    setBackupState(initialBackupState)
-    setBackupResultsState(initialBackupResultsState)
-  }
-
-  useEffect(() => {
-    if (backupResultsState.gistId) {
-      setBackupField("gistId", backupResultsState.gistId)
-    }
-  }, [backupResultsState.gistId])
+  const deleteBackup = () => dispatch({ type: "DELETE_BACKUP" })
 
   const value: BackupContext = {
-    gistBackup: {
-      ...backupState,
-      setField: (field, value) => setBackupField(field, value),
-    },
-    gistRestore: {
-      ...restoreState,
-      setField: (field, value) => setRestoreField(field, value),
-    },
-    backupResults: {
-      ...backupResultsState,
-      setField: (field, value) => setBackupResultsField(field, value),
-      setState: (state) => setBackupResultsState(state),
-    },
+    state,
     actions: {
+      setLoading,
+      setFilename,
+      setName,
+      setGistId,
+      setRemoteUrl,
+
       createBackup,
       updateBackup,
       restoreBackup,

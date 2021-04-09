@@ -5,13 +5,12 @@ import makeStyles from "@material-ui/core/styles/makeStyles"
 import { BackupResults } from "./BackupResults"
 import { SettingsItem } from "./SettingsItem"
 import { LocalBackup, LocalRestore } from "./Local"
-import { GistBackup } from "./GistBackup"
-import { GistRestore } from "./GistRestore"
 import { BackupContext } from "~/context"
 import { Typography } from "@material-ui/core"
 import { Bookmarklet } from "../common/Bookmarklet"
 import { ViewSettings } from "./ViewSettings"
 import { Routes } from "~/model/Routes"
+import { Gist } from "./Gist"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
   bookmarkletContainer: {
     marginTop: theme.spacing(2),
   },
+  logoutButtonContainer: {
+    marginTop: theme.spacing(1),
+  },
 }))
 
 interface Props {
@@ -34,7 +36,7 @@ interface Props {
 
 export const SettingsPanel: React.FC<Props> = ({ route }) => {
   const layoutContext = useContext(LayoutContext)
-  const backupContext = useContext(BackupContext)
+  const { state, actions } = useContext(BackupContext)
 
   const classes = useStyles()
 
@@ -45,53 +47,37 @@ export const SettingsPanel: React.FC<Props> = ({ route }) => {
       title="Settings"
       open={layoutContext.settingsPanelOpen}
       onClose={layoutContext.closeSettingsPanel}
-      loading={backupContext.gistBackup.backupLoading}
+      loading={state.isLoading}
     >
       <div className={classes.root}>
         {/* Backup Results */}
-        {isAppRoute &&
-          backupContext.backupResults.backupCreated &&
-          backupContext.backupResults.gistId && (
-            <BackupResults
-              gistId={backupContext.backupResults.gistId}
-              onDeleteClick={backupContext.actions.deleteBackup}
-              onSyncClick={backupContext.actions.updateBackup}
-              htmlUrl={backupContext.backupResults.htmlUrl}
-            />
-          )}
+        {isAppRoute && state.backupCreated && state.gistId && (
+          <BackupResults
+            gistId={state.gistId}
+            onDeleteClick={actions.deleteBackup}
+            onSyncClick={actions.updateBackup}
+            htmlUrl={state.remoteUrl}
+          />
+        )}
+        {/* View Settings */}
+        <SettingsItem title="General">
+          <ViewSettings />
+        </SettingsItem>
 
         {/* Local Backup */}
         {isAppRoute && (
-          <SettingsItem title="Local Backup">
+          <SettingsItem title="Local">
             <LocalBackup />
-          </SettingsItem>
-        )}
-
-        {/* Local Restore */}
-        {isAppRoute && (
-          <SettingsItem title="Local Restore">
             <LocalRestore />
           </SettingsItem>
         )}
 
         {/* Gist Backup */}
         {isAppRoute && (
-          <SettingsItem title="Backup to Gist">
-            <GistBackup />
+          <SettingsItem title="Github Gist">
+            <Gist />
           </SettingsItem>
         )}
-
-        {/* Gist Restore */}
-        {isAppRoute && (
-          <SettingsItem title="Restore from Gist">
-            <GistRestore />
-          </SettingsItem>
-        )}
-
-        {/* View Settings */}
-        <SettingsItem title="View Settings">
-          <ViewSettings />
-        </SettingsItem>
 
         {isAppRoute && (
           <div className={classes.bookmarkletContainer}>

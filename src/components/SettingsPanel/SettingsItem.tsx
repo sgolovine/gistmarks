@@ -4,6 +4,7 @@ import {
   AccordionSummary,
   Typography,
   AccordionDetails,
+  makeStyles,
 } from "@material-ui/core"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 
@@ -12,14 +13,27 @@ interface SettingsItemProps {
   children: ReactNode
 }
 
+const useStyles = makeStyles({
+  itemContent: {
+    display: "flex",
+    flexDirection: "column",
+  },
+})
+
 export const SettingsItem: React.FC<SettingsItemProps> = ({
   title,
   children,
-}) => (
-  <Accordion>
-    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-      <Typography>{title}</Typography>
-    </AccordionSummary>
-    <AccordionDetails>{children}</AccordionDetails>
-  </Accordion>
-)
+}) => {
+  const classes = useStyles()
+
+  return (
+    <Accordion>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography>{title}</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <div className={classes.itemContent}>{children}</div>
+      </AccordionDetails>
+    </Accordion>
+  )
+}
