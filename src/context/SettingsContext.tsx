@@ -4,22 +4,32 @@ import { usePersistedReducer } from "~/hooks/usePersistedReducer"
 import { AppAction, ContextProviderProps } from "~/model/Context"
 
 type SettingsState = {
+  // Dictates if we should open a link in a new tab
+  openInNewTab: boolean
+  // Checks if we have unsaved changes
   unsavedChanges: boolean
+  // Dictates if we show a sorted list or not
   showSortedList: boolean
   isDark: boolean
 }
 
 const initialState: SettingsState = {
+  openInNewTab: true,
   unsavedChanges: false,
   showSortedList: true,
   isDark: false,
 }
 
-type ActionTypes = "SET_SHOW_SORTED_LIST" | "SET_UNSAVED_CHANGES" | "SET_THEME"
+type ActionTypes =
+  | "SET_OPEN_NEW_TAB"
+  | "SET_SHOW_SORTED_LIST"
+  | "SET_UNSAVED_CHANGES"
+  | "SET_THEME"
 
 type SettingsContext = {
   state: SettingsState
   actions: {
+    setOpenNewTab: (newValue: boolean) => void
     setUnsavedChanges: (newValue: boolean) => void
     setSortedList: (newValue: boolean) => void
     setIsDark: (darkTheme: boolean) => void
@@ -31,6 +41,11 @@ function reducer(
   action: AppAction<ActionTypes>
 ): SettingsState {
   switch (action.type) {
+    case "SET_OPEN_NEW_TAB":
+      return {
+        ...state,
+        openInNewTab: action.payload,
+      }
     case "SET_SHOW_SORTED_LIST":
       return {
         ...state,
@@ -67,6 +82,8 @@ export const SettingsContextProvider: React.FC<ContextProviderProps> = ({
   const value: SettingsContext = {
     state,
     actions: {
+      setOpenNewTab: (payload: boolean) =>
+        dispatch({ type: "SET_OPEN_NEW_TAB", payload }),
       setUnsavedChanges: (payload: boolean) =>
         dispatch({ type: "SET_UNSAVED_CHANGES", payload }),
       setSortedList: (payload: boolean) =>

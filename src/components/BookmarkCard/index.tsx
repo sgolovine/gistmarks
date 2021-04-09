@@ -7,10 +7,11 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core"
-import React from "react"
+import React, { useContext } from "react"
 import { Bookmark } from "~/model/Bookmark"
 import EditIcon from "@material-ui/icons/Edit"
 import TrashIcon from "@material-ui/icons/Delete"
+import { SettingsContext } from "~/context"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -95,6 +96,7 @@ export const BookmarkCard: React.FC<Props> = ({
   onEdit,
   onDelete,
 }) => {
+  const { state: settingsState } = useContext(SettingsContext)
   const classes = useStyles()
 
   const handleEdit = () => {
@@ -113,27 +115,24 @@ export const BookmarkCard: React.FC<Props> = ({
     }
   }
 
+  const renderLink = (linkName: string, className: string) => {
+    return (
+      <a
+        target={settingsState.openInNewTab ? "_blank" : undefined}
+        rel="noopener noreferrer"
+        className={className}
+        href={href}
+      >
+        {linkName}
+      </a>
+    )
+  }
+
   return (
     <Card className={classes.root}>
       <CardContent className={classes.cardContent}>
-        <div>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            className={classes.titleText}
-            href={href}
-          >
-            {name}
-          </a>
-        </div>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          className={classes.hrefText}
-          href={href}
-        >
-          {href}
-        </a>
+        <div>{renderLink(name, classes.titleText)}</div>
+        {renderLink(href, classes.hrefText)}
         <Typography className={classes.descriptionText} variant="body1">
           {description}
         </Typography>
