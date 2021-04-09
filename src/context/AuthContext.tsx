@@ -1,4 +1,4 @@
-import React, { useEffect, createContext } from "react"
+import React, { useEffect, createContext, useState } from "react"
 import { ContextProviderProps } from "~/model/Context"
 import axios from "axios"
 import { AUTH_STORAGE_KEY } from "~/defines/localStorage"
@@ -26,7 +26,7 @@ interface AuthContext {
 
 type AuthState = Pick<
   AuthContext,
-  "authCode" | "accessToken" | "scope" | "tokenType" | "interceptorID"
+  "authCode" | "accessToken" | "scope" | "tokenType"
 >
 
 export const AuthContext = createContext<AuthContext>({
@@ -43,16 +43,25 @@ export const AuthContext = createContext<AuthContext>({
 export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
+  const [interceptorID, setInterceptorID] = useState<number | null>(null)
+
   const [authState, setAuthState] = useLocalStorage<AuthState>(
     AUTH_STORAGE_KEY,
     {
-      interceptorID: undefined,
       authCode: null,
       accessToken: null,
       scope: null,
       tokenType: null,
     }
   )
+
+  useEffect(() => {
+    // Check for existing intercptors
+    if (!interceptorID && authState.accessToken) {
+      const interceptorID = injectInterceptor(false, authState.accessToken)
+      setInterceptorID(interceptorID)
+    }
+  }, [authState.accessToken, interceptorID])
 
   // Once we are redirected back from github, look at the URL
   // and grab the code
@@ -79,12 +88,12 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
         .then((resp) => {
           const { accessToken, tokenType, scope } = resp.data
           const interceptorID = injectInterceptor(false, accessToken)
+          setInterceptorID(interceptorID)
           setAuthState({
             ...authState,
             // Set the auth code to null
             // upon success to prevent
             // caching issues
-            interceptorID,
             authCode: null,
             accessToken,
             tokenType,
@@ -106,8 +115,8 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
       tokenType: null,
     })
     localStorage.removeItem(AUTH_STORAGE_KEY)
-    if (authState.interceptorID) {
-      ejectInterceptor(authState.interceptorID)
+    if (interceptorID) {
+      ejectInterceptor(interceptorID)
     }
   }
 
