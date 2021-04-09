@@ -73,7 +73,7 @@ export const Gist = () => {
           )}
           <div className={classes.buttonContainer}>
             <Button
-              variant="contained"
+              variant="outlined"
               color="primary"
               onClick={editGist ? actions.updateBackup : actions.createBackup}
             >
@@ -96,7 +96,7 @@ export const Gist = () => {
 
           <div className={classes.buttonContainer}>
             <Button
-              variant="contained"
+              variant="outlined"
               color="primary"
               onClick={actions.restoreBackup}
             >

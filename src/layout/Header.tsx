@@ -113,6 +113,7 @@ const getTitle = (
 const Header: React.FC<Props> = ({ route }) => {
   const classes = useStyles()
   const history = useHistory()
+
   const { state: backupState, actions: backupAction } = useContext(
     BackupContext
   )
@@ -296,7 +297,11 @@ const Header: React.FC<Props> = ({ route }) => {
   }
 
   return (
-    <AppBar className={classes.root} position="static">
+    <AppBar
+      color={settingsContext.state.isDark ? "default" : "primary"}
+      className={classes.root}
+      position="static"
+    >
       <Toolbar>
         {renderSidebarButton(route)}
 
@@ -315,6 +320,13 @@ const Header: React.FC<Props> = ({ route }) => {
         )}
 
         {renderEditButton(route)}
+        {/* <Button
+          onClick={() =>
+            settingsContext.actions.setIsDark(!settingsContext.state.isDark)
+          }
+        >
+          Dark Theme
+        </Button> */}
       </Toolbar>
     </AppBar>
   )

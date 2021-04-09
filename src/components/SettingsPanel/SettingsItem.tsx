@@ -17,6 +17,7 @@ const useStyles = makeStyles({
   itemContent: {
     display: "flex",
     flexDirection: "column",
+    width: "100%",
   },
 })
 

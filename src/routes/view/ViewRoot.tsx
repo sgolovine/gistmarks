@@ -74,6 +74,7 @@ export const ViewRootRoute = () => {
             placeholder="GistID"
             label="Collection Gist ID"
             variant="outlined"
+            color="primary"
             value={gistId}
             onChange={(e) => setGistId(e.target.value)}
           />

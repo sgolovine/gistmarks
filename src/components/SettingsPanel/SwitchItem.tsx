@@ -28,7 +28,7 @@ export const SwitchItem: React.FC<Props> = ({ label, value, onToggle }) => {
   return (
     <div className={classes.container}>
       <Typography className={classes.label}>{label}</Typography>
-      <Switch checked={value} onChange={onToggle} name={name} />
+      <Switch color="primary" checked={value} onChange={onToggle} name={name} />
     </div>
   )
 }

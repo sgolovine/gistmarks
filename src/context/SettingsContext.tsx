@@ -10,18 +10,21 @@ type SettingsState = {
   unsavedChanges: boolean
   // Dictates if we show a sorted list or not
   showSortedList: boolean
+  isDark: boolean
 }
 
 const initialState: SettingsState = {
   openInNewTab: true,
   unsavedChanges: false,
   showSortedList: true,
+  isDark: false,
 }
 
 type ActionTypes =
   | "SET_OPEN_NEW_TAB"
   | "SET_SHOW_SORTED_LIST"
   | "SET_UNSAVED_CHANGES"
+  | "SET_THEME"
 
 type SettingsContext = {
   state: SettingsState
@@ -29,6 +32,7 @@ type SettingsContext = {
     setOpenNewTab: (newValue: boolean) => void
     setUnsavedChanges: (newValue: boolean) => void
     setSortedList: (newValue: boolean) => void
+    setIsDark: (darkTheme: boolean) => void
   }
 }
 
@@ -51,6 +55,11 @@ function reducer(
       return {
         ...state,
         unsavedChanges: action.payload,
+      }
+    case "SET_THEME":
+      return {
+        ...state,
+        isDark: action.payload,
       }
     default:
       return state
@@ -79,6 +88,7 @@ export const SettingsContextProvider: React.FC<ContextProviderProps> = ({
         dispatch({ type: "SET_UNSAVED_CHANGES", payload }),
       setSortedList: (payload: boolean) =>
         dispatch({ type: "SET_SHOW_SORTED_LIST", payload }),
+      setIsDark: (payload: boolean) => dispatch({ type: "SET_THEME", payload }),
     },
   }
 
