@@ -28,7 +28,7 @@ module.exports = {
     contentBase: devFolderPath,
     historyApiFallback: true,
     hot: true,
-    port: 3001,
+    port: 3000,
   },
   optimization: {
     minimize: true,
