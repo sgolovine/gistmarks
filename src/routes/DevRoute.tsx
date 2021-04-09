@@ -10,6 +10,7 @@ type State = {
 
 type Action = {
   type: AT
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: any
 }
 
