@@ -6,7 +6,6 @@ Gistmarks.io is a bookmark manager that uses Github Gist to save and share bookm
 
 [![APP Deploy Status](https://api.netlify.com/api/v1/badges/203e38fd-2db3-4c6f-ba9f-131dc129a76c/deploy-status)](https://app.netlify.com/sites/gistmarks-io/deploys)
 
-
 [Go to Site](https://gistmarks.io)
 
 [Go to App](https://app.gistmarks.io)
@@ -23,7 +22,10 @@ Gistmarks.io is a bookmark manager that uses Github Gist to save and share bookm
 1. Clone the repository (`git clone git@github.com:sgolovine/gistmarks.git`)
 2. Copy `.env.example` to `.env` and replace the keys inside with your own.
 3. Run `yarn install` to install dependencies
-4. Run `yarn start` to start the development server
+4. If you want to run the app with the backend. Run `yarn dev`, if you just want to run the frontend. Run `yarn start`
+
+NOTE: If you run the app with `yarn start`, you must USE a personal access token
+as Oauth will only work with a the backend running
 
 ### Testing Production builds Locally
 
