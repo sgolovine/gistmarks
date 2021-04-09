@@ -35,10 +35,10 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 500,
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     textDecoration: "none",
-    color: "#333",
+    color: theme.palette.text.primary,
     "&:hover": {
       textDecoration: "underline",
-      color: theme.palette.primary.main,
+      color: theme.palette.text.secondary,
     },
   },
   hrefText: {
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1),
     },
-    color: theme.palette.primary.main,
+    color: theme.palette.text.secondary,
     overflow: "hidden",
     textOverflow: "ellipsis",
     display: "box",
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
       textDecoration: "underline",
     },
     "&:visited": {
-      color: theme.palette.primary.main,
+      color: theme.palette.text.secondary,
     },
   },
   descriptionText: {
@@ -151,7 +151,7 @@ export const BookmarkCard: React.FC<Props> = ({
         )}
         {category && (
           <Chip
-            color="primary"
+            color="default"
             className={classes.categoryChip}
             label={category}
           />
