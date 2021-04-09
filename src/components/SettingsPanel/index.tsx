@@ -11,6 +11,7 @@ import { Bookmarklet } from "../common/Bookmarklet"
 import { ViewSettings } from "./ViewSettings"
 import { Routes } from "~/model/Routes"
 import { Gist } from "./Gist"
+import { Advanced } from "./Advanced"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,6 +77,13 @@ export const SettingsPanel: React.FC<Props> = ({ route }) => {
         {isAppRoute && (
           <SettingsItem title="Github Gist">
             <Gist />
+          </SettingsItem>
+        )}
+
+        {isAppRoute && (
+          <SettingsItem title="Advanced Settings">
+            {/* <Gist /> */}
+            <Advanced />
           </SettingsItem>
         )}
 

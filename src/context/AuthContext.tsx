@@ -22,6 +22,7 @@ interface AuthContext {
   isLoggedIn: boolean
   logout: () => void
   login: () => void
+  loginWithPat: (token: string) => void
 }
 
 type AuthState = Pick<
@@ -38,6 +39,7 @@ export const AuthContext = createContext<AuthContext>({
   isLoggedIn: false,
   logout: () => null,
   login: () => null,
+  loginWithPat: () => null,
 })
 
 export const AuthContextProvider: React.FC<ContextProviderProps> = ({
@@ -58,7 +60,7 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   useEffect(() => {
     // Check for existing intercptors
     if (!interceptorID && authState.accessToken) {
-      const interceptorID = injectInterceptor(false, authState.accessToken)
+      const interceptorID = injectInterceptor(authState.accessToken)
       setInterceptorID(interceptorID)
     }
   }, [authState.accessToken, interceptorID])
@@ -87,7 +89,7 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
         })
         .then((resp) => {
           const { accessToken, tokenType, scope } = resp.data
-          const interceptorID = injectInterceptor(false, accessToken)
+          const interceptorID = injectInterceptor(accessToken)
           setInterceptorID(interceptorID)
           setAuthState({
             ...authState,
@@ -125,15 +127,24 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
     navigate(authUrl)
   }
 
+  const loginWithPat = (token: string) => {
+    setAuthState({
+      authCode: null,
+      accessToken: token,
+      scope: null,
+      tokenType: null,
+    })
+  }
+
   const providerValue: AuthContext = {
     authCode: authState.authCode,
     accessToken: authState.accessToken,
     scope: authState.scope,
     tokenType: authState.tokenType,
-    isLoggedIn:
-      !!authState.accessToken && !!authState.scope && !!authState.tokenType,
+    isLoggedIn: !!authState.accessToken,
     logout,
     login,
+    loginWithPat,
   }
 
   return (
