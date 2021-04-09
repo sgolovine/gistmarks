@@ -204,15 +204,8 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
     }
   }
 
-  // TODO: This should be converted to an "authenticated"
-  // function. Whenever the user restores a backup
-  // they should be prompted to login and can only
-  // restore a backup that they "own"
-
-  // Also add a field to the UI that lets the user view another
-  // backup. This will simply redirect to /v/:gistID
   const restoreBackup = async () => {
-    if (state.gistId) {
+    if (state.gistId && authContext.accessToken) {
       setLoading(true)
       const instance = createInstance()
 
@@ -224,7 +217,17 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
         if (resp.data.description) {
           dispatch({ type: "SET_NAME", payload: resp.data.description })
         }
+
+        if (resp.data.html_url) {
+          dispatch({ type: "SET_URL", payload: resp.data.html_url })
+        }
+
         const firstFilename = Object.keys(allFiles)[0]
+
+        if (firstFilename) {
+          dispatch({ type: "SET_FILENAME", payload: firstFilename })
+        }
+        dispatch({ type: "SET_BACKUP_CREATED", payload: true })
         const bookmarkContent = allFiles[firstFilename].content
         bookmarkContext.restoreBookmarks(bookmarkContent)
       } else {

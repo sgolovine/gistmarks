@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     // width: "100%",
-    paddingBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(4),
   },
   buttonContainer: {
     paddingTop: theme.spacing(2),

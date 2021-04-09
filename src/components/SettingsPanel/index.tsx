@@ -5,14 +5,12 @@ import makeStyles from "@material-ui/core/styles/makeStyles"
 import { BackupResults } from "./BackupResults"
 import { SettingsItem } from "./SettingsItem"
 import { LocalBackup, LocalRestore } from "./Local"
-import { GistBackup } from "./GistBackup"
-import { GistRestore } from "./GistRestore"
-import { AuthContext, BackupContext } from "~/context"
-import { Button, Typography } from "@material-ui/core"
+import { BackupContext } from "~/context"
+import { Typography } from "@material-ui/core"
 import { Bookmarklet } from "../common/Bookmarklet"
 import { ViewSettings } from "./ViewSettings"
 import { Routes } from "~/model/Routes"
-import GitHubIcon from "@material-ui/icons/GitHub"
+import { Gist } from "./Gist"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,7 +37,6 @@ interface Props {
 export const SettingsPanel: React.FC<Props> = ({ route }) => {
   const layoutContext = useContext(LayoutContext)
   const { state, actions } = useContext(BackupContext)
-  const { isLoggedIn, login, logout } = useContext(AuthContext)
 
   const classes = useStyles()
 
@@ -78,8 +75,7 @@ export const SettingsPanel: React.FC<Props> = ({ route }) => {
         {/* Gist Backup */}
         {isAppRoute && (
           <SettingsItem title="Github Gist">
-            <GistBackup />
-            <GistRestore />
+            <Gist />
           </SettingsItem>
         )}
 
@@ -90,17 +86,6 @@ export const SettingsPanel: React.FC<Props> = ({ route }) => {
             <Bookmarklet />
           </div>
         )}
-        <div className={classes.logoutButtonContainer}>
-          {isLoggedIn ? (
-            <Button startIcon={<GitHubIcon />} onClick={logout}>
-              LOGOUT
-            </Button>
-          ) : (
-            <Button startIcon={<GitHubIcon />} onClick={login}>
-              LOGIN WITH GITHUB
-            </Button>
-          )}
-        </div>
       </div>
     </Panel>
   )
