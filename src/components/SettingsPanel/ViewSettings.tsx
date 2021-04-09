@@ -15,6 +15,15 @@ export const ViewSettings = () => {
           )
         }
       />
+      <SwitchItem
+        label="Open Links in New Tab"
+        value={settingsContext.state.openInNewTab}
+        onToggle={() =>
+          settingsContext.actions.setOpenNewTab(
+            !settingsContext.state.openInNewTab
+          )
+        }
+      />
     </>
   )
 }
