@@ -113,6 +113,12 @@ export const List: React.FC<Props> = ({
     }
   }, [data])
 
+  useEffect(() => console.log("list > data changed", data), [data])
+  useEffect(
+    () => console.log("list > total bookmarks changed", totalBookmarkCount),
+    [totalBookmarkCount]
+  )
+
   const handleEdit = (guid: string) => !!onEdit && onEdit(guid)
 
   const handleDelete = (guid: string) => !!onDelete && onDelete(guid)

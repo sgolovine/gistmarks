@@ -36,6 +36,9 @@ export const BookmarkList: React.FC<Props> = ({ view }) => {
   }
 
   const bookmarks = view ? viewContext.bookmarks : bookmarkContext.bookmarks
+  const totalBookmarkCount = view
+    ? Object.keys(viewContext.bookmarks).length
+    : Object.keys(bookmarkContext.allBookmarks).length
 
   return (
     <List
@@ -43,7 +46,7 @@ export const BookmarkList: React.FC<Props> = ({ view }) => {
       onEdit={handleEditBookmark}
       onDelete={handleDeleteBookmark}
       view={view}
-      totalBookmarkCount={Object.keys(bookmarkContext.allBookmarks).length}
+      totalBookmarkCount={totalBookmarkCount}
     />
   )
 }

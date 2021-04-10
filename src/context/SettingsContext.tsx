@@ -1,8 +1,7 @@
-import React, { createContext, useEffect } from "react"
+import React, { createContext } from "react"
 import { SETTINGS_STORAGE_KEY } from "~/defines"
 import { usePersistedReducer } from "~/hooks/usePersistedReducer"
 import { AppAction, ContextProviderProps } from "~/model/Context"
-import { getHealth } from "~/requests/health"
 
 type SettingsState = {
   // Dictates if we should open a link in a new tab
@@ -89,20 +88,6 @@ export const SettingsContextProvider: React.FC<ContextProviderProps> = ({
     initialState,
     SETTINGS_STORAGE_KEY
   )
-
-  // Health check. Mostly for development purposes. Prevents calls being made
-  // to backend when it's down.
-  useEffect(() => {
-    getHealth()
-      .then((resp) => {
-        if (resp.status === 200) {
-          dispatch({ type: "SET_BACKEND_CONNECTED", payload: true })
-        } else {
-          dispatch({ type: "SET_BACKEND_CONNECTED", payload: false })
-        }
-      })
-      .catch(() => dispatch({ type: "SET_BACKEND_CONNECTED", payload: false }))
-  }, [])
 
   const value: SettingsContext = {
     state,

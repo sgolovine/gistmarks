@@ -16,6 +16,7 @@ import { ContextProviderProps } from "~/model/Context"
 import { getGist } from "~/requests/getGist"
 
 interface ViewContext {
+  allBookmarks: BookmarkCollection
   collectionName: string | null
   gistId: string | null
   bookmarks: BookmarkCollection
@@ -42,6 +43,7 @@ interface ViewContext {
 }
 
 const initialContextState: ViewContext = {
+  allBookmarks: {},
   collectionName: null,
   gistId: null,
   bookmarks: {},
@@ -104,6 +106,10 @@ export const ViewContextProvider: React.FC<ContextProviderProps> = ({
     errorTitle: initialContextState.errorTitle,
     errorMessage: initialContextState.errorMessage,
   })
+
+  useEffect(() => {
+    console.log("bookmarks updated", bookmarks)
+  }, [bookmarks])
 
   useEffect(() => {
     if (gistId) {
@@ -193,6 +199,7 @@ export const ViewContextProvider: React.FC<ContextProviderProps> = ({
   }
 
   const value: ViewContext = {
+    allBookmarks: bookmarks,
     collectionName,
     gistId,
     bookmarks: filteredBookmarks,
