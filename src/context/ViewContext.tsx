@@ -108,10 +108,6 @@ export const ViewContextProvider: React.FC<ContextProviderProps> = ({
   })
 
   useEffect(() => {
-    console.log("bookmarks updated", bookmarks)
-  }, [bookmarks])
-
-  useEffect(() => {
     if (gistId) {
       fetchGist(gistId)
     }
