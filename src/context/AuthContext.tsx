@@ -11,7 +11,7 @@ import {
   removeCodeInUrl,
   dev,
 } from "~/helpers"
-import { ejectInterceptor, injectInterceptor } from "~/requests/setup"
+import { ejectInterceptor, injectAuthInterceptor } from "~/requests/setup"
 
 interface AuthContext {
   interceptorID?: number
@@ -60,7 +60,7 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   useEffect(() => {
     // Check for existing intercptors
     if (!interceptorID && authState.accessToken) {
-      const interceptorID = injectInterceptor(authState.accessToken)
+      const interceptorID = injectAuthInterceptor(authState.accessToken)
       setInterceptorID(interceptorID)
     }
   }, [authState.accessToken, interceptorID])
@@ -89,7 +89,7 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
         })
         .then((resp) => {
           const { accessToken, tokenType, scope } = resp.data
-          const interceptorID = injectInterceptor(accessToken)
+          const interceptorID = injectAuthInterceptor(accessToken)
           setInterceptorID(interceptorID)
           setAuthState({
             ...authState,

@@ -162,7 +162,6 @@ export const ViewContextProvider: React.FC<ContextProviderProps> = ({
       setGistLoading(true)
       const resp = await getGist(gistId)
       if (resp && validateStatus(resp.status)) {
-        setGistLoading(false)
         const allFiles = resp.data.files
         if (resp.data.description) {
           setCollectionName(resp.data.description)
@@ -173,8 +172,10 @@ export const ViewContextProvider: React.FC<ContextProviderProps> = ({
         try {
           const parsedBookmarks = JSON.parse(bookmarkContent)
           setBookmarks(parsedBookmarks)
+          setGistLoading(false)
           // setCollectionName(gistContent.description)
         } catch (e) {
+          setGistLoading(false)
           setError({
             show: true,
             title: "Unable to fetch Gist",

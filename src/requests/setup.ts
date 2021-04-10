@@ -6,7 +6,21 @@ import { GH_BASE_URL } from "~/defines"
 // or equal to 200 and less than 500
 const statusRange: [number, number] = [200, 500]
 
-export function injectInterceptor(token: string) {
+const validateStatus = (status: number) =>
+  status >= statusRange[0] && status <= statusRange[1]
+
+export function injectBaseInterceptor() {
+  const interceptor = axios.interceptors.request.use((config) => {
+    return {
+      ...config,
+      baseURL: GH_BASE_URL,
+      validateStatus,
+    }
+  })
+  return interceptor
+}
+
+export function injectAuthInterceptor(token: string) {
   const interceptor = axios.interceptors.request.use((config) => {
     return {
       ...config,
@@ -14,8 +28,7 @@ export function injectInterceptor(token: string) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      validateStatus: (status: number) =>
-        status >= statusRange[0] && status <= statusRange[1],
+      validateStatus,
     }
   })
 

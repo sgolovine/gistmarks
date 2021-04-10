@@ -14,7 +14,8 @@ const prodFolderPath = path.resolve(__dirname, "dist")
 
 module.exports = {
   mode: dev ? "development" : "production",
-  devtool: dev ? "eval-source-map" : false,
+  devtool: "eval-source-map",
+  // devtool: dev ? "eval-source-map" : false,
   entry: path.resolve(__dirname, "src", "entry", "index.tsx"),
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx", ".html", ".css"],
@@ -81,7 +82,9 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "src", "entry", "index.html"),
+      template: path.resolve(__dirname, "public", "index.html"),
+      favicon: path.resolve(__dirname, "public", "favicon.ico"),
+      scriptLoading: "defer",
     }),
     new Dotenv({
       path: path.resolve(__dirname, ".env"),

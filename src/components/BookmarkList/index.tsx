@@ -5,6 +5,7 @@ import {
   LayoutContext,
   ViewContext,
 } from "~/context"
+import { LoadingIndicator } from "../common/LoadingIndicator"
 import { List } from "./List"
 
 interface Props {
@@ -40,7 +41,14 @@ export const BookmarkList: React.FC<Props> = ({ view }) => {
     ? Object.keys(viewContext.bookmarks).length
     : Object.keys(bookmarkContext.allBookmarks).length
 
-  return (
+  // Loading only happens when you view a gist.
+  // only display loading if we are on the view page
+  // AND we are loading bookmarks
+  const isLoading = view && viewContext.gistLoading
+
+  return isLoading ? (
+    <LoadingIndicator />
+  ) : (
     <List
       bookmarks={bookmarks}
       onEdit={handleEditBookmark}
