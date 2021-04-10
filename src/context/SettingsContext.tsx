@@ -11,9 +11,6 @@ type SettingsState = {
   // Dictates if we show a sorted list or not
   showSortedList: boolean
   isDark: boolean
-
-  // Check if backend is connected
-  isBackendConnected: boolean
 }
 
 const initialState: SettingsState = {
@@ -21,7 +18,6 @@ const initialState: SettingsState = {
   unsavedChanges: false,
   showSortedList: true,
   isDark: false,
-  isBackendConnected: false,
 }
 
 type ActionTypes =
@@ -29,7 +25,6 @@ type ActionTypes =
   | "SET_SHOW_SORTED_LIST"
   | "SET_UNSAVED_CHANGES"
   | "SET_THEME"
-  | "SET_BACKEND_CONNECTED"
 
 type SettingsContext = {
   state: SettingsState
@@ -65,11 +60,6 @@ function reducer(
       return {
         ...state,
         isDark: action.payload,
-      }
-    case "SET_BACKEND_CONNECTED":
-      return {
-        ...state,
-        isBackendConnected: action.payload,
       }
     default:
       return state

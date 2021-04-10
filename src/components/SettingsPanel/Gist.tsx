@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@material-ui/core"
 import React, { useContext, useState } from "react"
-import { BackupContext, AuthContext, SettingsContext } from "~/context"
+import { BackupContext, AuthContext } from "~/context"
 import GitHubIcon from "@material-ui/icons/GitHub"
 
 const useStyles = makeStyles((theme) => ({
@@ -30,13 +30,9 @@ const useStyles = makeStyles((theme) => ({
 
 export const Gist = () => {
   const classes = useStyles()
-  const settingsContext = useContext(SettingsContext)
   const { state, actions } = useContext(BackupContext)
   const { logout, login, isLoggedIn } = useContext(AuthContext)
   const [editGist, setEditGist] = useState<boolean>(false)
-
-  const { loginWithPat, accessToken } = useContext(AuthContext)
-  const [pat, setPat] = useState<string>(accessToken || "")
 
   const renderAuthenticatedView = () => {
     return (
@@ -121,39 +117,11 @@ export const Gist = () => {
   }
 
   const renderUnAuthenticatedView = () => {
-    return settingsContext.state.isBackendConnected ? (
+    return (
       <div className={classes.itemContent}>
         <Button startIcon={<GitHubIcon />} onClick={login}>
           LOGIN WITH GITHUB
         </Button>
-      </div>
-    ) : (
-      <div className={classes.itemContent}>
-        <TextField
-          required
-          className={classes.itemInput}
-          variant="outlined"
-          label="Personal Access Token"
-          value={pat}
-          onChange={(e) => setPat(e.target.value)}
-        />
-        <div className={classes.buttonContainer}>
-          <Button
-            color="primary"
-            variant="outlined"
-            onClick={() => loginWithPat(pat)}
-          >
-            Authenticate
-          </Button>
-          <Button
-            className={classes.button}
-            color="secondary"
-            variant="outlined"
-            onClick={() => loginWithPat(pat)}
-          >
-            Clear Token
-          </Button>
-        </div>
       </div>
     )
   }
