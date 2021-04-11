@@ -1,15 +1,23 @@
-import axios from "axios"
 import { BookmarkCollection } from "~/model/Bookmark"
+import { createInstance } from "./setup"
 
 interface Args {
+  token: string
   gistId: string
   filename: string
   description: string
   bookmarks: BookmarkCollection
 }
 
-export function updateGist({ gistId, filename, description, bookmarks }: Args) {
-  return axios.patch(`/gists/${gistId}`, {
+export function updateGist({
+  token,
+  gistId,
+  filename,
+  description,
+  bookmarks,
+}: Args) {
+  const instance = createInstance(token)
+  return instance.patch(`/gists/${gistId}`, {
     public: false,
     description,
     files: {

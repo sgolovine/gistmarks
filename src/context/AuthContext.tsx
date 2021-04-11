@@ -11,7 +11,7 @@ import {
   removeCodeInUrl,
   dev,
 } from "~/helpers"
-import { ejectInterceptor, injectAuthInterceptor } from "~/requests/setup"
+// import { ejectInterceptor, injectAuthInterceptor } from "~/requests/setup"
 
 interface AuthContext {
   interceptorID?: number
@@ -45,7 +45,7 @@ export const AuthContext = createContext<AuthContext>({
 export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  const [interceptorID, setInterceptorID] = useState<number | null>(null)
+  // const [interceptorID, setInterceptorID] = useState<number | null>(null)
 
   const [authState, setAuthState] = useLocalStorage<AuthState>(
     AUTH_STORAGE_KEY,
@@ -57,13 +57,13 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
     }
   )
 
-  useEffect(() => {
-    // Check for existing intercptors
-    if (!interceptorID && authState.accessToken) {
-      const interceptorID = injectAuthInterceptor(authState.accessToken)
-      setInterceptorID(interceptorID)
-    }
-  }, [authState.accessToken, interceptorID])
+  // useEffect(() => {
+  //   // Check for existing intercptors
+  //   if (!interceptorID && authState.accessToken) {
+  //     const interceptorID = injectAuthInterceptor(authState.accessToken)
+  //     setInterceptorID(interceptorID)
+  //   }
+  // }, [authState.accessToken, interceptorID])
 
   // Once we are redirected back from github, look at the URL
   // and grab the code
@@ -89,8 +89,8 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
         })
         .then((resp) => {
           const { accessToken, tokenType, scope } = resp.data
-          const interceptorID = injectAuthInterceptor(accessToken)
-          setInterceptorID(interceptorID)
+          // const interceptorID = injectAuthInterceptor(accessToken)
+          // setInterceptorID(interceptorID)
           setAuthState({
             ...authState,
             // Set the auth code to null
@@ -117,9 +117,9 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
       tokenType: null,
     })
     localStorage.removeItem(AUTH_STORAGE_KEY)
-    if (interceptorID) {
-      ejectInterceptor(interceptorID)
-    }
+    // if (interceptorID) {
+    //   ejectInterceptor(interceptorID)
+    // }
   }
 
   const login = () => {

@@ -9,6 +9,23 @@ const statusRange: [number, number] = [200, 500]
 const validateStatus = (status: number) =>
   status >= statusRange[0] && status <= statusRange[1]
 
+export function createInstance(token?: string) {
+  if (token) {
+    return axios.create({
+      baseURL: GH_BASE_URL,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      validateStatus,
+    })
+  } else {
+    return axios.create({
+      baseURL: GH_BASE_URL,
+      validateStatus,
+    })
+  }
+}
+
 export function injectBaseInterceptor() {
   const interceptor = axios.interceptors.request.use((config) => {
     return {

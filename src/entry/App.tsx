@@ -1,6 +1,6 @@
 import CssBaseline from "@material-ui/core/CssBaseline/CssBaseline"
 import { ThemeProvider } from "@material-ui/core/styles"
-import React, { ReactNode, useContext, useEffect } from "react"
+import React, { ReactNode, useContext } from "react"
 import {
   AuthContextProvider,
   BackupContextProvider,
@@ -12,7 +12,6 @@ import {
   SettingsContext,
 } from "~/context"
 import { darkTheme, lightTheme } from "~/defines/theme"
-import { ejectInterceptor, injectBaseInterceptor } from "~/requests/setup"
 import { AppRouter } from "~/routes/router"
 
 interface WrapperProps {
@@ -46,14 +45,6 @@ const ThemeWrapper: React.FC<WrapperProps> = ({ children }) => {
 }
 
 export default function App() {
-  useEffect(() => {
-    const interceptor = injectBaseInterceptor()
-
-    return function cleanup() {
-      ejectInterceptor(interceptor)
-    }
-  }, [])
-
   return (
     <ContextWrapper>
       <ThemeWrapper>

@@ -147,6 +147,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       const filename = state.gistFilename ?? "bookmarks.json"
       const name = state.gistName ?? "Gistmarks"
       const resp = await createGist({
+        token: authContext.accessToken,
         filename,
         name,
         bookmarks: bookmarkContext.bookmarks,
@@ -176,6 +177,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       const filename = state.gistFilename ?? "bookmarks.json"
       const name = state.gistName ?? "Gistmarks"
       const resp = await updateGist({
+        token: authContext.accessToken,
         gistId: state.gistId,
         filename,
         description: name,
@@ -203,7 +205,10 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
     if (state.gistId && authContext.accessToken) {
       setLoading(true)
 
-      const resp = await getGist(state.gistId)
+      const resp = await getGist({
+        token: authContext.accessToken,
+        gistId: state.gistId,
+      })
       if (resp && validateStatus(resp.status)) {
         setLoading(false)
         const allFiles = resp.data.files
