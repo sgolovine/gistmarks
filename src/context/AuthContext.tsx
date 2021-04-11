@@ -1,4 +1,4 @@
-import React, { useEffect, createContext, useState } from "react"
+import React, { useEffect, createContext } from "react"
 import { ContextProviderProps } from "~/model/Context"
 import axios from "axios"
 import { AUTH_STORAGE_KEY } from "~/defines/localStorage"
