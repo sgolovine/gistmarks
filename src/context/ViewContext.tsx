@@ -160,7 +160,9 @@ export const ViewContextProvider: React.FC<ContextProviderProps> = ({
   const fetchGist = async (gistId: string) => {
     if (gistId) {
       setGistLoading(true)
-      const resp = await getGist(gistId)
+      const resp = await getGist({
+        gistId,
+      })
       if (resp && validateStatus(resp.status)) {
         const allFiles = resp.data.files
         if (resp.data.description) {
