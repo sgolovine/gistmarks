@@ -329,7 +329,7 @@ const Header: React.FC<Props> = ({ route }) => {
     <AppBar
       color={settingsContext.state.isDark ? "default" : "primary"}
       className={classes.root}
-      position="static"
+      position="sticky"
     >
       <Toolbar>
         {renderSidebarButton(route)}
