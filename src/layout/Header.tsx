@@ -283,15 +283,19 @@ const Header: React.FC<Props> = ({ route }) => {
   const renderCTA = (route: Routes) => {
     switch (route) {
       case "view": {
-        return (
-          <Button
-            className={classes.ctaButton}
-            color="inherit"
-            onClick={handleCreateCollection}
-          >
-            CREATE YOUR OWN COLLECTION
-          </Button>
-        )
+        if (!showEditCollectionButton) {
+          return (
+            <Button
+              className={classes.ctaButton}
+              color="inherit"
+              onClick={handleCreateCollection}
+            >
+              CREATE YOUR OWN COLLECTION
+            </Button>
+          )
+        } else {
+          return null
+        }
       }
       default: {
         return null
