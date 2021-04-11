@@ -4,6 +4,7 @@ import { SettingsPanel } from "~/components/SettingsPanel"
 import { BookmarkList } from "~/components/BookmarkList"
 import Header from "~/layout/Header"
 import Sidebar from "~/layout/Sidebar"
+import { OnboardingModal } from "~/components/common/OnboardingModal"
 
 export const AppRoute = () => {
   return (
@@ -23,6 +24,9 @@ export const AppRoute = () => {
 
       {/* Bookmark List */}
       <BookmarkList view={false} />
+
+      {/* Onboarding Modal */}
+      <OnboardingModal />
     </>
   )
 }

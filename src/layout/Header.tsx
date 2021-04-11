@@ -75,6 +75,12 @@ const useStyles = makeStyles((theme) => ({
       width: "20ch",
     },
   },
+  ctaButton: {
+    display: "none",
+    [theme.breakpoints.up("md")]: {
+      display: "block",
+    },
+  },
 }))
 
 interface Props {
@@ -140,6 +146,10 @@ const Header: React.FC<Props> = ({ route }) => {
     viewContext?.collectionName,
     backupState.gistName
   )
+
+  const handleCreateCollection = () => {
+    history.push("/")
+  }
 
   const handleInputChange = (newValue: string) => {
     if (route === "view") {
@@ -270,6 +280,25 @@ const Header: React.FC<Props> = ({ route }) => {
     }
   }
 
+  const renderCTA = (route: Routes) => {
+    switch (route) {
+      case "view": {
+        return (
+          <Button
+            className={classes.ctaButton}
+            color="inherit"
+            onClick={handleCreateCollection}
+          >
+            CREATE YOUR OWN COLLECTION
+          </Button>
+        )
+      }
+      default: {
+        return null
+      }
+    }
+  }
+
   const renderSaveButton = (
     route: Routes,
     hasUnsavedChanges?: boolean,
@@ -320,6 +349,7 @@ const Header: React.FC<Props> = ({ route }) => {
         )}
 
         {renderEditButton(route)}
+        {renderCTA(route)}
         {/* <Button
           onClick={() =>
             settingsContext.actions.setIsDark(!settingsContext.state.isDark)

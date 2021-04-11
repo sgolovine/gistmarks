@@ -10,7 +10,10 @@ type SettingsState = {
   unsavedChanges: boolean
   // Dictates if we show a sorted list or not
   showSortedList: boolean
+  // Show the dark theme
   isDark: boolean
+  // First run - used for showing intro modal
+  firstRun: boolean
 }
 
 const initialState: SettingsState = {
@@ -18,6 +21,7 @@ const initialState: SettingsState = {
   unsavedChanges: false,
   showSortedList: true,
   isDark: false,
+  firstRun: true,
 }
 
 type ActionTypes =
@@ -25,6 +29,7 @@ type ActionTypes =
   | "SET_SHOW_SORTED_LIST"
   | "SET_UNSAVED_CHANGES"
   | "SET_THEME"
+  | "SET_FIRST_RUN"
 
 type SettingsContext = {
   state: SettingsState
@@ -33,6 +38,7 @@ type SettingsContext = {
     setUnsavedChanges: (newValue: boolean) => void
     setSortedList: (newValue: boolean) => void
     setIsDark: (darkTheme: boolean) => void
+    setFirstRun: () => void
   }
 }
 
@@ -60,6 +66,11 @@ function reducer(
       return {
         ...state,
         isDark: action.payload,
+      }
+    case "SET_FIRST_RUN":
+      return {
+        ...state,
+        firstRun: false,
       }
     default:
       return state
@@ -89,6 +100,7 @@ export const SettingsContextProvider: React.FC<ContextProviderProps> = ({
       setSortedList: (payload: boolean) =>
         dispatch({ type: "SET_SHOW_SORTED_LIST", payload }),
       setIsDark: (payload: boolean) => dispatch({ type: "SET_THEME", payload }),
+      setFirstRun: () => dispatch({ type: "SET_FIRST_RUN" }),
     },
   }
 
