@@ -21,6 +21,7 @@ import {
 import SaveIcon from "@material-ui/icons/Save"
 import { Routes } from "~/model/Routes"
 import { useHistory } from "react-router"
+import { useMatomo } from "@datapunt/matomo-tracker-react"
 
 const useStyles = makeStyles((theme) => ({
   iconButton: {},
@@ -119,6 +120,7 @@ const getTitle = (
 const Header: React.FC<Props> = ({ route }) => {
   const classes = useStyles()
   const history = useHistory()
+  const { trackEvent } = useMatomo()
 
   const { state: backupState, actions: backupAction } = useContext(
     BackupContext
@@ -148,7 +150,51 @@ const Header: React.FC<Props> = ({ route }) => {
   )
 
   const handleCreateCollection = () => {
+    trackEvent({
+      category: "Header",
+      action: "Create Collection Pressed",
+    })
     history.push("/")
+  }
+
+  const handleEditButton = () => {
+    trackEvent({
+      category: "Header",
+      action: "Edit Collection Pressed",
+    })
+    history.push("/")
+  }
+
+  const handleOpenSidebar = () => {
+    trackEvent({
+      category: "Header",
+      action: "Toggle Sidebar",
+    })
+    layoutContext.openSidebar()
+  }
+
+  const handleSettingsItemPress = () => {
+    trackEvent({
+      category: "Header",
+      action: "Toggle Settings",
+    })
+    layoutContext.openSettingsPanel()
+  }
+
+  const handleCreateBookmark = () => {
+    trackEvent({
+      category: "Header",
+      action: "Toggle Create",
+    })
+    layoutContext.openCreatePanel()
+  }
+
+  const handleSaveCollection = () => {
+    trackEvent({
+      category: "Header",
+      action: "Saved Changes to Collection",
+    })
+    backupAction.updateBackup()
   }
 
   const handleInputChange = (newValue: string) => {
@@ -163,7 +209,7 @@ const Header: React.FC<Props> = ({ route }) => {
     switch (route) {
       case "view":
         return showEditCollectionButton ? (
-          <Button color="inherit" onClick={() => history.push("/")}>
+          <Button color="inherit" onClick={handleEditButton}>
             Edit Collection
           </Button>
         ) : null
@@ -186,7 +232,7 @@ const Header: React.FC<Props> = ({ route }) => {
             edge="start"
             color="inherit"
             aria-label="menu"
-            onClick={layoutContext.openSidebar}
+            onClick={handleOpenSidebar}
           >
             <MenuIcon />
           </IconButton>
@@ -249,7 +295,7 @@ const Header: React.FC<Props> = ({ route }) => {
       case "view":
       case "app": {
         return (
-          <IconButton color="inherit" onClick={layoutContext.openSettingsPanel}>
+          <IconButton color="inherit" onClick={handleSettingsItemPress}>
             <SettingsIcon />
           </IconButton>
         )
@@ -266,7 +312,7 @@ const Header: React.FC<Props> = ({ route }) => {
     switch (route) {
       case "app": {
         return (
-          <IconButton color="inherit" onClick={layoutContext.openCreatePanel}>
+          <IconButton color="inherit" onClick={handleCreateBookmark}>
             <CreateIcon />
           </IconButton>
         )
@@ -312,7 +358,7 @@ const Header: React.FC<Props> = ({ route }) => {
       case "app": {
         if (hasUnsavedChanges && backupCreated) {
           return (
-            <IconButton color="inherit" onClick={backupAction.updateBackup}>
+            <IconButton color="inherit" onClick={handleSaveCollection}>
               <SaveIcon />
             </IconButton>
           )

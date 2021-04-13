@@ -1,12 +1,22 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { CreatePanel, EditPanel } from "~/components/BookmarkPanel"
 import { SettingsPanel } from "~/components/SettingsPanel"
 import { BookmarkList } from "~/components/BookmarkList"
 import Header from "~/layout/Header"
 import Sidebar from "~/layout/Sidebar"
 import { OnboardingModal } from "~/components/common/OnboardingModal"
+import { useMatomo } from "@datapunt/matomo-tracker-react"
 
 export const AppRoute = () => {
+  const { trackPageView } = useMatomo()
+
+  useEffect(() => {
+    trackPageView({
+      documentTitle: "App Page",
+      href: "https://app.gistmarks.io/",
+    })
+  }, [])
+
   return (
     <>
       {/* App Header */}
