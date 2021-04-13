@@ -6,9 +6,10 @@ import {
   makeStyles,
   Button,
 } from "@material-ui/core"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
 import Header from "~/layout/Header"
+import { useMatomo } from "@datapunt/matomo-tracker-react"
 
 const useStyles = makeStyles((theme) => ({
   cardRoot: {
@@ -49,9 +50,17 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const ViewRootRoute = () => {
+  const { trackPageView } = useMatomo()
   const classes = useStyles()
   const [gistId, setGistId] = useState("")
   const history = useHistory()
+
+  useEffect(() => {
+    trackPageView({
+      documentTitle: "View Page - View Root",
+      href: "https://app.gistmarks.io/view",
+    })
+  }, [])
 
   const handleViewCollection = () => {
     if (gistId) {
