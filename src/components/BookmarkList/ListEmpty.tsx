@@ -1,9 +1,9 @@
-import { Typography } from "@material-ui/core"
 import Card from "@material-ui/core/Card"
 import React from "react"
 import CreateIcon from "@material-ui/icons/Create"
 import { Bookmarklet } from "../common/Bookmarklet"
-import { makeStyles } from "@material-ui/core"
+import Typography from "@material-ui/core/Typography"
+import makeStyles from "@material-ui/core/styles/makeStyles"
 
 const useStyles = makeStyles((theme) => ({
   cardRoot: {

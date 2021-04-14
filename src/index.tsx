@@ -1,6 +1,7 @@
+import React, { ReactNode, useContext } from "react"
+import ReactDOM from "react-dom"
 import CssBaseline from "@material-ui/core/CssBaseline/CssBaseline"
 import { ThemeProvider } from "@material-ui/core/styles"
-import React, { ReactNode, useContext } from "react"
 import {
   AuthContextProvider,
   BackupContextProvider,
@@ -45,7 +46,7 @@ const ThemeWrapper: React.FC<WrapperProps> = ({ children }) => {
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>
 }
 
-export default function App() {
+function App() {
   return (
     <AnalyticsProvider>
       <ContextWrapper>
@@ -60,3 +61,5 @@ export default function App() {
     </AnalyticsProvider>
   )
 }
+
+ReactDOM.render(<App />, document.getElementById("root"))

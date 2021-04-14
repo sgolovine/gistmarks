@@ -14,9 +14,9 @@ const prodFolderPath = path.resolve(__dirname, "dist")
 
 module.exports = {
   mode: dev ? "development" : "production",
-  devtool: "eval-source-map",
+  devtool: dev ? "eval-source-map" : false,
   // devtool: dev ? "eval-source-map" : false,
-  entry: path.resolve(__dirname, "src", "entry", "index.tsx"),
+  entry: path.resolve(__dirname, "src", "index.tsx"),
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx", ".html", ".css"],
   },
@@ -77,6 +77,13 @@ module.exports = {
       {
         test: /\.(woff|woff2|eot|ttf|otf|png|jpg|gif)$/,
         use: ["file-loader"],
+      },
+      {
+        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+        loader: "url-loader",
+        options: {
+          limit: 100000,
+        },
       },
     ],
   },

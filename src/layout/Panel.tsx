@@ -6,7 +6,7 @@ import IconButton from "@material-ui/core/IconButton"
 import Typography from "@material-ui/core/Typography"
 import Divider from "@material-ui/core/Divider"
 
-import { ChevronRight } from "@material-ui/icons"
+import ChevronRight from "@material-ui/icons/ChevronRight"
 import CircularProgress from "@material-ui/core/CircularProgress"
 
 export const panelWidth = 500
