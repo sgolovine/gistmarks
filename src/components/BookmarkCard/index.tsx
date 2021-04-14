@@ -1,16 +1,16 @@
-import {
-  Card,
-  CardActions,
-  CardContent,
-  Chip,
-  IconButton,
-  makeStyles,
-  Typography,
-} from "@material-ui/core"
 import React, { useContext } from "react"
-import { Bookmark } from "~/model/Bookmark"
+
+import Card from "@material-ui/core/Card"
+import CardActions from "@material-ui/core/CardActions"
+import CardContent from "@material-ui/core/CardContent"
+import Chip from "@material-ui/core/Chip"
+import IconButton from "@material-ui/core/IconButton"
+import makeStyles from "@material-ui/core/styles/makeStyles"
+import Typography from "@material-ui/core/Typography"
 import EditIcon from "@material-ui/icons/Edit"
 import TrashIcon from "@material-ui/icons/Delete"
+
+import { Bookmark } from "~/model/Bookmark"
 import { SettingsContext } from "~/context"
 
 const useStyles = makeStyles((theme) => ({

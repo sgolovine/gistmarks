@@ -1,6 +1,10 @@
-import { Button, makeStyles, Modal, Typography } from "@material-ui/core"
-
 import React, { useContext, useEffect, useState } from "react"
+
+import Button from "@material-ui/core/Button"
+import makeStyles from "@material-ui/core/styles/makeStyles"
+import Modal from "@material-ui/core/Modal"
+import Typography from "@material-ui/core/Typography"
+
 import { SettingsContext } from "~/context"
 import {
   COOKING_COLLECTION,

@@ -1,14 +1,14 @@
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  makeStyles,
-  TextField,
-  Typography,
-} from "@material-ui/core"
 import React, { useContext, useState } from "react"
-import { BackupContext, AuthContext } from "~/context"
+
+import Button from "@material-ui/core/Button"
+import Checkbox from "@material-ui/core/Checkbox"
+import FormControlLabel from "@material-ui/core/FormControlLabel"
+import makeStyles from "@material-ui/core/styles/makeStyles"
+import TextField from "@material-ui/core/TextField"
+import Typography from "@material-ui/core/Typography"
 import GitHubIcon from "@material-ui/icons/GitHub"
+
+import { BackupContext, AuthContext } from "~/context"
 
 const useStyles = makeStyles((theme) => ({
   itemContent: {
