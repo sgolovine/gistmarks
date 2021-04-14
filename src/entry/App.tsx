@@ -12,7 +12,7 @@ import {
   SettingsContext,
 } from "~/context"
 import { darkTheme, lightTheme } from "~/defines/theme"
-// import { AnalyticsProvider } from "~/helpers/analytics"
+import { AnalyticsProvider } from "~/helpers/analytics"
 import { AppRouter } from "~/routes/router"
 
 interface WrapperProps {
@@ -47,16 +47,16 @@ const ThemeWrapper: React.FC<WrapperProps> = ({ children }) => {
 
 export default function App() {
   return (
-    // <AnalyticsProvider>
-    <ContextWrapper>
-      <ThemeWrapper>
-        {/* CSS Reset */}
-        <CssBaseline />
+    <AnalyticsProvider>
+      <ContextWrapper>
+        <ThemeWrapper>
+          {/* CSS Reset */}
+          <CssBaseline />
 
-        {/* Router */}
-        <AppRouter />
-      </ThemeWrapper>
-    </ContextWrapper>
-    // </AnalyticsProvider>
+          {/* Router */}
+          <AppRouter />
+        </ThemeWrapper>
+      </ContextWrapper>
+    </AnalyticsProvider>
   )
 }
