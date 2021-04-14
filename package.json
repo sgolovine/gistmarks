@@ -13,7 +13,7 @@
     "clean": "ts-prune && depcheck --config ./.depcheckrc",
     "lint": "eslint 'src/**/*'",
     "ci": "yarn format && tsc && yarn lint",
-    "test-prod": "rm -rf dist/ && yarn run build && yarn run serve"
+    "test-prod": "yarn run build && yarn run serve"
   },
   "repository": {
     "type": "git",
