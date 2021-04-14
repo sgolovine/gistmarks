@@ -16,7 +16,7 @@ const prodFolderPath = path.resolve(__dirname, "dist")
 
 module.exports = {
   mode: dev ? "development" : "production",
-  devtool: "eval-source-map",
+  devtool: dev ? "eval-source-map" : false,
   // devtool: dev ? "eval-source-map" : false,
   entry: path.resolve(__dirname, "src", "entry", "index.tsx"),
   resolve: {
