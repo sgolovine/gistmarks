@@ -2,7 +2,7 @@ import React, { ReactNode } from "react"
 import { createInstance, MatomoProvider } from "@datapunt/matomo-tracker-react"
 
 export const instance = createInstance({
-  urlBase: "https://stats.glvn.co/matomo",
+  urlBase: "https://stats.glvn.co",
   siteId: 4,
   heartBeat: {
     // optional, enabled by default
