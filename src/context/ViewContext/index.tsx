@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { createContext } from "react"
 import { usePersistedReducer } from "~/hooks/usePersistedReducer"
-import { ViewContextType } from "./types"
+import { ErrorArgs, ViewContextType } from "./types"
 import { reducer, initialState } from "./reducer"
 import { VIEW_STORAGE_KEY } from "~/defines"
 import {
@@ -166,12 +166,24 @@ export const ViewContextProvider: React.FC = ({ children }) => {
     })
   }
 
+  const setError = ({ show, title, message }: ErrorArgs) => {
+    dispatch({
+      type: "SET_ERROR",
+      payload: {
+        showError: show,
+        errorTitle: title,
+        errorMessage: message,
+      },
+    })
+  }
+
   const value: ViewContextType = {
     ...state,
     addActiveCategory,
     removeActiveCategory,
     setSearch,
     setGistId,
+    setError,
   }
 
   return <ViewContext.Provider value={value}>{children}</ViewContext.Provider>

@@ -1,5 +1,11 @@
 import { IBookmarkContext } from "../BookmarkContext/types"
 
+export interface ErrorArgs {
+  show: boolean
+  title: string
+  message: string
+}
+
 export type ViewContextType = Pick<
   IBookmarkContext,
   | "allBookmarks"
@@ -18,6 +24,7 @@ export type ViewContextType = Pick<
   errorTitle: string
   errorMessage: string
   setGistId: (gistId: string) => void
+  setError: (args: ErrorArgs) => void
 }
 
 export type ViewState = Pick<
