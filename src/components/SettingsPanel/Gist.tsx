@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Gist = () => {
   const classes = useStyles()
-  const { state, actions } = useContext(BackupContext)
+  const backupContext = useContext(BackupContext)
   const { logout, login, isLoggedIn } = useContext(AuthContext)
   const [editGist, setEditGist] = useState<boolean>(false)
 
@@ -54,15 +54,15 @@ export const Gist = () => {
             className={classes.itemInput}
             variant="outlined"
             label="Filename"
-            value={state.gistFilename}
-            onChange={(e) => actions.setFilename(e.target.value)}
+            value={backupContext.gistFilename}
+            onChange={(e) => backupContext.setFilename(e.target.value)}
           />
           <TextField
             className={classes.itemInput}
             variant="outlined"
             label="Collection Name (optional)"
-            value={state.gistName}
-            onChange={(e) => actions.setName(e.target.value)}
+            value={backupContext.gistName}
+            onChange={(e) => backupContext.setName(e.target.value)}
           />
           {editGist && (
             <TextField
@@ -70,15 +70,19 @@ export const Gist = () => {
               className={classes.itemInput}
               variant="outlined"
               label="Gist ID"
-              value={state.gistId}
-              onChange={(e) => actions.setGistId(e.target.value)}
+              value={backupContext.gistId}
+              onChange={(e) => backupContext.setGistId(e.target.value)}
             />
           )}
           <div className={classes.buttonContainer}>
             <Button
               variant="outlined"
               color="primary"
-              onClick={editGist ? actions.updateBackup : actions.createBackup}
+              onClick={
+                editGist
+                  ? backupContext.updateBackup
+                  : backupContext.createBackup
+              }
             >
               {editGist ? "Update" : "Create"}
             </Button>
@@ -93,15 +97,15 @@ export const Gist = () => {
             className={classes.itemInput}
             variant="outlined"
             label="Gist ID"
-            value={state.gistId}
-            onChange={(e) => actions.setGistId(e.target.value)}
+            value={backupContext.gistId}
+            onChange={(e) => backupContext.setGistId(e.target.value)}
           />
 
           <div className={classes.buttonContainer}>
             <Button
               variant="outlined"
               color="primary"
-              onClick={actions.restoreBackup}
+              onClick={backupContext.restoreBackup}
             >
               Restore
             </Button>

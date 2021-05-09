@@ -6,9 +6,9 @@ import { AppAction, ContextProviderProps } from "~/model/Context"
 import { createGist } from "~/requests/createGist"
 import { getGist } from "~/requests/getGist"
 import { updateGist } from "~/requests/updateGist"
-import { AuthContext } from "./AuthContext"
-import { BookmarkContext } from "./BookmarkContext"
-import { SettingsContext } from "./SettingsContext"
+import { AuthContext } from "../AuthContext"
+import { BookmarkContext } from "../BookmarkContext"
+import { SettingsContext } from "../SettingsContext"
 
 type ActionTypes =
   | "SET_FILENAME"
