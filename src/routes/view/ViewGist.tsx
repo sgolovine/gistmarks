@@ -30,7 +30,7 @@ export const ViewGistRoute = () => {
       viewContext.setError({
         show: true,
         title: "Missing GistID",
-        msg: "Gist ID not found. Unable to load bookmarks",
+        message: "Gist ID not found. Unable to load bookmarks",
       })
       // If we have an ID, hand off the ID to
       // context to then fetch the gist

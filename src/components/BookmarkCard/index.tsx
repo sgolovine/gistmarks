@@ -96,7 +96,7 @@ export const BookmarkCard: React.FC<Props> = ({
   onEdit,
   onDelete,
 }) => {
-  const { state: settingsState } = useContext(SettingsContext)
+  const settingsContext = useContext(SettingsContext)
   const classes = useStyles()
 
   const handleEdit = () => {
@@ -118,7 +118,7 @@ export const BookmarkCard: React.FC<Props> = ({
   const renderLink = (linkName: string, className: string) => {
     return (
       <a
-        target={settingsState.openInNewTab ? "_blank" : undefined}
+        target={settingsContext.openInNewTab ? "_blank" : undefined}
         rel="noopener noreferrer"
         className={className}
         href={href}

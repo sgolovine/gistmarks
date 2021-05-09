@@ -2,111 +2,17 @@ import React, { createContext, useContext } from "react"
 import { BACKUP_STORAGE_KEY } from "~/defines"
 import { validateStatus } from "~/helpers"
 import { usePersistedReducer } from "~/hooks/usePersistedReducer"
-import { AppAction, ContextProviderProps } from "~/model/Context"
+import { ContextProviderProps } from "~/model/Context"
 import { createGist } from "~/requests/createGist"
 import { getGist } from "~/requests/getGist"
 import { updateGist } from "~/requests/updateGist"
-import { AuthContext } from "./AuthContext"
-import { BookmarkContext } from "./BookmarkContext"
-import { SettingsContext } from "./SettingsContext"
+import { initialState, reducer } from "./reducer"
+import { IBackupContext } from "./types"
 
-type ActionTypes =
-  | "SET_FILENAME"
-  | "SET_NAME"
-  | "SET_LOADING"
-  | "SET_GIST_ID"
-  | "SET_URL"
-  | "SET_BACKUP_CREATED"
-  | "DELETE_BACKUP"
-  | "SET_RESULTS"
+// Legacy imports, change later.
+import { AuthContext, BookmarkContext, SettingsContext } from "~/context"
 
-type BackupState = {
-  isLoading: boolean
-  backupCreated: boolean
-  gistFilename: string | null
-  gistName: string | null
-  gistId: string | null
-  remoteUrl: string | null
-}
-
-const initialState: BackupState = {
-  isLoading: false,
-  backupCreated: false,
-  gistFilename: null,
-  gistName: null,
-  gistId: null,
-  remoteUrl: null,
-}
-
-function reducer(
-  state: BackupState,
-  action: AppAction<ActionTypes>
-): BackupState {
-  switch (action.type) {
-    case "SET_FILENAME":
-      return {
-        ...state,
-        gistFilename: action.payload,
-      }
-    case "SET_NAME":
-      return {
-        ...state,
-        gistName: action.payload,
-      }
-    case "SET_LOADING":
-      return {
-        ...state,
-        isLoading: action.payload,
-      }
-    case "SET_GIST_ID":
-      return {
-        ...state,
-        gistId: action.payload,
-      }
-    case "SET_URL":
-      return {
-        ...state,
-        remoteUrl: action.payload,
-      }
-    case "SET_BACKUP_CREATED":
-      return {
-        ...state,
-        backupCreated: action.payload,
-      }
-    case "SET_RESULTS": {
-      return {
-        ...state,
-        gistId: action.payload.gistId,
-        remoteUrl: action.payload.htmlUrl,
-        gistName: action.payload.collectionName,
-        backupCreated: true,
-      }
-    }
-    case "DELETE_BACKUP":
-      return initialState
-    default:
-      return state
-  }
-}
-
-interface BackupContext {
-  state: BackupState
-  actions: {
-    // Field Setters
-    setLoading: (newValue: boolean) => void
-    setFilename: (newValue: string) => void
-    setName: (newValue: string) => void
-    setGistId: (newValue: string) => void
-    setRemoteUrl: (newValue: string) => void
-    // Other actions
-    createBackup: () => void
-    updateBackup: () => void
-    restoreBackup: () => void
-    deleteBackup: () => void
-  }
-}
-
-export const BackupContext = createContext<BackupContext>({} as BackupContext)
+export const BackupContext = createContext<IBackupContext>({} as IBackupContext)
 
 export const BackupContextProvider: React.FC<ContextProviderProps> = ({
   children,
@@ -154,7 +60,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       })
       if (resp && validateStatus(resp.status)) {
         setLoading(false)
-        settingsContext.actions.setUnsavedChanges(false)
+        settingsContext.setUnsavedChanges(false)
         const { html_url, id, description } = resp.data
         dispatch({
           type: "SET_RESULTS",
@@ -185,7 +91,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       })
       if (resp && validateStatus(resp.status)) {
         setLoading(false)
-        settingsContext.actions.setUnsavedChanges(false)
+        settingsContext.setUnsavedChanges(false)
         const { html_url, id, description } = resp.data
         dispatch({
           type: "SET_RESULTS",
@@ -238,20 +144,22 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
 
   const deleteBackup = () => dispatch({ type: "DELETE_BACKUP" })
 
-  const value: BackupContext = {
-    state,
-    actions: {
-      setLoading,
-      setFilename,
-      setName,
-      setGistId,
-      setRemoteUrl,
+  const value: IBackupContext = {
+    // State
+    ...state,
 
-      createBackup,
-      updateBackup,
-      restoreBackup,
-      deleteBackup,
-    },
+    // Setters
+    setLoading,
+    setFilename,
+    setName,
+    setGistId,
+    setRemoteUrl,
+
+    // Other actions
+    createBackup,
+    updateBackup,
+    restoreBackup,
+    deleteBackup,
   }
 
   return (

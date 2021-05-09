@@ -40,8 +40,8 @@ const ContextWrapper: React.FC<WrapperProps> = ({ children }) => {
 }
 
 const ThemeWrapper: React.FC<WrapperProps> = ({ children }) => {
-  const { state } = useContext(SettingsContext)
-  const theme = state.isDark ? darkTheme : lightTheme
+  const settingsContext = useContext(SettingsContext)
+  const theme = settingsContext.isDark ? darkTheme : lightTheme
 
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>
 }

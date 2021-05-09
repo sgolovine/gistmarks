@@ -122,9 +122,6 @@ const Header: React.FC<Props> = ({ route }) => {
   const history = useHistory()
   const { trackEvent } = useMatomo()
 
-  const { state: backupState, actions: backupAction } = useContext(
-    BackupContext
-  )
   const settingsContext = useContext(SettingsContext)
   const layoutContext = useContext(LayoutContext)
   const bookmarkContext = useContext(BookmarkContext)
@@ -137,8 +134,8 @@ const Header: React.FC<Props> = ({ route }) => {
   // This just takes the user to the app
   const showEditCollectionButton =
     authContext.isLoggedIn &&
-    backupContext.state.backupCreated &&
-    backupContext.state.gistId
+    backupContext.backupCreated &&
+    backupContext.gistId
 
   const searchInputValue =
     route === "view" ? viewContext.searchTerm : bookmarkContext.searchTerm
@@ -146,7 +143,7 @@ const Header: React.FC<Props> = ({ route }) => {
   const headerText = getTitle(
     route,
     viewContext?.collectionName,
-    backupState.gistName
+    backupContext.gistName
   )
 
   const handleCreateCollection = () => {
@@ -194,7 +191,7 @@ const Header: React.FC<Props> = ({ route }) => {
       category: "Header",
       action: "Saved Changes to Collection",
     })
-    backupAction.updateBackup()
+    backupContext.updateBackup()
   }
 
   const handleInputChange = (newValue: string) => {
@@ -377,7 +374,7 @@ const Header: React.FC<Props> = ({ route }) => {
 
   return (
     <AppBar
-      color={settingsContext.state.isDark ? "default" : "primary"}
+      color={settingsContext.isDark ? "default" : "primary"}
       className={classes.root}
       position="sticky"
     >
@@ -394,19 +391,12 @@ const Header: React.FC<Props> = ({ route }) => {
 
         {renderSaveButton(
           route,
-          settingsContext.state.unsavedChanges,
-          backupState.backupCreated
+          settingsContext.unsavedChanges,
+          backupContext.backupCreated
         )}
 
         {renderEditButton(route)}
         {renderCTA(route)}
-        {/* <Button
-          onClick={() =>
-            settingsContext.actions.setIsDark(!settingsContext.state.isDark)
-          }
-        >
-          Dark Theme
-        </Button> */}
       </Toolbar>
     </AppBar>
   )
