@@ -228,12 +228,12 @@ export const OnboardingModal = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
 
   useEffect(() => {
-    if (settingsContext.state.firstRun) {
+    if (settingsContext.firstRun) {
       setTimeout(() => {
         setModalOpen(true)
       }, 1000)
     }
-  }, [settingsContext.state.firstRun])
+  }, [settingsContext.firstRun])
 
   const handleClose = () => {
     settingsContext.actions.setFirstRun()

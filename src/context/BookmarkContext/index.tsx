@@ -69,7 +69,7 @@ export const BookmarkContextProvider: React.FC = ({ children }) => {
       type: "ADD_BOOKMARK",
       payload: bookmark,
     })
-    settingsContext.actions.setUnsavedChanges(true)
+    settingsContext.setUnsavedChanges(true)
   }
 
   const removeBookmark = (guid: string) => {
@@ -77,7 +77,7 @@ export const BookmarkContextProvider: React.FC = ({ children }) => {
       type: "REMOVE_BOOKMARK",
       payload: guid,
     })
-    settingsContext.actions.setUnsavedChanges(true)
+    settingsContext.setUnsavedChanges(true)
   }
 
   const editBookmark = (bookmark: Partial<Bookmark>, guid: string) => {
@@ -87,7 +87,7 @@ export const BookmarkContextProvider: React.FC = ({ children }) => {
         ...bookmark,
       }
       dispatch({ type: "ADD_BOOKMARK", payload: completeBookmark })
-      settingsContext.actions.setUnsavedChanges(true)
+      settingsContext.setUnsavedChanges(true)
     }
   }
 

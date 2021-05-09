@@ -374,7 +374,7 @@ const Header: React.FC<Props> = ({ route }) => {
 
   return (
     <AppBar
-      color={settingsContext.state.isDark ? "default" : "primary"}
+      color={settingsContext.isDark ? "default" : "primary"}
       className={classes.root}
       position="sticky"
     >
@@ -391,19 +391,12 @@ const Header: React.FC<Props> = ({ route }) => {
 
         {renderSaveButton(
           route,
-          settingsContext.state.unsavedChanges,
+          settingsContext.unsavedChanges,
           backupContext.backupCreated
         )}
 
         {renderEditButton(route)}
         {renderCTA(route)}
-        {/* <Button
-          onClick={() =>
-            settingsContext.actions.setIsDark(!settingsContext.state.isDark)
-          }
-        >
-          Dark Theme
-        </Button> */}
       </Toolbar>
     </AppBar>
   )

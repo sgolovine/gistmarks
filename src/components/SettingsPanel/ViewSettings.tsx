@@ -8,28 +8,22 @@ export const ViewSettings = () => {
     <>
       <SwitchItem
         label="Sort by Category"
-        value={settingsContext.state.showSortedList}
+        value={settingsContext.showSortedList}
         onToggle={() =>
-          settingsContext.actions.setSortedList(
-            !settingsContext.state.showSortedList
-          )
+          settingsContext.setSortedList(!settingsContext.showSortedList)
         }
       />
       <SwitchItem
         label="Open Links in New Tab"
-        value={settingsContext.state.openInNewTab}
+        value={settingsContext.openInNewTab}
         onToggle={() =>
-          settingsContext.actions.setOpenNewTab(
-            !settingsContext.state.openInNewTab
-          )
+          settingsContext.setOpenNewTab(!settingsContext.openInNewTab)
         }
       />
       <SwitchItem
         label="Dark Theme"
-        value={settingsContext.state.isDark}
-        onToggle={() =>
-          settingsContext.actions.setIsDark(!settingsContext.state.isDark)
-        }
+        value={settingsContext.isDark}
+        onToggle={() => settingsContext.setIsDark(!settingsContext.isDark)}
       />
     </>
   )
