@@ -60,7 +60,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       })
       if (resp && validateStatus(resp.status)) {
         setLoading(false)
-        settingsContext.actions.setUnsavedChanges(false)
+        settingsContext.setUnsavedChanges(false)
         const { html_url, id, description } = resp.data
         dispatch({
           type: "SET_RESULTS",
@@ -91,7 +91,7 @@ export const BackupContextProvider: React.FC<ContextProviderProps> = ({
       })
       if (resp && validateStatus(resp.status)) {
         setLoading(false)
-        settingsContext.actions.setUnsavedChanges(false)
+        settingsContext.setUnsavedChanges(false)
         const { html_url, id, description } = resp.data
         dispatch({
           type: "SET_RESULTS",
