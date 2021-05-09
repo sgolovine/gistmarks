@@ -11,7 +11,7 @@ import {
 import useLocalStorage from "~/hooks/useLocalStorage"
 import { Bookmark, BookmarkCollection } from "~/model/Bookmark"
 import { ContextProviderProps } from "~/model/Context"
-import { SettingsContext } from "./SettingsContext"
+import { SettingsContext } from "../SettingsContext"
 
 interface BookmarkContext {
   allBookmarks: BookmarkCollection

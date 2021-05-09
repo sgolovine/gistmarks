@@ -1,5 +1,6 @@
 import { ReactNode } from "react"
 
+// DEPRECATED: React.FC includes a children prop
 export interface ContextProviderProps {
   children: ReactNode
 }
