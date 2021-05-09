@@ -1,6 +1,6 @@
 import { IBookmarkContext } from "../BookmarkContext/types"
 
-export type ViewContext = Pick<
+export type ViewContextType = Pick<
   IBookmarkContext,
   | "allBookmarks"
   | "bookmarks"
@@ -11,25 +11,17 @@ export type ViewContext = Pick<
   | "removeActiveCategory"
   | "setSearch"
 > & {
+  collectionName: string
   gistId: string | null
   gistLoading: boolean
   showError: boolean
   errorTitle: string
   errorMessage: string
   setGistId: (gistId: string) => void
-  setError: ({
-    show,
-    title,
-    msg,
-  }: {
-    show: boolean
-    title: string
-    msg: string
-  }) => void
 }
 
 export type ViewState = Pick<
-  ViewContext,
+  ViewContextType,
   | "allBookmarks"
   | "bookmarks"
   | "categories"
@@ -39,15 +31,21 @@ export type ViewState = Pick<
   | "errorMessage"
   | "showError"
   | "gistId"
+  | "gistLoading"
+  | "collectionName"
 >
 
 export type ActionTypes =
   | "SET_ALL_BOOKMARKS"
   | "SET_BOOKMARKS"
   | "SET_CATEGORIES"
-  | "SET_ACTIVE_CATEGORIES"
+  | "ADD_ACTIVE_CATEGORY"
+  | "REMOVE_ACTIVE_CATEGORY"
   | "SET_SEARCH_TERM"
   | "SET_ERROR_TITLE"
   | "SET_ERROR_MESSAGE"
   | "SHOW_ERROR"
   | "SET_GIST_ID"
+  | "SET_GIST_LOADING"
+  | "SET_COLLECTION_NAME"
+  | "SET_ERROR"

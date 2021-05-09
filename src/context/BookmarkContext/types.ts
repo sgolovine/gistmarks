@@ -28,7 +28,6 @@ export type ActionTypes =
   | "SET_ALL_BOOKMARKS"
   | "SET_BOOKMARKS"
   | "SET_CATEGORIES"
-  | "SET_ACTIVE_CATEGORIES"
   | "SET_SEARCH"
   | "ADD_BOOKMARK"
   | "REMOVE_BOOKMARK"

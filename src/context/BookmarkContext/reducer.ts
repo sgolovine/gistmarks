@@ -67,11 +67,6 @@ export function reducer(
         ...state,
         categories: action.payload,
       }
-    case "SET_ACTIVE_CATEGORIES":
-      return {
-        ...state,
-        activeCategories: action.payload,
-      }
     case "SET_SEARCH":
       return {
         ...state,
