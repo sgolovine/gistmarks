@@ -11,10 +11,8 @@ import {
   removeCodeInUrl,
   dev,
 } from "~/helpers"
-// import { ejectInterceptor, injectAuthInterceptor } from "~/requests/setup"
 
 interface AuthContext {
-  interceptorID?: number
   authCode: string | null
   accessToken: string | null
   scope: string | null
@@ -31,7 +29,6 @@ type AuthState = Pick<
 >
 
 export const AuthContext = createContext<AuthContext>({
-  interceptorID: undefined,
   authCode: null,
   accessToken: null,
   scope: null,
@@ -45,8 +42,6 @@ export const AuthContext = createContext<AuthContext>({
 export const AuthContextProvider: React.FC<ContextProviderProps> = ({
   children,
 }) => {
-  // const [interceptorID, setInterceptorID] = useState<number | null>(null)
-
   const [authState, setAuthState] = useLocalStorage<AuthState>(
     AUTH_STORAGE_KEY,
     {
@@ -56,14 +51,6 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
       tokenType: null,
     }
   )
-
-  // useEffect(() => {
-  //   // Check for existing intercptors
-  //   if (!interceptorID && authState.accessToken) {
-  //     const interceptorID = injectAuthInterceptor(authState.accessToken)
-  //     setInterceptorID(interceptorID)
-  //   }
-  // }, [authState.accessToken, interceptorID])
 
   // Once we are redirected back from github, look at the URL
   // and grab the code
@@ -105,7 +92,6 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
     }
   }, [authState.authCode])
 
-  // Helper function - set state
   const setState = (key: keyof AuthState, value: string) =>
     setAuthState({ ...authState, [key]: value })
 
@@ -117,9 +103,6 @@ export const AuthContextProvider: React.FC<ContextProviderProps> = ({
       tokenType: null,
     })
     localStorage.removeItem(AUTH_STORAGE_KEY)
-    // if (interceptorID) {
-    //   ejectInterceptor(interceptorID)
-    // }
   }
 
   const login = () => {

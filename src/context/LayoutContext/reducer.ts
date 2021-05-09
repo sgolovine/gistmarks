@@ -1,3 +1,4 @@
+import { AppAction } from "~/model/Context"
 import { ActionTypes, LayoutState } from "./types"
 
 export const initialState: LayoutState = {
@@ -9,7 +10,7 @@ export const initialState: LayoutState = {
 
 export function reducer(
   state: LayoutState,
-  action: { type: ActionTypes; payload: boolean }
+  action: AppAction<ActionTypes>
 ): LayoutState {
   switch (action.type) {
     case "TOGGLE_CREATE":
