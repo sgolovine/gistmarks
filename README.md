@@ -1,38 +1,54 @@
-## Gistmarks.io
+# React + TypeScript + Vite
 
-Gistmarks.io is a bookmark manager that uses Github Gist to save and share bookmarks.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-[![Build Status](https://github.com/sgolovine/gistmarks/actions/workflows/ci.yml/badge.svg)](https://github.com/sgolovine/gistmarks/actions/workflows/ci.yml)
+Currently, two official plugins are available:
 
-[![APP Deploy Status](https://api.netlify.com/api/v1/badges/203e38fd-2db3-4c6f-ba9f-131dc129a76c/deploy-status)](https://app.netlify.com/sites/gistmarks-io/deploys)
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-[Go to Site](https://gistmarks.io)
+## Expanding the ESLint configuration
 
-[Go to App](https://app.gistmarks.io)
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-## Development
+```js
+export default tseslint.config({
+  extends: [
+    // Remove ...tseslint.configs.recommended and replace with this
+    ...tseslint.configs.recommendedTypeChecked,
+    // Alternatively, use this for stricter rules
+    ...tseslint.configs.strictTypeChecked,
+    // Optionally, add this for stylistic rules
+    ...tseslint.configs.stylisticTypeChecked,
+  ],
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
 
-### Pre-requisites
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-- NodeJS v10+ (any recent node version will work)
-- Yarn (npm install -g yarn)
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-### Setup
-
-1. Clone the repository (`git clone git@github.com:sgolovine/gistmarks.git`)
-2. Copy `.env.example` to `.env` and replace the keys inside with your own.
-3. Run `yarn install` to install dependencies
-4. If you want to run the app with the backend. Run `yarn dev`, if you just want to run the frontend. Run `yarn start`
-
-NOTE: If you run the app with `yarn start`, you must USE a personal access token
-as Oauth will only work with a the backend running
-
-### Testing Production builds Locally
-
-1. `yarn build`
-2. `yarn serve`
-3. `https://localhost:5000`
-
-### Deployment
-
-WIP
+export default tseslint.config({
+  plugins: {
+    // Add the react-x and react-dom plugins
+    'react-x': reactX,
+    'react-dom': reactDom,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended typescript rules
+    ...reactX.configs['recommended-typescript'].rules,
+    ...reactDom.configs.recommended.rules,
+  },
+})
+```

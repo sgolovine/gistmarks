@@ -1,1 +1,0 @@
-ignores: ["~", "@types/node", "webpack-cli", "terser-webpack-plugin"]
