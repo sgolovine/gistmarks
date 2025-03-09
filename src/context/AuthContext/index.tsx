@@ -1,5 +1,5 @@
 import axios from "axios"
-import React, { createContext, useEffect } from "react"
+import React, { createContext, ReactNode, useEffect } from "react"
 import { AUTH_STORAGE_KEY } from "~/defines"
 import {
   buildAuthUrl,
@@ -13,11 +13,13 @@ import { IAuthContext } from "./types"
 
 export const AuthContext = createContext<IAuthContext>({} as IAuthContext)
 
-export const AuthContextProvider: React.FC = ({ children }) => {
+export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const { state, dispatch } = usePersistedReducer(
     reducer,
     initialState,
-    AUTH_STORAGE_KEY
+    AUTH_STORAGE_KEY,
   )
 
   // Once we are redirected back from github, look at the URL

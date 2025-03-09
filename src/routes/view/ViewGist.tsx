@@ -1,28 +1,18 @@
-import React, { useContext, useEffect } from "react"
+import { useContext, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { ViewContext } from "~/context"
 import { BookmarkList } from "~/components/BookmarkList"
 import Header from "~/layout/Header"
 import Sidebar from "~/layout/Sidebar"
 import { SettingsPanel } from "~/components/SettingsPanel"
-import { useMatomo } from "@datapunt/matomo-tracker-react"
 
 interface RouteParams {
   id: string
 }
 
 export const ViewGistRoute = () => {
-  const { trackPageView } = useMatomo()
-
   const params = useParams<RouteParams>()
   const viewContext = useContext(ViewContext)
-
-  useEffect(() => {
-    trackPageView({
-      documentTitle: "View Page - View Collection",
-      href: "https://app.gistmarks.io/",
-    })
-  }, [])
 
   useEffect(() => {
     // Check and make sure that we have an ID
@@ -38,6 +28,7 @@ export const ViewGistRoute = () => {
       viewContext.setGistId(params.id)
     }
   }, [])
+
   return (
     <>
       {/* App Header */}

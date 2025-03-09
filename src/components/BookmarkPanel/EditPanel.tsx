@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import { useContext } from "react"
 import { BookmarkContext, EditorStateContext } from "~/context"
 import { Bookmark } from "~/model/Bookmark"
 import { LayoutContext } from "~/context/LayoutContext"

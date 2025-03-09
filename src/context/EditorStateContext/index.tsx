@@ -1,12 +1,14 @@
-import React, { createContext, useReducer } from "react"
+import React, { createContext, ReactNode, useReducer } from "react"
 import { initialState, reducer } from "./reducer"
 import { EditorState, IEditorContext } from "./types"
 
 export const EditorStateContext = createContext<IEditorContext>(
-  {} as IEditorContext
+  {} as IEditorContext,
 )
 
-export const EditorStateContextProvider: React.FC = ({ children }) => {
+export const EditorStateContextProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
   const setAllFields = (state: EditorState) => {
