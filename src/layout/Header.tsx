@@ -89,7 +89,7 @@ interface Props {
 const getTitle = (
   route: Routes,
   viewContextName?: string | null,
-  backupContextName?: string | null
+  backupContextName?: string | null,
 ) => {
   switch (route) {
     case "add": {
@@ -139,16 +139,16 @@ const Header: React.FC<Props> = ({ route }) => {
   const headerText = getTitle(
     route,
     viewContext?.collectionName,
-    backupContext.gistName
+    backupContext.gistName,
   )
 
   const handleCreateCollection = () => {
-    alert('history.push stub hit')
+    alert("history.push stub hit")
     // history.push("/")
   }
 
   const handleEditButton = () => {
-    alert('history.push stub hit')
+    alert("history.push stub hit")
     // history.push("/")
   }
 
@@ -323,7 +323,7 @@ const Header: React.FC<Props> = ({ route }) => {
   const renderSaveButton = (
     route: Routes,
     hasUnsavedChanges?: boolean,
-    backupCreated?: boolean
+    backupCreated?: boolean,
   ) => {
     switch (route) {
       case "app": {
@@ -366,7 +366,7 @@ const Header: React.FC<Props> = ({ route }) => {
         {renderSaveButton(
           route,
           settingsContext.unsavedChanges,
-          backupContext.backupCreated
+          backupContext.backupCreated,
         )}
 
         {renderEditButton(route)}
