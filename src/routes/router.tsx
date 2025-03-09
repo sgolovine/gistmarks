@@ -9,7 +9,7 @@ export const AppRouter = () => {
       <Route path="/">
         <AppRoute />
       </Route>
-      {/* <Route path="/view">
+      <Route path="/view">
         <ViewRootRoute />
       </Route>
       <Route path="/add">
@@ -23,7 +23,7 @@ export const AppRouter = () => {
       </Route>
       <Route path="/v/:id">
         <ViewGistRoute />
-      </Route> */}
+      </Route>
     </Switch>
   )
 }
