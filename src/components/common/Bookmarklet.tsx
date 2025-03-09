@@ -1,4 +1,3 @@
-import React from "react"
 import { DEV_BOOKMARKLET, PROD_BOOKMARKLET } from "~/defines/bookmarklet"
 import { dev } from "~/helpers"
 import makeStyles from "@material-ui/core/styles/makeStyles"

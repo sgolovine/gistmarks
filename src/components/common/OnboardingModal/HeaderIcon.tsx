@@ -1,5 +1,3 @@
-import React from "react"
-
 export const HeaderIcon = () => (
   <svg
     width="350"

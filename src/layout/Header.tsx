@@ -20,8 +20,6 @@ import {
 } from "~/context"
 import SaveIcon from "@material-ui/icons/Save"
 import { Routes } from "~/model/Routes"
-import { useHistory } from "react-router"
-import { useMatomo } from "@datapunt/matomo-tracker-react"
 
 const useStyles = makeStyles((theme) => ({
   iconButton: {},
@@ -91,7 +89,7 @@ interface Props {
 const getTitle = (
   route: Routes,
   viewContextName?: string | null,
-  backupContextName?: string | null
+  backupContextName?: string | null,
 ) => {
   switch (route) {
     case "add": {
@@ -119,8 +117,6 @@ const getTitle = (
 
 const Header: React.FC<Props> = ({ route }) => {
   const classes = useStyles()
-  const history = useHistory()
-  const { trackEvent } = useMatomo()
 
   const settingsContext = useContext(SettingsContext)
   const layoutContext = useContext(LayoutContext)
@@ -143,54 +139,32 @@ const Header: React.FC<Props> = ({ route }) => {
   const headerText = getTitle(
     route,
     viewContext?.collectionName,
-    backupContext.gistName
+    backupContext.gistName,
   )
 
   const handleCreateCollection = () => {
-    trackEvent({
-      category: "Header",
-      action: "Create Collection Pressed",
-    })
-    history.push("/")
+    alert("history.push stub hit")
+    // history.push("/")
   }
 
   const handleEditButton = () => {
-    trackEvent({
-      category: "Header",
-      action: "Edit Collection Pressed",
-    })
-    history.push("/")
+    alert("history.push stub hit")
+    // history.push("/")
   }
 
   const handleOpenSidebar = () => {
-    trackEvent({
-      category: "Header",
-      action: "Toggle Sidebar",
-    })
     layoutContext.openSidebar()
   }
 
   const handleSettingsItemPress = () => {
-    trackEvent({
-      category: "Header",
-      action: "Toggle Settings",
-    })
     layoutContext.openSettingsPanel()
   }
 
   const handleCreateBookmark = () => {
-    trackEvent({
-      category: "Header",
-      action: "Toggle Create",
-    })
     layoutContext.openCreatePanel()
   }
 
   const handleSaveCollection = () => {
-    trackEvent({
-      category: "Header",
-      action: "Saved Changes to Collection",
-    })
     backupContext.updateBackup()
   }
 
@@ -349,7 +323,7 @@ const Header: React.FC<Props> = ({ route }) => {
   const renderSaveButton = (
     route: Routes,
     hasUnsavedChanges?: boolean,
-    backupCreated?: boolean
+    backupCreated?: boolean,
   ) => {
     switch (route) {
       case "app": {
@@ -392,7 +366,7 @@ const Header: React.FC<Props> = ({ route }) => {
         {renderSaveButton(
           route,
           settingsContext.unsavedChanges,
-          backupContext.backupCreated
+          backupContext.backupCreated,
         )}
 
         {renderEditButton(route)}

@@ -1,4 +1,4 @@
-import React, { createContext } from "react"
+import React, { createContext, ReactNode } from "react"
 import { SETTINGS_STORAGE_KEY } from "~/defines"
 import { usePersistedReducer } from "~/hooks/usePersistedReducer"
 import { initialState, reducer } from "./reducer"
@@ -8,7 +8,7 @@ export const SettingsContext = createContext<ISettingsContext>(
   {} as ISettingsContext
 )
 
-export const SettingsContextProvider: React.FC = ({ children }) => {
+export const SettingsContextProvider: React.FC<{children: ReactNode}> = ({ children }) => {
   const { state, dispatch } = usePersistedReducer(
     reducer,
     initialState,

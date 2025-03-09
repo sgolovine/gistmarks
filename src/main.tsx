@@ -1,7 +1,5 @@
-import React, { ReactNode, useContext } from "react"
-import ReactDOM from "react-dom"
+import React, { ReactNode } from "react"
 import CssBaseline from "@material-ui/core/CssBaseline/CssBaseline"
-import { ThemeProvider } from "@material-ui/core/styles"
 import {
   AuthContextProvider,
   BackupContextProvider,
@@ -10,11 +8,9 @@ import {
   ViewContextProvider,
   LayoutContextProvider,
   SettingsContextProvider,
-  SettingsContext,
 } from "~/context"
-import { darkTheme, lightTheme } from "~/defines/theme"
-import { AnalyticsProvider } from "~/helpers/analytics"
 import { AppRouter } from "~/routes/router"
+import { createRoot } from "react-dom/client"
 
 interface WrapperProps {
   children: ReactNode
@@ -39,27 +35,18 @@ const ContextWrapper: React.FC<WrapperProps> = ({ children }) => {
   )
 }
 
-const ThemeWrapper: React.FC<WrapperProps> = ({ children }) => {
-  const settingsContext = useContext(SettingsContext)
-  const theme = settingsContext.isDark ? darkTheme : lightTheme
-
-  return <ThemeProvider theme={theme}>{children}</ThemeProvider>
-}
-
 function App() {
   return (
-    <AnalyticsProvider>
-      <ContextWrapper>
-        <ThemeWrapper>
-          {/* CSS Reset */}
-          <CssBaseline />
+    <ContextWrapper>
+      {/* CSS Reset */}
+      <CssBaseline />
 
-          {/* Router */}
-          <AppRouter />
-        </ThemeWrapper>
-      </ContextWrapper>
-    </AnalyticsProvider>
+      {/* Router */}
+      <AppRouter />
+    </ContextWrapper>
   )
 }
 
-ReactDOM.render(<App />, document.getElementById("root"))
+const rootEl = document.getElementById("root")
+const root = createRoot(rootEl!)
+root.render(<App />)

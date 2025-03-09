@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect } from "react"
+import React, { createContext, ReactNode, useContext, useEffect } from "react"
 import { BOOKMARK_STORAGE_KEY } from "~/defines"
 import {
   extractCategories,
@@ -12,16 +12,18 @@ import { usePersistedReducer } from "~/hooks/usePersistedReducer"
 import { reducer, initialState } from "./reducer"
 
 export const BookmarkContext = createContext<IBookmarkContext>(
-  {} as IBookmarkContext
+  {} as IBookmarkContext,
 )
 
-export const BookmarkContextProvider: React.FC = ({ children }) => {
+export const BookmarkContextProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const settingsContext = useContext(SettingsContext)
 
   const { state, dispatch } = usePersistedReducer(
     reducer,
     initialState,
-    BOOKMARK_STORAGE_KEY
+    BOOKMARK_STORAGE_KEY,
   )
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export const BookmarkContextProvider: React.FC = ({ children }) => {
     if (state.searchTerm) {
       const filteredBookmarks = filterBySearchTerm(
         state.allBookmarks,
-        state.searchTerm
+        state.searchTerm,
       )
       dispatch({
         type: "SET_BOOKMARKS",
@@ -45,7 +47,7 @@ export const BookmarkContextProvider: React.FC = ({ children }) => {
     } else if (state.activeCategories.length > 0) {
       const filteredBookmarks = filterByCategories(
         state.allBookmarks,
-        state.activeCategories
+        state.activeCategories,
       )
       dispatch({
         type: "SET_BOOKMARKS",

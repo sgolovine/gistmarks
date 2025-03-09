@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { ReactNode, useEffect } from "react"
 import { createContext } from "react"
 import { usePersistedReducer } from "~/hooks/usePersistedReducer"
 import { ErrorArgs, ViewContextType } from "./types"
@@ -14,11 +14,13 @@ import { getGist } from "~/requests/getGist"
 
 export const ViewContext = createContext<ViewContextType>({} as ViewContextType)
 
-export const ViewContextProvider: React.FC = ({ children }) => {
+export const ViewContextProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const { state, dispatch } = usePersistedReducer(
     reducer,
     initialState,
-    VIEW_STORAGE_KEY
+    VIEW_STORAGE_KEY,
   )
 
   useEffect(() => {
@@ -40,7 +42,7 @@ export const ViewContextProvider: React.FC = ({ children }) => {
     if (state.searchTerm) {
       const filteredBookmarks = filterBySearchTerm(
         state.allBookmarks,
-        state.searchTerm
+        state.searchTerm,
       )
       dispatch({
         type: "SET_BOOKMARKS",
@@ -49,7 +51,7 @@ export const ViewContextProvider: React.FC = ({ children }) => {
     } else if (state.activeCategories.length > 0) {
       const filteredBookmarks = filterByCategories(
         state.allBookmarks,
-        state.activeCategories
+        state.activeCategories,
       )
       dispatch({
         type: "SET_BOOKMARKS",

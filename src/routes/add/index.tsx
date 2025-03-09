@@ -7,7 +7,6 @@ import Header from "~/layout/Header"
 import qs from "query-string"
 import { generateUUID } from "~/helpers"
 import { Bookmark } from "~/model/Bookmark"
-import { useMatomo } from "@datapunt/matomo-tracker-react"
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -27,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const AddRoute: React.FC = () => {
-  const { trackPageView } = useMatomo()
   const classes = useStyles()
   const bookmarkContext = useContext(BookmarkContext)
 
@@ -35,14 +33,6 @@ export const AddRoute: React.FC = () => {
   const [bookmarkHref, setBookmarkHref] = useState<string>("")
   const [bookmarkDescription, setBookmarkDescription] = useState<string>("")
   const [bookmarkCategory, setBookmarkCategory] = useState<string>("")
-
-  /** Analytics */
-  useEffect(() => {
-    trackPageView({
-      documentTitle: "Add Page",
-      href: "https://app.gistmarks.io/add",
-    })
-  }, [])
 
   useEffect(() => {
     try {
