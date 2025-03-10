@@ -1,1 +1,143 @@
-{"guid":"root________","title":"","index":0,"dateAdded":1741449056090000,"lastModified":1741573580185000,"id":1,"typeCode":2,"type":"text/x-moz-place-container","root":"placesRoot","children":[{"guid":"menu________","title":"menu","index":0,"dateAdded":1741449056090000,"lastModified":1741573580185000,"id":2,"typeCode":2,"type":"text/x-moz-place-container","root":"bookmarksMenuFolder","children":[{"guid":"uWHw94QthAn-","title":"News","index":0,"dateAdded":1741573536737000,"lastModified":1741573580185000,"id":16,"typeCode":2,"type":"text/x-moz-place-container","children":[{"guid":"rJ3r7Zdn0LmO","title":"CNN","index":0,"dateAdded":1741573554061000,"lastModified":1741573559753000,"id":17,"typeCode":1,"type":"text/x-moz-place","uri":"https://www.cnn.com/"},{"guid":"fJ-HUXccpOH9","title":"NYTimes","index":1,"dateAdded":1741573576147000,"lastModified":1741573580185000,"id":18,"typeCode":1,"type":"text/x-moz-place","uri":"https://nytimes.com/"}]},{"guid":"ufKwWBLnHxUE","title":"GitHub","index":1,"dateAdded":1741547351891000,"lastModified":1741547351891000,"id":13,"typeCode":1,"iconUri":"https://github.githubassets.com/favicons/favicon.svg","type":"text/x-moz-place","uri":"https://github.com/"},{"guid":"vNp1TCkVRDV6","title":"crewsum/frontend","index":2,"dateAdded":1741547373675000,"lastModified":1741547373675000,"id":14,"typeCode":1,"iconUri":"https://github.githubassets.com/favicons/favicon.svg","type":"text/x-moz-place","uri":"https://github.com/crewsum/frontend"},{"guid":"Ty6ZJdGd6W_T","title":"crewsum/backend","index":3,"dateAdded":1741547380714000,"lastModified":1741547380714000,"id":15,"typeCode":1,"iconUri":"https://github.githubassets.com/favicons/favicon.svg","type":"text/x-moz-place","uri":"https://github.com/crewsum/backend"}]},{"guid":"toolbar_____","title":"toolbar","index":1,"dateAdded":1741449056090000,"lastModified":1741449056702000,"id":3,"typeCode":2,"type":"text/x-moz-place-container","root":"toolbarFolder","children":[{"guid":"_cHOxZ_2zKb8","title":"Getting Started","index":0,"dateAdded":1741449056702000,"lastModified":1741449056702000,"id":12,"typeCode":1,"iconUri":"fake-favicon-uri:https://www.mozilla.org/firefox/?utm_medium=firefox-desktop&utm_source=bookmarks-toolbar&utm_campaign=new-users&utm_content=-global","type":"text/x-moz-place","uri":"https://www.mozilla.org/firefox/?utm_medium=firefox-desktop&utm_source=bookmarks-toolbar&utm_campaign=new-users&utm_content=-global"}]},{"guid":"unfiled_____","title":"unfiled","index":3,"dateAdded":1741449056090000,"lastModified":1741449056656000,"id":5,"typeCode":2,"type":"text/x-moz-place-container","root":"unfiledBookmarksFolder"},{"guid":"mobile______","title":"mobile","index":4,"dateAdded":1741449056099000,"lastModified":1741449056656000,"id":6,"typeCode":2,"type":"text/x-moz-place-container","root":"mobileFolder"}]}
+{
+  "guid": "root________",
+  "title": "",
+  "index": 0,
+  "dateAdded": 1741449056090000,
+  "lastModified": 1741573580185000,
+  "id": 1,
+  "typeCode": 2,
+  "type": "text/x-moz-place-container",
+  "root": "placesRoot",
+  "children": [
+    {
+      "guid": "menu________",
+      "title": "menu",
+      "index": 0,
+      "dateAdded": 1741449056090000,
+      "lastModified": 1741573580185000,
+      "id": 2,
+      "typeCode": 2,
+      "type": "text/x-moz-place-container",
+      "root": "bookmarksMenuFolder",
+      "children": [
+        {
+          "guid": "uWHw94QthAn-",
+          "title": "News",
+          "index": 0,
+          "dateAdded": 1741573536737000,
+          "lastModified": 1741573580185000,
+          "id": 16,
+          "typeCode": 2,
+          "type": "text/x-moz-place-container",
+          "children": [
+            {
+              "guid": "rJ3r7Zdn0LmO",
+              "title": "CNN",
+              "index": 0,
+              "dateAdded": 1741573554061000,
+              "lastModified": 1741573559753000,
+              "id": 17,
+              "typeCode": 1,
+              "type": "text/x-moz-place",
+              "uri": "https://www.cnn.com/"
+            },
+            {
+              "guid": "fJ-HUXccpOH9",
+              "title": "NYTimes",
+              "index": 1,
+              "dateAdded": 1741573576147000,
+              "lastModified": 1741573580185000,
+              "id": 18,
+              "typeCode": 1,
+              "type": "text/x-moz-place",
+              "uri": "https://nytimes.com/"
+            }
+          ]
+        },
+        {
+          "guid": "ufKwWBLnHxUE",
+          "title": "GitHub",
+          "index": 1,
+          "dateAdded": 1741547351891000,
+          "lastModified": 1741547351891000,
+          "id": 13,
+          "typeCode": 1,
+          "iconUri": "https://github.githubassets.com/favicons/favicon.svg",
+          "type": "text/x-moz-place",
+          "uri": "https://github.com/"
+        },
+        {
+          "guid": "vNp1TCkVRDV6",
+          "title": "crewsum/frontend",
+          "index": 2,
+          "dateAdded": 1741547373675000,
+          "lastModified": 1741547373675000,
+          "id": 14,
+          "typeCode": 1,
+          "iconUri": "https://github.githubassets.com/favicons/favicon.svg",
+          "type": "text/x-moz-place",
+          "uri": "https://github.com/crewsum/frontend"
+        },
+        {
+          "guid": "Ty6ZJdGd6W_T",
+          "title": "crewsum/backend",
+          "index": 3,
+          "dateAdded": 1741547380714000,
+          "lastModified": 1741547380714000,
+          "id": 15,
+          "typeCode": 1,
+          "iconUri": "https://github.githubassets.com/favicons/favicon.svg",
+          "type": "text/x-moz-place",
+          "uri": "https://github.com/crewsum/backend"
+        }
+      ]
+    },
+    {
+      "guid": "toolbar_____",
+      "title": "toolbar",
+      "index": 1,
+      "dateAdded": 1741449056090000,
+      "lastModified": 1741449056702000,
+      "id": 3,
+      "typeCode": 2,
+      "type": "text/x-moz-place-container",
+      "root": "toolbarFolder",
+      "children": [
+        {
+          "guid": "_cHOxZ_2zKb8",
+          "title": "Getting Started",
+          "index": 0,
+          "dateAdded": 1741449056702000,
+          "lastModified": 1741449056702000,
+          "id": 12,
+          "typeCode": 1,
+          "iconUri": "fake-favicon-uri:https://www.mozilla.org/firefox/?utm_medium=firefox-desktop&utm_source=bookmarks-toolbar&utm_campaign=new-users&utm_content=-global",
+          "type": "text/x-moz-place",
+          "uri": "https://www.mozilla.org/firefox/?utm_medium=firefox-desktop&utm_source=bookmarks-toolbar&utm_campaign=new-users&utm_content=-global"
+        }
+      ]
+    },
+    {
+      "guid": "unfiled_____",
+      "title": "unfiled",
+      "index": 3,
+      "dateAdded": 1741449056090000,
+      "lastModified": 1741449056656000,
+      "id": 5,
+      "typeCode": 2,
+      "type": "text/x-moz-place-container",
+      "root": "unfiledBookmarksFolder"
+    },
+    {
+      "guid": "mobile______",
+      "title": "mobile",
+      "index": 4,
+      "dateAdded": 1741449056099000,
+      "lastModified": 1741449056656000,
+      "id": 6,
+      "typeCode": 2,
+      "type": "text/x-moz-place-container",
+      "root": "mobileFolder"
+    }
+  ]
+}
