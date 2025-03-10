@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import Dropzone from "react-dropzone";
-import { parse } from "bookmarks-parser/lib/parsers/netscape";
+import { parse } from "../../services/bookmarks-parser";
 
 const BookmarkUploader = () => {
   const [uploadError, setUploadError] = useState<boolean>(false);
@@ -15,9 +15,16 @@ const BookmarkUploader = () => {
       reader.onerror = () => setUploadError(true);
       reader.onload = () => {
         // Do whatever you want with the file contents
-        const binaryStr = reader.result;
+        const htmlString = reader.result;
 
-        console.log(binaryStr);
+        console.log(htmlString);
+
+        parse(htmlString as string, (error, data) => {
+          if (error) {
+            console.error(error);
+          }
+          console.log("parsed data: ", data);
+        });
       };
       reader.readAsText(file);
     });
